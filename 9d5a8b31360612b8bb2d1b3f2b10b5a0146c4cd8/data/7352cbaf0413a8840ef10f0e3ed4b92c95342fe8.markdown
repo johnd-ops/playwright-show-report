@@ -1,0 +1,303 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: suite/e2e/dashboard/toolkit-crud.journey.spec.ts >> Toolkits — CRUD + editor (create / copy / delete / save / publish / session items) >> Save Changes — editing name + description persists
+- Location: suite/e2e/dashboard/toolkit-crud.journey.spec.ts:109:7
+
+# Error details
+
+```
+Error: expect(locator).toBeVisible() failed
+
+Locator: getByRole('heading', { name: /toolkit editor/i, level: 1 })
+Expected: visible
+Timeout: 30000ms
+Error: element(s) not found
+
+Call log:
+  - Expect "toBeVisible" with timeout 30000ms
+  - waiting for getByRole('heading', { name: /toolkit editor/i, level: 1 })
+
+```
+
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e5]:
+        - img "PlaySpace Logo" [ref=e7]
+        - generic [ref=e8]: PlaySpace
+      - generic [ref=e10]:
+        - link "Home" [ref=e12] [cursor=pointer]:
+          - /url: /dashboard/home
+          - generic [ref=e14]:
+            - img [ref=e15]
+            - generic [ref=e18]: Home
+        - generic [ref=e19]:
+          - generic [ref=e20]: Session Prep
+          - link "Video Session" [ref=e21] [cursor=pointer]:
+            - /url: /dashboard/session
+            - generic [ref=e23]:
+              - img [ref=e24]
+              - generic [ref=e27]: Video Session
+          - link "In-Person Tools" [ref=e28] [cursor=pointer]:
+            - /url: /dashboard/in-person-session
+            - generic [ref=e30]:
+              - img [ref=e31]
+              - generic [ref=e34]: In-Person Tools
+          - link "Creative Suite" [ref=e35] [cursor=pointer]:
+            - /url: /dashboard/creative-suite
+            - generic [ref=e37]:
+              - img [ref=e38]
+              - generic [ref=e44]: Creative Suite
+        - generic [ref=e45]:
+          - generic [ref=e46]: Your Practice
+          - link "Calendar" [ref=e47] [cursor=pointer]:
+            - /url: /dashboard/appointments
+            - generic [ref=e49]:
+              - img [ref=e50]
+              - generic [ref=e52]: Calendar
+          - link "Clients" [ref=e53] [cursor=pointer]:
+            - /url: /dashboard/clients
+            - generic [ref=e55]:
+              - img [ref=e56]
+              - generic [ref=e60]: Clients
+          - link "Clinical Notes" [ref=e61] [cursor=pointer]:
+            - /url: /dashboard/clinical-notes
+            - generic [ref=e63]:
+              - img [ref=e64]
+              - generic [ref=e66]: Clinical Notes
+          - link "Forms" [ref=e67] [cursor=pointer]:
+            - /url: /dashboard/forms
+            - generic [ref=e69]:
+              - img [ref=e70]
+              - generic [ref=e73]: Forms
+        - generic [ref=e74]:
+          - generic [ref=e75]: Discover
+          - link "Community" [ref=e76] [cursor=pointer]:
+            - /url: /dashboard/community
+            - generic [ref=e78]:
+              - img [ref=e79]
+              - generic [ref=e83]: Community
+      - generic [ref=e84]:
+        - button "What's new — version 0.16.0" [ref=e85] [cursor=pointer]:
+          - generic [ref=e87]: v0.16.0
+          - generic [ref=e88]: What's new
+        - link "Settings" [ref=e89] [cursor=pointer]:
+          - /url: /dashboard/settings
+          - generic [ref=e90]:
+            - img [ref=e91]
+            - generic [ref=e94]: Settings
+    - generic [ref=e95]:
+      - banner [ref=e96]:
+        - generic [ref=e97]:
+          - button "Collapse sidebar" [ref=e98] [cursor=pointer]:
+            - img [ref=e99]
+          - navigation "Breadcrumb" [ref=e103]:
+            - link "Toolkits" [ref=e104] [cursor=pointer]:
+              - /url: /dashboard/toolkits/manage
+            - img [ref=e105]
+            - generic [ref=e107]: Toolkit Editor
+        - button "UT User Test" [ref=e109] [cursor=pointer]:
+          - generic [ref=e111]: UT
+          - generic [ref=e112]: User Test
+          - img [ref=e113]
+      - main [ref=e115]:
+        - paragraph [ref=e117]: Loading toolkit...
+  - region "Notifications (F8)":
+    - list
+  - region "Notifications alt+T"
+  - alert [ref=e118]
+  - iframe [ref=e119]:
+    
+  - button "Open Intercom Messenger" [ref=e120] [cursor=pointer]:
+    - img [ref=e122]
+    - generic:
+      - img
+```
+
+# Test source
+
+```ts
+  5   | } from '../../../helpers/editor-content-switches';
+  6   | 
+  7   | // QA journey — Toolkit CRUD + editor: create, copy, delete, Save Changes,
+  8   | // publish, and the Session Items "keep at least one" rule.
+  9   | //
+  10  | // Source: toolkitsCRUD recording. The existing toolkit specs cover content
+  11  | // (Sand Tray / Whiteboard / Dollhouse / Games) navigation, NOT toolkit CRUD —
+  12  | // so this is a new journey, no overlap.
+  13  | //
+  14  | // ISOLATION: create/copy operations make throwaway toolkits that are deleted
+  15  | // in afterEach (DELETE /api/toolkits/:id). The real toolkits are never
+  16  | // mutated — editor tests (save/publish/session items) run on a freshly
+  17  | // CREATED throwaway toolkit (NOT a copy: editing a copied toolkit doesn't
+  18  | // trigger the editor's auto-save, while a created/normal toolkit saves fine).
+  19  | //
+  20  | // Verified-live facts: list = GET /api/toolkits/manage; create =
+  21  | // POST /api/toolkits {title, description} (201, starts unpublished); copy =
+  22  | // POST /api/toolkits/:id/copy (201, unpublished); delete = DELETE
+  23  | // /api/toolkits/:id (200). Editor (H1 "Toolkit Editor"): name input
+  24  | // (placeholder "Enter toolkit name"), description textarea, Save Changes
+  25  | // button, a "Published" switch, and Session Items toggles (Activity Shelf,
+  26  | // Multiplayer Games, Single Player Games, Whiteboard, Sand Tray, Dollhouse)
+  27  | // as role="switch" next to their headings.
+  28  | 
+  29  | test.use({ screenshot: 'off', video: 'off', trace: 'off' });
+  30  | 
+  31  | async function listToolkits(request: APIRequestContext) {
+  32  |   const res = await request.get('/api/toolkits/manage');
+  33  |   if (!res.ok()) return [];
+  34  |   const b = await res.json();
+  35  |   return b?.toolkits ?? b?.data ?? (Array.isArray(b) ? b : []);
+  36  | }
+  37  | 
+  38  | async function firstToolkitId(request: APIRequestContext): Promise<string | null> {
+  39  |   return (await listToolkits(request))[0]?.id ?? null;
+  40  | }
+  41  | 
+  42  | test.describe('Toolkits — CRUD + editor (create / copy / delete / save / publish / session items)', () => {
+  43  |   test.describe.configure({ timeout: 90_000 }); // editor is heavy; staging is slow
+  44  | 
+  45  |   const trash: string[] = [];
+  46  |   test.afterEach(async ({ request }) => {
+  47  |     for (const id of trash.splice(0)) {
+  48  |       await request.delete(`/api/toolkits/${id}`).catch(() => {});
+  49  |     }
+  50  |   });
+  51  | 
+  52  |   test('create — POST /api/toolkits creates a new toolkit', async ({ request }) => {
+  53  |     const title = `E2E-TK-${Date.now()}`;
+  54  |     const res = await request.post('/api/toolkits', { data: { title, description: 'e2e' } });
+  55  |     expect(res.ok(), `create must succeed (got ${res.status()})`).toBeTruthy();
+  56  |     const b = await res.json();
+  57  |     const id = b?.id ?? b?.toolkit?.id;
+  58  |     expect(id, 'create must return an id').toBeTruthy();
+  59  |     trash.push(id as string);
+  60  |     expect(b?.title ?? b?.toolkit?.title, 'created toolkit must echo the title').toBe(title);
+  61  |   });
+  62  | 
+  63  |   test('copy — POST /api/toolkits/:id/copy duplicates a toolkit', async ({ request }) => {
+  64  |     const src = await firstToolkitId(request);
+  65  |     test.skip(!src, 'no toolkit available to copy');
+  66  |     const res = await request.post(`/api/toolkits/${src}/copy`);
+  67  |     expect(res.ok(), `copy must succeed (got ${res.status()})`).toBeTruthy();
+  68  |     const b = await res.json();
+  69  |     const id = b?.id ?? b?.toolkit?.id;
+  70  |     expect(id, 'copy must return a new id').toBeTruthy();
+  71  |     expect(id, 'copy id must differ from the source').not.toBe(src);
+  72  |     trash.push(id as string);
+  73  |   });
+  74  | 
+  75  |   test('delete — DELETE /api/toolkits/:id removes a toolkit', async ({ request }) => {
+  76  |     const src = await firstToolkitId(request);
+  77  |     test.skip(!src, 'no toolkit available to copy for deletion');
+  78  |     const copy = await (await request.post(`/api/toolkits/${src}/copy`)).json();
+  79  |     const id = copy?.id ?? copy?.toolkit?.id;
+  80  |     expect(id, 'precondition: a throwaway copy to delete').toBeTruthy();
+  81  | 
+  82  |     const del = await request.delete(`/api/toolkits/${id}`);
+  83  |     expect(del.ok(), `delete must succeed (got ${del.status()})`).toBeTruthy();
+  84  | 
+  85  |     const ids = (await listToolkits(request)).map((t: { id: string }) => t.id);
+  86  |     expect(ids, 'deleted toolkit must no longer appear in the list').not.toContain(id);
+  87  |   });
+  88  | 
+  89  |   // Editor tests run on a freshly CREATED toolkit, not a copy: editing a
+  90  |   // copied toolkit doesn't trigger the editor's auto-save (PATCH never fires)
+  91  |   // — a copy-specific quirk — whereas a created/normal toolkit saves
+  92  |   // correctly. (Save uses PATCH /api/toolkits/:id, not PUT.)
+  93  |   async function openCreatedEditor(page: Page, request: APIRequestContext): Promise<string> {
+  94  |     const res = await request.post('/api/toolkits', {
+  95  |       data: { title: `E2E-TK-${Date.now()}`, description: 'e2e editor seed' },
+  96  |     });
+  97  |     test.skip(!res.ok(), 'could not create a toolkit to edit');
+  98  |     const b = await res.json();
+  99  |     const id = b?.id ?? b?.toolkit?.id;
+  100 |     test.skip(!id, 'create returned no id');
+  101 |     trash.push(id);
+  102 |     await page.goto(`/dashboard/toolkits/${id}/edit`, { waitUntil: 'domcontentloaded' });
+  103 |     await expect(
+  104 |       page.getByRole('heading', { level: 1, name: /toolkit editor/i }),
+> 105 |     ).toBeVisible({ timeout: 30_000 });
+      |       ^ Error: expect(locator).toBeVisible() failed
+  106 |     return id;
+  107 |   }
+  108 | 
+  109 |   test('Save Changes — editing name + description persists', async ({ page, request }) => {
+  110 |     const id = await openCreatedEditor(page, request);
+  111 |     const name = `E2E-TK-${Date.now()}`;
+  112 |     const desc = `E2E description ${Date.now()}`;
+  113 | 
+  114 |     await page.locator('input[placeholder="Enter toolkit name"]').fill(name);
+  115 |     await page.locator('textarea[placeholder="Enter toolkit description"]').fill(desc);
+  116 | 
+  117 |     // Click Save Changes if it's offered; the editor may also auto-save.
+  118 |     const save = page.getByRole('button', { name: /^save changes$/i });
+  119 |     if ((await save.isVisible().catch(() => false)) && (await save.isEnabled().catch(() => false))) {
+  120 |       await save.click().catch(() => {});
+  121 |     }
+  122 |     // Wait for the save to settle (the "Saving..." indicator clears).
+  123 |     await page
+  124 |       .getByRole('button', { name: /^saving/i })
+  125 |       .waitFor({ state: 'detached', timeout: 20_000 })
+  126 |       .catch(() => {});
+  127 |     await page.waitForTimeout(1500);
+  128 | 
+  129 |     const me = (await listToolkits(request)).find((t: { id: string }) => t.id === id);
+  130 |     expect(me?.title, 'edited name must persist after Save Changes').toBe(name);
+  131 |     expect(me?.description, 'edited description must persist after Save Changes').toBe(desc);
+  132 |   });
+  133 | 
+  134 |   test('Publish — toggling the Published switch publishes an unpublished toolkit', async ({
+  135 |     page,
+  136 |     request,
+  137 |   }) => {
+  138 |     const id = await openCreatedEditor(page, request);
+  139 |     const publishSwitch = page
+  140 |       .getByText('Published', { exact: true })
+  141 |       .first()
+  142 |       .locator('xpath=following::*[@role="switch"][1]');
+  143 |     await expect(publishSwitch, 'Published switch must be present').toBeVisible({
+  144 |       timeout: 10_000,
+  145 |     });
+  146 |     if ((await publishSwitch.getAttribute('aria-checked')) !== 'true') {
+  147 |       await publishSwitch.click();
+  148 |     }
+  149 |     // Persist if a Save Changes is offered, and let the save settle.
+  150 |     const save = page.getByRole('button', { name: /^save changes$/i });
+  151 |     if ((await save.isVisible().catch(() => false)) && (await save.isEnabled().catch(() => false))) {
+  152 |       await save.click().catch(() => {});
+  153 |     }
+  154 |     await page
+  155 |       .getByRole('button', { name: /^saving/i })
+  156 |       .waitFor({ state: 'detached', timeout: 20_000 })
+  157 |       .catch(() => {});
+  158 |     await page.waitForTimeout(1500);
+  159 | 
+  160 |     const me = (await listToolkits(request)).find((t: { id: string }) => t.id === id);
+  161 |     expect(me?.published, 'toolkit must be published after toggling Published').toBe(true);
+  162 |   });
+  163 | 
+  164 |   test('Session Items — items can be disabled but at least one must remain', async ({
+  165 |     page,
+  166 |     request,
+  167 |   }) => {
+  168 |     await openCreatedEditor(page, request);
+  169 | 
+  170 |     // Session items are headings (any level) followed by their toggle; the
+  171 |     // shared helper collects them (heading-scoped to skip the Legacy Content
+  172 |     // Library cards) and drives the enable → reduce-to-one → keep-≥1 rule.
+  173 |     const switches = await collectContentSwitches(page);
+  174 |     await assertKeepAtLeastOne(page, switches, 'session');
+  175 |   });
+  176 | });
+  177 | 
+```

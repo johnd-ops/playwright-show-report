@@ -1,0 +1,249 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: suite/e2e/dashboard/add-client-with-caregiver.journey.spec.ts >> Add Client with caregiver — full create + verify >> client + caregiver save successfully via the multi-step wizard
+- Location: suite/e2e/dashboard/add-client-with-caregiver.journey.spec.ts:43:7
+
+# Error details
+
+```
+Error: client identifier should display on detail page
+
+expect(received).toBe(expected) // Object.is equality
+
+Expected: true
+Received: false
+```
+
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e5]:
+        - img "PlaySpace Logo" [ref=e7]
+        - generic [ref=e8]: PlaySpace
+      - generic [ref=e10]:
+        - link "Home" [ref=e12] [cursor=pointer]:
+          - /url: /dashboard/home
+          - generic [ref=e14]:
+            - img [ref=e15]
+            - generic [ref=e18]: Home
+        - generic [ref=e19]:
+          - generic [ref=e20]: Session Prep
+          - link "Video Session" [ref=e21] [cursor=pointer]:
+            - /url: /dashboard/session
+            - generic [ref=e23]:
+              - img [ref=e24]
+              - generic [ref=e27]: Video Session
+          - link "In-Person Tools" [ref=e28] [cursor=pointer]:
+            - /url: /dashboard/in-person-session
+            - generic [ref=e30]:
+              - img [ref=e31]
+              - generic [ref=e34]: In-Person Tools
+          - link "Creative Suite" [ref=e35] [cursor=pointer]:
+            - /url: /dashboard/creative-suite
+            - generic [ref=e37]:
+              - img [ref=e38]
+              - generic [ref=e44]: Creative Suite
+        - generic [ref=e45]:
+          - generic [ref=e46]: Your Practice
+          - link "Calendar" [ref=e47] [cursor=pointer]:
+            - /url: /dashboard/appointments
+            - generic [ref=e49]:
+              - img [ref=e50]
+              - generic [ref=e52]: Calendar
+          - link "Clients" [ref=e53] [cursor=pointer]:
+            - /url: /dashboard/clients
+            - generic [ref=e55]:
+              - img [ref=e56]
+              - generic [ref=e60]: Clients
+          - link "Clinical Notes" [ref=e61] [cursor=pointer]:
+            - /url: /dashboard/clinical-notes
+            - generic [ref=e63]:
+              - img [ref=e64]
+              - generic [ref=e66]: Clinical Notes
+          - link "Forms" [ref=e67] [cursor=pointer]:
+            - /url: /dashboard/forms
+            - generic [ref=e69]:
+              - img [ref=e70]
+              - generic [ref=e73]: Forms
+        - generic [ref=e74]:
+          - generic [ref=e75]: Discover
+          - link "Community" [ref=e76] [cursor=pointer]:
+            - /url: /dashboard/community
+            - generic [ref=e78]:
+              - img [ref=e79]
+              - generic [ref=e83]: Community
+      - generic [ref=e84]:
+        - button "What's new — version 0.16.0" [ref=e85] [cursor=pointer]:
+          - generic [ref=e87]: v0.16.0
+          - generic [ref=e88]: What's new
+        - link "Settings" [ref=e89] [cursor=pointer]:
+          - /url: /dashboard/settings
+          - generic [ref=e90]:
+            - img [ref=e91]
+            - generic [ref=e94]: Settings
+    - generic [ref=e95]:
+      - banner [ref=e96]:
+        - generic [ref=e97]:
+          - button "Collapse sidebar" [ref=e98] [cursor=pointer]:
+            - img [ref=e99]
+          - navigation "Breadcrumb" [ref=e103]:
+            - link "Clients" [ref=e104] [cursor=pointer]:
+              - /url: /dashboard/clients
+            - img [ref=e105]
+            - generic [ref=e107]: Client
+        - button "UT User Test" [ref=e109] [cursor=pointer]:
+          - generic [ref=e111]: UT
+          - generic [ref=e112]: User Test
+          - img [ref=e113]
+      - main [ref=e115]:
+        - generic [ref=e117]: Loading client information...
+  - region "Notifications (F8)":
+    - list
+  - region "Notifications alt+T"
+  - alert [ref=e118]
+  - iframe [ref=e119]:
+    
+  - button "Open Intercom Messenger" [ref=e120] [cursor=pointer]:
+    - img [ref=e122]
+    - generic:
+      - img
+```
+
+# Test source
+
+```ts
+  88  |       first: clientFirst,
+  89  |       last: clientLast,
+  90  |       email: clientEmail,
+  91  |       phone: '5550100001',
+  92  |     });
+  93  |     // Explicit therapist selection — some accounts have it auto-
+  94  |     // populated, others don't (the validation toast "Please select a
+  95  |     // therapist" blocks Next when the default is treated as unset).
+  96  |     // Picking the first option keeps the spec robust across accounts.
+  97  |     await wizard.selectFirstTherapist();
+  98  | 
+  99  |     await wizard.goToNextStep();
+  100 | 
+  101 |     // ---------- Step 2: Caregiver Settings ----------
+  102 |     // Wait for step 2 to actually mount. If validation silently rejected
+  103 |     // the Next click, this assertion fails fast with a clear message
+  104 |     // rather than a confusing missing-control error later.
+  105 |     await expect(
+  106 |       page.getByText(/caregiver settings|caregiver information/i).first(),
+  107 |       'step 2 (Caregiver) header should appear after Next from step 1',
+  108 |     ).toBeVisible({ timeout: 10_000 });
+  109 |     await wizard.enableCaregivers();
+  110 |     await expect(wizard.caregiverCard(0)).toBeVisible();
+  111 | 
+  112 |     await wizard.fillCaregiver(0, {
+  113 |       first: careFirst,
+  114 |       last: careLast,
+  115 |       email: careEmail,
+  116 |       phone: carePhone,
+  117 |     });
+  118 | 
+  119 |     await wizard.nextButton.click();
+  120 | 
+  121 |     // ---------- Step 3: Review & Submit ----------
+  122 |     await expect(wizard.reviewStep).toBeVisible();
+  123 |     await expect(wizard.submitButton).toBeVisible();
+  124 | 
+  125 |     const createResponsePromise = page.waitForResponse(
+  126 |       (r) => r.request().method() === 'POST' && /\/api\/client(\b|\/|\?)/.test(r.url()),
+  127 |       { timeout: 20_000 },
+  128 |     );
+  129 |     await wizard.submitButton.click();
+  130 |     const createRes = await createResponsePromise;
+  131 | 
+  132 |     // Soft-pass on dev: the dev backend currently 500s on POST /api/client
+  133 |     // with caregiver. Filed as a separate Linear bug. Surface it via test
+  134 |     // annotation rather than failing the build (other write flows confirm
+  135 |     // the wizard reaches the right endpoint with the right payload).
+  136 |     if (await handleCreateClient500(createRes, 'with-caregiver')) return;
+  137 | 
+  138 |     expect(
+  139 |       createRes.ok(),
+  140 |       `client creation should succeed (got ${createRes.status()})`,
+  141 |     ).toBeTruthy();
+  142 | 
+  143 |     // Verify the create payload has the shape we expect — both the client
+  144 |     // record and the caregiver fields we filled. This is the primary
+  145 |     // confirmation that "both client and caregiver save successfully."
+  146 |     const body = await createRes.json();
+  147 |     expect(createRes.status(), 'POST /api/client should return 201 Created').toBe(201);
+  148 |     expect(body?.success, 'response should signal success').toBe(true);
+  149 | 
+  150 |     const newClient = body?.data?.client ?? body?.client ?? body?.data;
+  151 |     expect(newClient, 'response must include a created client object').toBeTruthy();
+  152 |     expect(newClient.last_name ?? newClient.lastName).toBe(clientLast);
+  153 |     expect((newClient.email ?? '').toLowerCase()).toBe(clientEmail.toLowerCase());
+  154 |     const clientId = newClient.id;
+  155 |     expect(clientId, 'created client must have an id').toBeTruthy();
+  156 | 
+  157 |     // ---------- Scenario 2: Verify caregiver info displays on detail ----------
+  158 |     // The new client is created with is_internal=true and is excluded from
+  159 |     // the standard /api/client list endpoint; the detail endpoint
+  160 |     // (/api/clients/:id) returns 404 immediately after creation. Filed as
+  161 |     // Issue C1. For the purposes of this test, we navigate to the detail
+  162 |     // page and accept either:
+  163 |     //   (a) the page renders the client + caregiver info — the desired path,
+  164 |     //       and we further verify the caregiver shows up on the Caregiver
+  165 |     //       *tab* specifically (not just anywhere in the body).
+  166 |     //   (b) the page shows "client not found" — flagged as a known issue
+  167 |     //       and surfaced in the test message rather than swallowed.
+  168 |     await page.goto(`/dashboard/clients/${clientId}`);
+  169 |     await expect(page).toHaveURL(new RegExp(`/dashboard/clients/${clientId}`));
+  170 |     await page.waitForLoadState('domcontentloaded');
+  171 |     await page.waitForTimeout(3000);
+  172 | 
+  173 |     const bodyText = ((await page.textContent('body')) || '').toLowerCase();
+  174 |     const knownNotFound = bodyText.includes('client not found') || bodyText.includes('failed to load client');
+  175 | 
+  176 |     if (knownNotFound) {
+  177 |       test.info().annotations.push({
+  178 |         type: 'product-issue',
+  179 |         description: `New client ${clientId} cannot be read via /api/clients/{id} immediately after creation; detail page shows "client not found". Filed as a separate finding — not a test failure.`,
+  180 |       });
+  181 |       console.warn(`[finding] post-create read of /api/clients/${clientId} returns "not found"`);
+  182 |       return;
+  183 |     }
+  184 | 
+  185 |     // (a) Client identifier is visible on the default (Personal Information) tab.
+  186 |     const clientFound =
+  187 |       bodyText.includes(clientLast.toLowerCase()) || bodyText.includes(clientEmail.toLowerCase());
+> 188 |     expect(clientFound, 'client identifier should display on detail page').toBe(true);
+      |                                                                            ^ Error: client identifier should display on detail page
+  189 | 
+  190 |     // (b) Switch to the Caregiver tab and assert the caregiver renders THERE,
+  191 |     //     not just anywhere on the page. This is the precise check: caregiver
+  192 |     //     was actually attached to the client and surfaces in its UI section.
+  193 |     const caregiverTab = page.getByRole('tab', { name: /^caregiver$/i });
+  194 |     await expect(caregiverTab, 'detail page should expose a Caregiver tab').toBeVisible();
+  195 |     await caregiverTab.click();
+  196 |     await expect(caregiverTab).toHaveAttribute('data-state', 'active');
+  197 | 
+  198 |     const caregiverPanel = page.getByRole('tabpanel').filter({ hasText: /caregiver/i }).first();
+  199 |     const caregiverPanelText = ((await caregiverPanel.textContent()) || '').toLowerCase();
+  200 |     expect(
+  201 |       caregiverPanelText.includes(careLast.toLowerCase()) ||
+  202 |         caregiverPanelText.includes(careFirst.toLowerCase()),
+  203 |       'caregiver name should render on the Caregiver tab',
+  204 |     ).toBe(true);
+  205 |     expect(
+  206 |       caregiverPanelText.includes(careEmail.toLowerCase()),
+  207 |       'caregiver email should render on the Caregiver tab',
+  208 |     ).toBe(true);
+  209 |   });
+  210 | });
+  211 | 
+```

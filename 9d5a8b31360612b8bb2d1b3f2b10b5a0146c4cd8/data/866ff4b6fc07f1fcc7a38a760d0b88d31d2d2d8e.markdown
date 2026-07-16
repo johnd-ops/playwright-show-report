@@ -1,0 +1,16 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: suite/e2e/dashboard/worksheet-pages.journey.spec.ts >> Worksheet pages — edit page content >> 4. PUT /api/worksheets/:id/pages/:pageId updates content and persists
+- Location: suite/e2e/dashboard/worksheet-pages.journey.spec.ts:224:7
+
+# Error details
+
+```
+Test timeout of 30000ms exceeded.
+```

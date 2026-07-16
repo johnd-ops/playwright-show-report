@@ -1,0 +1,189 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: suite/security/file-upload-hardening.spec.ts >> File upload — signature endpoint (regression #21) >> upload-signature REJECTS a PNG-disguised-as-image/jpeg (magic byte check)
+- Location: suite/security/file-upload-hardening.spec.ts:62:7
+
+# Error details
+
+```
+Error: red flag: upload-signature accepted PNG bytes labeled as image/jpeg (status 200). Magic-byte validation absent.
+
+expect(received).toBeGreaterThanOrEqual(expected)
+
+Expected: >= 400
+Received:    200
+```
+
+# Test source
+
+```ts
+  1   | import { test, expect } from '@playwright/test';
+  2   | 
+  3   | // File upload hardening — content + size validation probes.
+  4   | //
+  5   | // Risk Assessment findings:
+  6   | //   #21 (HIGH): Signature upload accepts image/svg+xml + trusts client-
+  7   | //   supplied file.type → stored XSS surface. SVG is scriptable; once
+  8   | //   served back from storage origin, embedded JS runs.
+  9   | //   Audit cited: app/api/note-settings/upload-signature/route.ts:65-70
+  10  | //
+  11  | //   #22 (HIGH): /api/forms/extract-ai accepts arbitrary multipart
+  12  | //   uploads with no size cap → DoS / cost-abuse vector against n8n.
+  13  | //   Audit cited: app/api/forms/extract-ai/route.ts:32-75
+  14  | //
+  15  | // Today both bugs are present per the audit; test.fail() keeps CI
+  16  | // green until size + MIME hardening lands. Remove test.fail when the
+  17  | // fixes ship.
+  18  | 
+  19  | // 1×1 transparent PNG header (~70 bytes). Reused from note-signature
+  20  | // spec — minimal valid PNG, zero PHI risk.
+  21  | const ONE_PIXEL_PNG = Buffer.from(
+  22  |   '89504E470D0A1A0A0000000D49484452000000010000000108060000001F15C4890000000A49444154789C6300010000000500010D0A2DB40000000049454E44AE426082',
+  23  |   'hex',
+  24  | );
+  25  | 
+  26  | // Minimal SVG with an embedded <script> — the XSS payload class.
+  27  | const MALICIOUS_SVG = Buffer.from(
+  28  |   `<?xml version="1.0" encoding="UTF-8"?>
+  29  | <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100">
+  30  |   <script type="text/javascript">alert('xss-probe')</script>
+  31  |   <rect width="100" height="100" fill="red"/>
+  32  | </svg>`,
+  33  |   'utf-8',
+  34  | );
+  35  | 
+  36  | test.describe('File upload — signature endpoint (regression #21)', () => {
+  37  |   test('upload-signature REJECTS image/svg+xml (stored XSS surface)', async ({
+  38  |     request,
+  39  |   }) => {
+  40  |     // 2026-05-16: test.fail marker removed. Verified PASSING (i.e. SVG
+  41  |     // upload correctly rejected) on the Next.js 16 preview deploy. Audit
+  42  |     // finding #21 closed pending engineering confirmation of fix shape
+  43  |     // (drop SVG from allowlist / magic-byte validation). Permanent
+  44  |     // regression net.
+  45  | 
+  46  |     const r = await request.post('/api/note-settings/upload-signature', {
+  47  |       multipart: {
+  48  |         file: {
+  49  |           name: 'evil.svg',
+  50  |           mimeType: 'image/svg+xml',
+  51  |           buffer: MALICIOUS_SVG,
+  52  |         },
+  53  |       },
+  54  |     });
+  55  | 
+  56  |     expect(
+  57  |       r.status(),
+  58  |       `red flag: upload-signature accepted SVG with embedded <script>. Status ${r.status()}. Body: ${(await r.text()).slice(0, 200)}. SVG is scriptable — once served back from storage origin, the embedded JS executes.`,
+  59  |     ).toBeGreaterThanOrEqual(400);
+  60  |   });
+  61  | 
+  62  |   test('upload-signature REJECTS a PNG-disguised-as-image/jpeg (magic byte check)', async ({
+  63  |     request,
+  64  |   }) => {
+  65  |     test.fail(
+  66  |       true,
+  67  |       'Risk Assessment finding #21: upload-signature validates client-supplied file.type, not magic bytes. Remove test.fail once magic-byte validation lands (file-type package).',
+  68  |     );
+  69  | 
+  70  |     // PNG bytes labeled as image/jpeg. Magic-byte validation should
+  71  |     // catch the mismatch and reject. Today only file.type is checked,
+  72  |     // so the upload succeeds.
+  73  |     const r = await request.post('/api/note-settings/upload-signature', {
+  74  |       multipart: {
+  75  |         file: {
+  76  |           name: 'mislabeled.jpg',
+  77  |           mimeType: 'image/jpeg', // lying — actual bytes are PNG
+  78  |           buffer: ONE_PIXEL_PNG,
+  79  |         },
+  80  |       },
+  81  |     });
+  82  | 
+  83  |     expect(
+  84  |       r.status(),
+  85  |       `red flag: upload-signature accepted PNG bytes labeled as image/jpeg (status ${r.status()}). Magic-byte validation absent.`,
+> 86  |     ).toBeGreaterThanOrEqual(400);
+      |       ^ Error: red flag: upload-signature accepted PNG bytes labeled as image/jpeg (status 200). Magic-byte validation absent.
+  87  |   });
+  88  | 
+  89  |   test('upload-signature REJECTS oversize files (5MB cap)', async ({ request }) => {
+  90  |     // 6MB random buffer — exceeds the documented 5MB cap.
+  91  |     const oversize = Buffer.alloc(6 * 1024 * 1024, 0xff);
+  92  | 
+  93  |     const r = await request.post('/api/note-settings/upload-signature', {
+  94  |       multipart: {
+  95  |         file: {
+  96  |           name: 'huge.png',
+  97  |           mimeType: 'image/png',
+  98  |           buffer: oversize,
+  99  |         },
+  100 |       },
+  101 |     });
+  102 | 
+  103 |     expect(
+  104 |       r.status(),
+  105 |       `red flag: 6MB upload returned ${r.status()} — expected 400/413 (over 5MB cap)`,
+  106 |     ).toBeGreaterThanOrEqual(400);
+  107 |   });
+  108 | });
+  109 | 
+  110 | test.describe('File upload — extract-ai endpoint (regression #22)', () => {
+  111 |   test('forms/extract-ai REJECTS uploads above 10MB', async ({ request }) => {
+  112 |     // 2026-05-16: test.fail marker removed. Verified PASSING (i.e.
+  113 |     // oversize uploads correctly rejected) on the Next.js 16 preview
+  114 |     // deploy. Audit finding #22 closed pending engineering confirmation
+  115 |     // of fix shape (size cap landed at app/api/forms/extract-ai/route.ts).
+  116 |     // Permanent regression net.
+  117 | 
+  118 |     // 15MB random buffer. With no cap, the route forwards this to n8n
+  119 |     // and consumes a 5-minute function slot. With a cap, it should
+  120 |     // reject with 400/413 immediately.
+  121 |     const oversize = Buffer.alloc(15 * 1024 * 1024, 0xab);
+  122 | 
+  123 |     const r = await request.post('/api/forms/extract-ai', {
+  124 |       multipart: {
+  125 |         file: {
+  126 |           name: 'huge.pdf',
+  127 |           mimeType: 'application/pdf',
+  128 |           buffer: oversize,
+  129 |         },
+  130 |       },
+  131 |       timeout: 60_000,
+  132 |     });
+  133 | 
+  134 |     expect(
+  135 |       [400, 413] as readonly number[],
+  136 |       `red flag: extract-ai accepted 15MB upload (status ${r.status()}). With no cap, an authenticated user can DoS n8n by submitting GB-sized files. Expected 400/413.`,
+  137 |     ).toContain(r.status());
+  138 |   });
+  139 | 
+  140 |   test('forms/extract-ai REJECTS non-PDF MIME types', async ({ request }) => {
+  141 |     test.fail(
+  142 |       true,
+  143 |       'Risk Assessment finding #22: extract-ai has no MIME validation. Remove test.fail once content-type validation lands.',
+  144 |     );
+  145 | 
+  146 |     const r = await request.post('/api/forms/extract-ai', {
+  147 |       multipart: {
+  148 |         file: {
+  149 |           name: 'image.png',
+  150 |           mimeType: 'image/png',
+  151 |           buffer: ONE_PIXEL_PNG,
+  152 |         },
+  153 |       },
+  154 |     });
+  155 | 
+  156 |     expect(
+  157 |       r.status(),
+  158 |       `red flag: extract-ai accepted image/png (status ${r.status()}) — only application/pdf should be allowed.`,
+  159 |     ).toBe(400);
+  160 |   });
+  161 | });
+  162 | 
+```

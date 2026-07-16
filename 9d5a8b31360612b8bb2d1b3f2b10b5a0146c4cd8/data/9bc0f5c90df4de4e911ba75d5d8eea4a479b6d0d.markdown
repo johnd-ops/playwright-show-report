@@ -1,0 +1,230 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: suite/e2e/dashboard/marketplace-publishing.journey.spec.ts >> Marketplace Publishing — practitioner side >> 5. publish modal exposes Title / Description / Age / Tags / Topics fields
+- Location: suite/e2e/dashboard/marketplace-publishing.journey.spec.ts:206:7
+
+# Error details
+
+```
+Error: apiRequestContext.get: read ETIMEDOUT
+Call log:
+  - → GET https://agentic-ps-staging.playspace.health/api/storybooks?shared=true
+    - user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.7727.15 Safari/537.36
+    - accept: */*
+    - accept-encoding: gzip,deflate,br
+    - cookie: _gcl_au=1.1.2138850906.1784208832; _ga=GA1.1.1803929502.1784208833; _fbp=fb.1.1784208832746.704794545697049875; _ga_1SHE26PCJC=GS2.1.s1784208832$o1$g0$t1784208835$j57$l0$h0; playspace-tokens=L0YlcH71zVwP4nu89nWnxEJw5ZN7dwXi7ETdOADa6E7ot0euRMRksCdPCTOo1ARiptPy3810q2Ri7kFoFa99Ltg6gKIanyDqxQ8BS0J6LGzEtcn0jMnZUz9i2jFsrG%2BWSxFRodlLjaj4asUOfeaZh42muDnRyPGFeeO%2BTT41vBW%2BmB2prV3yNNeZ7zDJLZH1tB8IYYOnGq9F9L6QSsYlnAda9lZrwmM8i4QDaGnd%2Bv5avSHhooCp3N9nbsYmAsC%2BVW3rvrva7ZWeQltl39fcX1MLwNmfhdFR2yv5hQdVbM1pbHHohYfeKQOId0cBNnTMfLNTAt9%2B6wnrxFR0KprqjDvGCOxycf3E%2BfnBtOnDhkP3QCEtpAzTcsWlxRkhK3g3FgFR%2FgkamrOuhqiJSCWnSwNZCho%2BkzVaEuTdt4hSxIVQ8roK6JMCeNFlFzjBhexPF1iJWc1sXx9RfW53qnrMMN7rHUw0%2FCBtOaE9o%2FYKW0Zt2ri2YZxQkKFSJpu9pATCWBjuZrxQoyEIpJUI1y5JaaOKR3EPbow1q7tJQNGlsFXDSyXe3sGtWhUlUdQNPFjsgwP5ka8O64SOsVDPox14jTUpmpWsYbmqK2pNa%2FRusI%2BQlO2W9ImwigFjnb7IWOrt0UI7jWfDN4rji%2FG3ZrCVBQ3XBN7DTgl65gD5JODSUdR60SCraPysgAH%2FU%2FjIPmkxhsaOg7LG1ALF6iRFbI%2FVwKulbwcbTkAdJF81o%2FcP65SRlZg%2FBVfA%2Bt5b8SFQfmcGBMV%2FwpFos3gZMLDi4IsFFXQgULMtVaaeqZa6yt4JK7FEmluamvhUjizHGiXJLtPInh9MaURd0faSsxg2jR86wQsXWWy6b7Lc0IGtCT6xkwtgpL0qRzypnnrFLyGSchB%2BU3YJgzX%2FLd4t5sOqkFclXZGTmBpHSfrozFHiFNRp8II7CUuR0uARl6nPbYflwa5%2Fmadhx5YmemRMZi72zcTKyjRDJw%2BXoqhDTxau6MwsDSpOI5lHiFN%2F6Re87iCPPTlnVk0xghb0PtPslFwauIBYktIEg3oZdlNugH5qw9kPm39D6z1Dsoe8S7HUEtkWJ8L%2Fo2i%2BCFVfby0PBBzStBLeQeSxWvGZZ4dkCvpk8tQL501Jz%2BeLPkcYSmCxnhnJ3Hfs3Et9wXkTErlmXT%2B%2BHmrra7%2B0pe5uSssKTsBJKXGPuRAdqqP2xBdWU1xSZlL%2FZfsz7MvUoju3vpCJIM1ZqR4qA5XYa7ECET9V24nugkeLB59GQ7HUe5dOOFBZ0D%2Fa6n%2FybkqM5%2F0J8%2BLSfVWJsokCOUfhUmf30ddnstpyrWIUpCvV9%2B%2FgUhWTBXpt4Bnp%2BAi07QzYL593V3WK6FyN2MryJu0OGdMK0Ez3lm0Ctf9xxnox9gjXnmPl%2BGIq1o7x9m4TXZBqEIxiQR6YQ9%2FaUMPLpJTnWQ4ElsCQBuL%2FOoz9cQ%2Bnu49HHWoo9u9SIjf%2BvU6LHlFW%2FQMEk%2FHrVAAQy8zN9ybIvO2MUChUA1Di%2F18HFWs92YV3DMe6Rm9ZDPlC438iUamLPv%2B8LLKDxxib8hfRsPo76Js9eo9JXNi0zGpBdXZUZp6TqkMayqJj0LeHgRTApiz%2Fj2sZ0J2MdCyibaCZRrBeAgHOqrYjAAjeakDdZ52evjtmJVkrzp7zmkKEwECSG1uYqXACkqt1aYemEkQkTxZ3%2FUj0seJWCxxtD96ps6wCEEsJRvmnfFdsX5qNUQS8K1gHGtYWVz0regf2qLKxLnzZ%2F3tR7NwwI6EqCfaGoqr5FUrW6VIvFsoaZAvGgHpHFq9JV7P%2B1CHA9FS6qzz8yHn1aoJADk25FJfAClUVTkJabcYM6wFnp3la2SOEjlK%2BvPNwplwKNRgLwglorVD4iLppIU9RQxwVA14%2BU5vAOQRuImStO8aQQt7PfNnOiSenUmlKEmQYbSy1Su%2B7qlWMIiTSmDfmWfErQIXAztxD6h%2ByfErWqPg7omilz1AMXYQkfwnuOocs0n6OOXtC4w8%2BJWIlL24U1a%2Bo8CNifFmN%2Ff3PhA2sz0CNE%2FGxpRIRTNUH5ECMsr%2Ba0CgR8n2Gzlc4akJAfAnwwNgBeVoT0b2P80xYQY38yPATZdkYkYVtooTzZlmN%2FqSO2RBFdYfSH8wyZwD5Eobo%2FmlU4tmnQTfw6GC8fj6XKKkkLv44gM9Ave6FD2QydWEMIxlkvbh0%2F6v3Wv4wMNDJCQe5MLAt%2F33%2BBPAx3RyWwZw3dmL6CXV6gf05CJovSf6Mgr4qEIPcJID1Kt1JjIlBwZvekK%2Bf8Z853CB1vsZPr2iteK1f7rnnKg7FALi%2BViSAmT36%2BbRVpLI1c0BHbTzP%2BhmXzQP9nM4lqHPCVQvIHi%2FmZs6qSm9Qd%2FwHm4GQ9cEJPqtPApM6dhMVClhO4%2BpVYKsR0zeDJf%2FQC%2FCAoFclXqwbfYzo4yeoFP%2BG7Ffb37%2FXl1KQca%2BnHCN4UC7YgE%2BmcBZIb9nhmSWjk9l2xENxJT1iIon%2BpnlK13qiR9YUa%2Btt2Q5fjSbAc589%2FNVQCeskDiSXPGXcKyV6Gd2v8amnx0ADz3HifEjjmberZ%2FFgjjHmYoI4hHl6JV5vMFlc9c6ar5cstdRRKKNbSGFT88xEAdhCuX51nNf6vntDHNawweSpPGndY4YoBNLbyJMUbt4uSR6sn7d7Jw%2FM4WszfK5XsKk%2FDcRUBl%2FLNgPyx5LkAaXS18n2eVAEHxRsEDYmqPtprhaflDoym9rYuklNXu2PQTY8t0OnDylVv4soIRQkhhY5CfD5M3Af98gYXKzC1gLKh5w%2BiwEj%2BhfpyjRPa5saQf23rShLhvTFJS98WUoMfPrX9Vx6R80FBnPfTwEip6lNbTt7m%2BDUBlP02pG11olcbQR2VxacsGoEsZyPfTs8qb3MBS9VzUndD8qEf%2B%2FIiXdOcg2v2fxFaN1rBwVQgskySylnSgW0GiafyR7OJIN5K4aB0lOfrCsoUTi3CzAs65KyAUOMyJOUvXWM7KgeTcxSHrrMHaDlW62FNGx5ud%2FB%2F7QAY312NOVZ5hpD3F6O1MkOVbCM9iddO5o1s%2FDhcOHr67AHFbGUCg%3D%3D; playspace-session=eyJzdWIiOiJhdXRoMHw2OTMyZjQ2MWQxZDQyYjVkNGViOTNhZjciLCJlbWFpbCI6ImpsZGFtc0B5b3BtYWlsLmNvbSIsIm5hbWUiOiJqbGRhbXNAeW9wbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwib25ib2FyZGVkIjpmYWxzZSwicGVybWlzc2lvbnMiOlsibWFuYWdlOmFkbWlucyIsIm1hbmFnZTphbGwtY2xpZW50cyIsIm1hbmFnZTphbGwtY2xpbmljLWNvbW11bml0eSIsIm1hbmFnZTpjbGluaWMtZGV0YWlscyIsIm1hbmFnZTpsaWNlbnNlcyIsIm1hbmFnZTptZW1iZXJzIiwibWFuYWdlOm93bi1jb250ZW50IiwibWFuYWdlOm93bmVycyIsIm1hbmFnZTpwYXltZW50LW1ldGhvZCIsIm1vZGlmeTpjbGllbnQtcHJvZmlsZXMiLCJwdXJjaGFzZTpjbGluaWMtYWRkb25zIiwicHVyY2hhc2U6c2VsZi1hZGRvbnMiLCJzY2hlZHVsZTpvdGhlcnMiLCJzY2hlZHVsZTpvd24iLCJ0cmFuc2ZlcjpjbGllbnRzIiwidmlldzpjbGluaWMtY29tbXVuaXR5IiwidmlldzptZW1iZXJzIiwiYWNjZXNzOm93bi1tYXRlcmlhbHMiLCJtYW5hZ2U6b3duLWNsaWVudHMiXSwicm9sZXMiOlsiY2xpbmljLW93bmVyIiwic29sby10aGVyYXBpc3QiXSwicGVybWlzc2lvblZlcnNpb24iOjEsInNlc3Npb25JZCI6IjZlNWE4ZmI3LTkwYWYtNDY5Mi04MzM3LTM0YWJhMjBjMTBjNyIsInRva2VuRXhwaXJlc0F0IjoxNzg0Mjk1MjQwMTIyLCJoYXNSZWZyZXNoVG9rZW4iOnRydWUsImNyZWF0ZWRBdCI6MTc4NDIwODg0MDEyMiwiZXhwaXJlc0F0IjoxNzg0Mjk1MjQwMTIyLCJsYXN0QWN0aXZpdHlBdCI6MTc4NDIwODg0MDU1NH0; playspace-session-sig=1e7c2df6.1784208840554; ph_phc_xfx6VN0K7N6Ha4Efh0usZcqQjeUO8dEZPy0RwTngfQb_posthog=%7B%22%24device_id%22%3A%22019f6b22-3474-7851-9496-9b67c0c11566%22%2C%22distinct_id%22%3A%22019f6b22-3474-7851-9496-9b67c0c11566%22%2C%22%24sesid%22%3A%5B1784208840821%2C%22019f6b22-35fb-7012-b28d-1c07be36efa6%22%2C1784208831995%5D%2C%22%24user_state%22%3A%22anonymous%22%7D
+
+```
+
+# Test source
+
+```ts
+  115 |   test('3. marketplace listing — /api/community/items returns the published-content shape', async ({
+  116 |     request,
+  117 |   }) => {
+  118 |     // This endpoint is consumed by /dashboard/community. Each item should
+  119 |     // expose ownership + publication metadata so the UI can mark "by you".
+  120 |     const r = await request.get('/api/community/items');
+  121 |     expect(
+  122 |       r.status(),
+  123 |       `red flag: GET /api/community/items returned ${r.status()}`,
+  124 |     ).toBeLessThan(500);
+  125 |     expect(r.ok()).toBeTruthy();
+  126 |     const body = (await r.json()) as {
+  127 |       items?: Array<Record<string, unknown>>;
+  128 |     };
+  129 |     expect(
+  130 |       Array.isArray(body.items),
+  131 |       'red flag: /api/community/items must return an items array',
+  132 |     ).toBe(true);
+  133 |     if (body.items && body.items.length > 0) {
+  134 |       const sample = body.items[0];
+  135 |       // Each item should at minimum carry an id + a published-state
+  136 |       // marker. Field names vary across item types; verify at least one
+  137 |       // identity-like field exists.
+  138 |       const hasId =
+  139 |         'id' in sample ||
+  140 |         'item_id' in sample ||
+  141 |         'product_id' in sample ||
+  142 |         'community_item_id' in sample;
+  143 |       expect(
+  144 |         hasId,
+  145 |         `red flag: community item lacks any identifying id field. Sample keys: ${Object.keys(sample).join(', ')}`,
+  146 |       ).toBe(true);
+  147 |     }
+  148 |   });
+  149 | 
+  150 |   test('4. checkout — marketplace product page does not 5xx for an existing product', async ({
+  151 |     request,
+  152 |     browser,
+  153 |   }) => {
+  154 |     // Pick a product to probe. Use the community items list to find one
+  155 |     // with a Stripe-backed price; soft-skip if none exist on this env.
+  156 |     const list = await request.get('/api/community/items').catch(() => null);
+  157 |     if (!list?.ok()) {
+  158 |       test.skip(true, '/api/community/items unavailable; cannot identify a product to probe');
+  159 |       return;
+  160 |     }
+  161 |     const body = (await list.json()) as {
+  162 |       items?: Array<{
+  163 |         id?: string;
+  164 |         product_id?: string;
+  165 |         stripe_product_id?: string;
+  166 |         price?: number | null;
+  167 |       }>;
+  168 |     };
+  169 |     const products = body.items ?? [];
+  170 |     const buyable = products.find(
+  171 |       (p) => (p.price ?? 0) > 0 || p.product_id || p.stripe_product_id,
+  172 |     );
+  173 |     if (!buyable) {
+  174 |       test.info().annotations.push({
+  175 |         type: 'env-condition',
+  176 |         description: 'No buyable marketplace product found on this env. Seed a paid community item to exercise checkout.',
+  177 |       });
+  178 |       test.skip(true, 'no buyable marketplace product on this env');
+  179 |       return;
+  180 |     }
+  181 | 
+  182 |     const productId = buyable.product_id ?? buyable.stripe_product_id ?? buyable.id;
+  183 |     expect(productId, 'product id must be present').toBeTruthy();
+  184 | 
+  185 |     // Hit the product detail route — anonymous browsing of a marketplace
+  186 |     // product page should not 5xx (some envs require auth, that's OK).
+  187 |     const ctx = await browser.newContext({ storageState: { cookies: [], origins: [] } });
+  188 |     const p = await ctx.newPage();
+  189 |     try {
+  190 |       const baseURL = process.env.BASE_URL ?? 'https://agentic-ps-dev.playspace.health';
+  191 |       const res = await p.goto(
+  192 |         `${baseURL}/checkout/marketplace/product/${productId}`,
+  193 |         { waitUntil: 'domcontentloaded' },
+  194 |       );
+  195 |       // Marketplace product pages may redirect to /login on dev — that is
+  196 |       // an auth-gate, not an error. Treat any non-5xx as a pass.
+  197 |       expect(
+  198 |         res?.status() ?? 0,
+  199 |         `red flag: /checkout/marketplace/product/${productId} returned ${res?.status()}`,
+  200 |       ).toBeLessThan(500);
+  201 |     } finally {
+  202 |       await ctx.close();
+  203 |     }
+  204 |   });
+  205 | 
+  206 |   test('5. publish modal exposes Title / Description / Age / Tags / Topics fields', async ({
+  207 |     page,
+  208 |     request,
+  209 |   }) => {
+  210 |     test.setTimeout(60_000);
+  211 | 
+  212 |     // Find a ready storybook (the most reliable surface to open the
+  213 |     // Share-with-Community modal — its detail page exposes
+  214 |     // share-community-button as a stable testid).
+> 215 |     const list = await request.get('/api/storybooks?shared=true');
+      |                                ^ Error: apiRequestContext.get: read ETIMEDOUT
+  216 |     if (!list.ok()) {
+  217 |       test.skip(true, '/api/storybooks not OK; cannot open publish modal');
+  218 |       return;
+  219 |     }
+  220 |     const sbs = ((await list.json()) as { storybooks?: Array<{ id: string; status?: string }> })
+  221 |       .storybooks ?? [];
+  222 |     const target = sbs.find((s) => s.status && s.status !== 'generating');
+  223 |     if (!target) {
+  224 |       test.info().annotations.push({
+  225 |         type: 'env-condition',
+  226 |         description: 'No ready storybook on this account — cannot open publish modal.',
+  227 |       });
+  228 |       test.skip(true, 'no ready storybook');
+  229 |       return;
+  230 |     }
+  231 | 
+  232 |     await page.goto(`/dashboard/storybooks/${target.id}`);
+  233 |     const shareBtn = page.getByTestId('share-community-button');
+  234 |     await expect(shareBtn).toBeVisible({ timeout: 15_000 });
+  235 |     await shareBtn.click();
+  236 | 
+  237 |     const dialog = page.getByRole('dialog');
+  238 |     await expect(dialog).toBeVisible({ timeout: 5_000 });
+  239 | 
+  240 |     // Required metadata fields (per the source pointer + verified via probe).
+  241 |     // The modal's labels carry asterisks for required fields.
+  242 |     const dialogText = ((await dialog.textContent()) || '').toLowerCase();
+  243 | 
+  244 |     expect(
+  245 |       dialogText.includes('title'),
+  246 |       'red flag: publish modal missing Title field',
+  247 |     ).toBe(true);
+  248 |     expect(
+  249 |       dialogText.includes('description'),
+  250 |       'red flag: publish modal missing Description field',
+  251 |     ).toBe(true);
+  252 |     expect(
+  253 |       dialogText.includes('age categories') || dialogText.includes('age category'),
+  254 |       'red flag: publish modal missing Age Categories selector',
+  255 |     ).toBe(true);
+  256 |     expect(
+  257 |       dialogText.includes('tags'),
+  258 |       'red flag: publish modal missing Tags input',
+  259 |     ).toBe(true);
+  260 |     expect(
+  261 |       dialogText.includes('topics'),
+  262 |       'red flag: publish modal missing Topics selector',
+  263 |     ).toBe(true);
+  264 | 
+  265 |     // The 3 documented age categories must each render as selectable copy.
+  266 |     for (const age of ['Child', 'Teen', 'Adult']) {
+  267 |       expect(
+  268 |         ((await dialog.textContent()) || '').includes(age),
+  269 |         `red flag: publish modal missing "${age}" age category option`,
+  270 |       ).toBe(true);
+  271 |     }
+  272 | 
+  273 |     // Cancel button must exist so practitioner can back out.
+  274 |     await expect(
+  275 |       dialog.getByRole('button', { name: /^cancel$/i }),
+  276 |       'red flag: publish modal missing Cancel button',
+  277 |     ).toBeVisible();
+  278 | 
+  279 |     // Cleanup — close without submitting (we don't want to create real
+  280 |     // community items as a side-effect of the test).
+  281 |     await dialog.getByRole('button', { name: /^cancel$/i }).click();
+  282 |     await expect(dialog).not.toBeVisible({ timeout: 2_000 });
+  283 |   });
+  284 | 
+  285 |   test('6. /api/community/items items carry the documented metadata contract', async ({
+  286 |     request,
+  287 |   }) => {
+  288 |     const r = await request.get('/api/community/items');
+  289 |     expect(r.ok()).toBeTruthy();
+  290 |     const body = (await r.json()) as {
+  291 |       items?: Array<Record<string, unknown>>;
+  292 |     };
+  293 |     const items = body.items ?? [];
+  294 |     if (items.length === 0) {
+  295 |       test.info().annotations.push({
+  296 |         type: 'env-condition',
+  297 |         description: 'No community items on this env — cannot exercise contract-shape assertions.',
+  298 |       });
+  299 |       test.skip(true, 'no community items');
+  300 |       return;
+  301 |     }
+  302 | 
+  303 |     // Required fields the publish modal writes — all must round-trip into
+  304 |     // the listing endpoint or the consumer-side UI will render incomplete cards.
+  305 |     const sample = items[0];
+  306 |     for (const field of ['id', 'item_id', 'item_type', 'title', 'age_categories']) {
+  307 |       expect(
+  308 |         field in sample,
+  309 |         `red flag: community item missing required field "${field}". Sample keys: ${Object.keys(sample).join(', ')}`,
+  310 |       ).toBe(true);
+  311 |     }
+  312 | 
+  313 |     // age_categories must be an array of one of the documented vocabulary
+  314 |     // values (child / teen / adult).
+  315 |     const ageCats = sample.age_categories as unknown[] | undefined;
+```

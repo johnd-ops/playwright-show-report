@@ -1,0 +1,386 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: suite/e2e/dashboard/home-practice-redirects.journey.spec.ts >> Home practice-tile redirections >> go-to-library → \/dashboard\/clinic-community\b
+- Location: suite/e2e/dashboard/home-practice-redirects.journey.spec.ts:135:9
+
+# Error details
+
+```
+Test timeout of 30000ms exceeded.
+```
+
+```
+Error: locator.click: Test timeout of 30000ms exceeded.
+Call log:
+  - waiting for locator('#go-to-library')
+
+```
+
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e5]:
+        - img "PlaySpace Logo" [ref=e7]
+        - generic [ref=e8]: PlaySpace
+      - generic [ref=e10]:
+        - link "Home" [ref=e12] [cursor=pointer]:
+          - /url: /dashboard/home
+          - generic [ref=e14]:
+            - img [ref=e15]
+            - generic [ref=e18]: Home
+        - generic [ref=e19]:
+          - generic [ref=e20]: Session Prep
+          - link "Video Session" [ref=e21] [cursor=pointer]:
+            - /url: /dashboard/session
+            - generic [ref=e23]:
+              - img [ref=e24]
+              - generic [ref=e27]: Video Session
+          - link "In-Person Tools" [ref=e28] [cursor=pointer]:
+            - /url: /dashboard/in-person-session
+            - generic [ref=e30]:
+              - img [ref=e31]
+              - generic [ref=e34]: In-Person Tools
+          - link "Creative Suite" [ref=e35] [cursor=pointer]:
+            - /url: /dashboard/creative-suite
+            - generic [ref=e37]:
+              - img [ref=e38]
+              - generic [ref=e44]: Creative Suite
+        - generic [ref=e45]:
+          - generic [ref=e46]: Your Practice
+          - link "Calendar" [ref=e47] [cursor=pointer]:
+            - /url: /dashboard/appointments
+            - generic [ref=e49]:
+              - img [ref=e50]
+              - generic [ref=e52]: Calendar
+          - link "Clients" [ref=e53] [cursor=pointer]:
+            - /url: /dashboard/clients
+            - generic [ref=e55]:
+              - img [ref=e56]
+              - generic [ref=e60]: Clients
+          - link "Clinical Notes" [ref=e61] [cursor=pointer]:
+            - /url: /dashboard/clinical-notes
+            - generic [ref=e63]:
+              - img [ref=e64]
+              - generic [ref=e66]: Clinical Notes
+          - link "Forms" [ref=e67] [cursor=pointer]:
+            - /url: /dashboard/forms
+            - generic [ref=e69]:
+              - img [ref=e70]
+              - generic [ref=e73]: Forms
+        - generic [ref=e74]:
+          - generic [ref=e75]: Discover
+          - link "Community" [ref=e76] [cursor=pointer]:
+            - /url: /dashboard/community
+            - generic [ref=e78]:
+              - img [ref=e79]
+              - generic [ref=e83]: Community
+      - generic [ref=e84]:
+        - button "What's new — version 0.16.0" [ref=e85] [cursor=pointer]:
+          - generic [ref=e87]: v0.16.0
+          - generic [ref=e88]: What's new
+        - link "Settings" [ref=e89] [cursor=pointer]:
+          - /url: /dashboard/settings
+          - generic [ref=e90]:
+            - img [ref=e91]
+            - generic [ref=e94]: Settings
+    - generic [ref=e95]:
+      - banner [ref=e96]:
+        - generic [ref=e97]:
+          - button "Collapse sidebar" [ref=e98] [cursor=pointer]:
+            - img [ref=e99]
+          - navigation "Breadcrumb" [ref=e103]:
+            - generic [ref=e104]: Home
+        - button "UT User Test" [ref=e106] [cursor=pointer]:
+          - generic [ref=e108]: UT
+          - generic [ref=e109]: User Test
+          - img [ref=e110]
+      - main [ref=e112]:
+        - generic [ref=e113]:
+          - generic [ref=e114]:
+            - generic [ref=e117]:
+              - heading "Welcome, User" [level=1] [ref=e118]
+              - generic [ref=e119]:
+                - paragraph [ref=e120]: You have 1 appointments today
+                - generic [ref=e121]:
+                  - generic [ref=e122]:
+                    - img [ref=e123]
+                    - generic [ref=e126]: "1"
+                  - generic [ref=e127]: •
+                  - generic [ref=e128]:
+                    - img [ref=e129]
+                    - generic [ref=e132]: "0"
+                - generic [ref=e134]:
+                  - switch [ref=e135] [cursor=pointer]
+                  - generic [ref=e136]: Hide
+            - generic [ref=e142]:
+              - generic [ref=e143]:
+                - generic [ref=e144]:
+                  - generic [ref=e145]:
+                    - generic [ref=e146]: 5:36 PM
+                    - generic [ref=e147]: Today
+                  - generic [ref=e148]:
+                    - heading "Sally-1783661352971 SameEmail" [level=3] [ref=e149]
+                    - generic [ref=e150]:
+                      - generic [ref=e151]:
+                        - img [ref=e152]
+                        - generic [ref=e155]: E2E-APPT-EDIT-1784208978573 (45 minutes)
+                      - generic [ref=e156]:
+                        - img [ref=e157]
+                        - generic [ref=e160]: Virtual
+                - generic [ref=e161]:
+                  - generic [ref=e162]: "Prep:"
+                  - generic [ref=e163]:
+                    - button "View past appointments and notes" [ref=e164] [cursor=pointer]
+                    - button "View client profile" [ref=e165] [cursor=pointer]
+              - button "Join session" [ref=e167] [cursor=pointer]:
+                - img
+                - text: Join session
+          - generic [ref=e168]:
+            - generic [ref=e169]:
+              - heading "Practice & Explore" [level=2] [ref=e170]
+              - generic [ref=e171]:
+                - button "Playroom Playroom Demo" [ref=e172] [cursor=pointer]:
+                  - img "Playroom" [ref=e174]
+                  - generic [ref=e175]:
+                    - generic [ref=e176]: Playroom
+                    - generic [ref=e177]: Demo
+                    - img [ref=e178]
+                - button "Toolkit Toolkit Demo" [ref=e180] [cursor=pointer]:
+                  - img "Toolkit" [ref=e182]
+                  - generic [ref=e183]:
+                    - generic [ref=e184]: Toolkit
+                    - generic [ref=e185]: Demo
+                    - img [ref=e186]
+                - button "Sand Tray Sand Tray" [ref=e188] [cursor=pointer]:
+                  - img "Sand Tray" [ref=e190]
+                  - generic [ref=e191]:
+                    - generic [ref=e192]: Sand Tray
+                    - img [ref=e193]
+                - button "Dollhouse Dollhouse" [ref=e195] [cursor=pointer]:
+                  - img "Dollhouse" [ref=e197]
+                  - generic [ref=e198]:
+                    - generic [ref=e199]: Dollhouse
+                    - img [ref=e200]
+                - button "Whiteboard Whiteboard" [ref=e202] [cursor=pointer]:
+                  - img "Whiteboard" [ref=e204]
+                  - generic [ref=e205]:
+                    - generic [ref=e206]: Whiteboard
+                    - img [ref=e207]
+                - button "Games Games" [ref=e209] [cursor=pointer]:
+                  - img "Games" [ref=e211]
+                  - generic [ref=e212]:
+                    - generic [ref=e213]: Games
+                    - img [ref=e214]
+            - generic [ref=e216]:
+              - generic [ref=e217]:
+                - heading "Create Session Materials" [level=2] [ref=e218]
+                - generic [ref=e219]:
+                  - button "PlayStudio Builder PlayStudio Builder" [ref=e220] [cursor=pointer]:
+                    - img "PlayStudio Builder" [ref=e222]
+                    - generic [ref=e223]:
+                      - generic [ref=e224]: PlayStudio Builder
+                      - img [ref=e225]
+                  - button "Create slides Create slides" [ref=e227] [cursor=pointer]:
+                    - img "Create slides" [ref=e229]
+                    - generic [ref=e230]:
+                      - generic [ref=e231]: Create slides
+                      - img [ref=e232]
+                  - button "Upload worksheet Upload a worksheet" [ref=e234] [cursor=pointer]:
+                    - img "Upload worksheet" [ref=e236]
+                    - generic [ref=e237]:
+                      - generic [ref=e238]: Upload a worksheet
+                      - img [ref=e239]
+                  - button "Generate storybook Generate storybook" [ref=e241] [cursor=pointer]:
+                    - img "Generate storybook" [ref=e243]
+                    - generic [ref=e244]:
+                      - generic [ref=e245]: Generate storybook
+                      - img [ref=e246]
+              - generic [ref=e248]:
+                - heading "Manage Spaces" [level=2] [ref=e249]
+                - generic [ref=e250]:
+                  - button "PlayStudio Manage PlayStudio Manage Manage your custom PlayStudio games" [ref=e251] [cursor=pointer]:
+                    - img "PlayStudio Manage" [ref=e253]
+                    - generic [ref=e254]:
+                      - generic [ref=e255]:
+                        - generic [ref=e256]: PlayStudio Manage
+                        - img [ref=e257]
+                      - paragraph [ref=e259]: Manage your custom PlayStudio games
+                  - button "Playrooms Playrooms Design rooms with interactive tools for your sessions" [ref=e260] [cursor=pointer]:
+                    - img "Playrooms" [ref=e262]
+                    - generic [ref=e263]:
+                      - generic [ref=e264]:
+                        - generic [ref=e265]: Playrooms
+                        - img [ref=e266]
+                      - paragraph [ref=e268]: Design rooms with interactive tools for your sessions
+                  - button "Toolkits Toolkits Set up toolkits for focused therapeutic work" [ref=e269] [cursor=pointer]:
+                    - img "Toolkits" [ref=e271]
+                    - generic [ref=e272]:
+                      - generic [ref=e273]:
+                        - generic [ref=e274]: Toolkits
+                        - img [ref=e275]
+                      - paragraph [ref=e277]: Set up toolkits for focused therapeutic work
+                  - button "Activity Shelf Activity Shelf Create and manage storybooks, slides, worksheets, and clinical forms" [ref=e278] [cursor=pointer]:
+                    - img "Activity Shelf" [ref=e280]
+                    - generic [ref=e281]:
+                      - generic [ref=e282]:
+                        - generic [ref=e283]: Activity Shelf
+                        - img [ref=e284]
+                      - paragraph [ref=e286]: Create and manage storybooks, slides, worksheets, and clinical forms
+  - region "Notifications (F8)":
+    - list
+  - region "Notifications alt+T"
+  - alert [ref=e287]
+  - iframe [ref=e288]:
+    
+  - button "Open Intercom Messenger" [ref=e289] [cursor=pointer]:
+    - img [ref=e291]
+    - generic:
+      - img
+```
+
+# Test source
+
+```ts
+  1   | import {
+  2   |   test,
+  3   |   expect,
+  4   |   type APIRequestContext,
+  5   |   type BrowserContext,
+  6   |   type Locator,
+  7   |   type Page,
+  8   | } from '@playwright/test';
+  9   | 
+  10  | // Tile-redirect kit — extracts the navigation-assertion patterns repeated
+  11  | // across the launch-tile redirection specs (home / session / creative-suite /
+  12  | // in-person). Each function reproduces, verbatim, the inline logic the specs
+  13  | // used before — no assertion was dropped or weakened. The per-page tile tables
+  14  | // (`{ id → URL }`) stay in their own specs; only the click+assert mechanics
+  15  | // are shared.
+  16  | //
+  17  | // Used by:
+  18  | //   - home-practice-redirects.journey.spec.ts
+  19  | //   - session-tiles.journey.spec.ts
+  20  | //   - creative-suite-more-tiles.journey.spec.ts
+  21  | //   - in-person-tools.journey.spec.ts (cleanup only)
+  22  | //
+  23  | // NOT covered here (intentionally left inline): the in-person heavy-page
+  24  | // reload/click-retry helpers (single-file, page-specific) and the
+  25  | // modal-opening tiles (1-3 lines, and the assertions diverge per page).
+  26  | 
+  27  | /**
+  28  |  * Same-tab tile redirect: click the tile and assert the page navigated to
+  29  |  * `to`. Mirrors the SAME_TAB / NAV_TILES / SESSION_SAME_TAB loops.
+  30  |  *
+  31  |  * `label` flavours the assertion message (the tile id, as the specs used).
+  32  |  * Returns nothing — callers that need a follow-up check (e.g. the home game
+  33  |  * viewers' `backUrl` query param) run it after this resolves.
+  34  |  */
+  35  | export async function expectSameTabRedirect(
+  36  |   page: Page,
+  37  |   locator: Locator,
+  38  |   to: RegExp,
+  39  |   label: string,
+  40  | ): Promise<void> {
+> 41  |   await locator.click();
+      |                 ^ Error: locator.click: Test timeout of 30000ms exceeded.
+  42  |   await expect(page, `${label} should redirect to ${to.source}`).toHaveURL(to, {
+  43  |     timeout: 15_000,
+  44  |   });
+  45  | }
+  46  | 
+  47  | /**
+  48  |  * New-tab tile redirect: clicking the tile opens a popup that lands on `to`,
+  49  |  * and the original tab must stay on `originUrl`. Mirrors the NEW_TAB /
+  50  |  * SESSION_NEW_TAB loops (popup awaited, asserted, closed; origin re-checked).
+  51  |  */
+  52  | export async function expectNewTabRedirect(
+  53  |   page: Page,
+  54  |   context: BrowserContext,
+  55  |   locator: Locator,
+  56  |   to: RegExp,
+  57  |   originUrl: RegExp,
+  58  |   label: string,
+  59  | ): Promise<void> {
+  60  |   const popupPromise = context.waitForEvent('page', { timeout: 15_000 });
+  61  |   await locator.click();
+  62  |   const popup = await popupPromise;
+  63  |   await popup.waitForLoadState('domcontentloaded');
+  64  |   await expect(popup, `${label} new tab should land on ${to.source}`).toHaveURL(
+  65  |     to,
+  66  |     { timeout: 15_000 },
+  67  |   );
+  68  |   await popup.close();
+  69  |   // The originating tab must not have navigated away.
+  70  |   await expect(page).toHaveURL(originUrl);
+  71  | }
+  72  | 
+  73  | /**
+  74  |  * Prefetch-then-navigate tile: clicking the tile fires a prefetch request
+  75  |  * matching `prefetch`, then navigates to `urlMatch` — in the same tab OR a
+  76  |  * new tab (whichever the page does). Mirrors the heading-keyed (session) and
+  77  |  * testid-keyed (creative-suite) TILES loops: it asserts BOTH the request
+  78  |  * fired AND the final URL, on whichever tab received the navigation.
+  79  |  */
+  80  | export async function expectPrefetchRedirect(
+  81  |   page: Page,
+  82  |   context: BrowserContext,
+  83  |   locator: Locator,
+  84  |   prefetch: RegExp,
+  85  |   urlMatch: RegExp,
+  86  |   label: string,
+  87  | ): Promise<void> {
+  88  |   const newPagePromise = context
+  89  |     .waitForEvent('page', { timeout: 5_000 })
+  90  |     .catch(() => null);
+  91  |   const requestPromise = page
+  92  |     .waitForRequest((r) => prefetch.test(r.url()), { timeout: 10_000 })
+  93  |     .catch(() => null);
+  94  | 
+  95  |   await locator.click();
+  96  | 
+  97  |   const req = await requestPromise;
+  98  |   expect(
+  99  |     req,
+  100 |     `expected a request matching ${prefetch} after clicking ${label}`,
+  101 |   ).not.toBeNull();
+  102 | 
+  103 |   const newPage = await newPagePromise;
+  104 |   const target = newPage ?? page;
+  105 |   if (newPage) await newPage.waitForLoadState('domcontentloaded');
+  106 |   await expect(target).toHaveURL(urlMatch, { timeout: 10_000 });
+  107 | }
+  108 | 
+  109 | /**
+  110 |  * Best-effort cleanup for the tiles that CREATE a worksheet draft and route
+  111 |  * to its editor (/dashboard/.../worksheets/<uuid>/edit). Extracts the id from
+  112 |  * the current URL and DELETEs it. DELETE /api/worksheets/:id returns 200 on
+  113 |  * staging but is known to 500 on dev (RA #46), so failure is annotated as an
+  114 |  * orphan rather than failing the test — identical to the inline blocks.
+  115 |  *
+  116 |  * Call AFTER the editor-URL assertion, with the page sitting on the editor.
+  117 |  */
+  118 | export async function cleanupWorksheetDraft(
+  119 |   request: APIRequestContext,
+  120 |   page: Page,
+  121 | ): Promise<void> {
+  122 |   const id = page.url().match(/worksheets\/([0-9a-f-]+)\/edit/)?.[1];
+  123 |   if (!id) return;
+  124 |   const res = await request.fetch(`/api/worksheets/${id}`, { method: 'DELETE' });
+  125 |   if (!res.ok()) {
+  126 |     test.info().annotations.push({
+  127 |       type: 'orphan-worksheet',
+  128 |       description: `Could not delete worksheet ${id} (DELETE → ${res.status()}; known to 500 on dev per RA #46). Orphan left for manual sweep.`,
+  129 |     });
+  130 |   }
+  131 | }
+  132 | 
+```

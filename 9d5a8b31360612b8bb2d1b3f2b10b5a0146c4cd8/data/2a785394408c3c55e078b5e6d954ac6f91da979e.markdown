@@ -1,0 +1,131 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: suite/security/file-upload-hardening.spec.ts >> File upload — extract-ai endpoint (regression #22) >> forms/extract-ai REJECTS non-PDF MIME types
+- Location: suite/security/file-upload-hardening.spec.ts:140:7
+
+# Error details
+
+```
+Error: red flag: extract-ai accepted image/png (status 500) — only application/pdf should be allowed.
+
+expect(received).toBe(expected) // Object.is equality
+
+Expected: 400
+Received: 500
+```
+
+# Test source
+
+```ts
+  59  |     ).toBeGreaterThanOrEqual(400);
+  60  |   });
+  61  | 
+  62  |   test('upload-signature REJECTS a PNG-disguised-as-image/jpeg (magic byte check)', async ({
+  63  |     request,
+  64  |   }) => {
+  65  |     test.fail(
+  66  |       true,
+  67  |       'Risk Assessment finding #21: upload-signature validates client-supplied file.type, not magic bytes. Remove test.fail once magic-byte validation lands (file-type package).',
+  68  |     );
+  69  | 
+  70  |     // PNG bytes labeled as image/jpeg. Magic-byte validation should
+  71  |     // catch the mismatch and reject. Today only file.type is checked,
+  72  |     // so the upload succeeds.
+  73  |     const r = await request.post('/api/note-settings/upload-signature', {
+  74  |       multipart: {
+  75  |         file: {
+  76  |           name: 'mislabeled.jpg',
+  77  |           mimeType: 'image/jpeg', // lying — actual bytes are PNG
+  78  |           buffer: ONE_PIXEL_PNG,
+  79  |         },
+  80  |       },
+  81  |     });
+  82  | 
+  83  |     expect(
+  84  |       r.status(),
+  85  |       `red flag: upload-signature accepted PNG bytes labeled as image/jpeg (status ${r.status()}). Magic-byte validation absent.`,
+  86  |     ).toBeGreaterThanOrEqual(400);
+  87  |   });
+  88  | 
+  89  |   test('upload-signature REJECTS oversize files (5MB cap)', async ({ request }) => {
+  90  |     // 6MB random buffer — exceeds the documented 5MB cap.
+  91  |     const oversize = Buffer.alloc(6 * 1024 * 1024, 0xff);
+  92  | 
+  93  |     const r = await request.post('/api/note-settings/upload-signature', {
+  94  |       multipart: {
+  95  |         file: {
+  96  |           name: 'huge.png',
+  97  |           mimeType: 'image/png',
+  98  |           buffer: oversize,
+  99  |         },
+  100 |       },
+  101 |     });
+  102 | 
+  103 |     expect(
+  104 |       r.status(),
+  105 |       `red flag: 6MB upload returned ${r.status()} — expected 400/413 (over 5MB cap)`,
+  106 |     ).toBeGreaterThanOrEqual(400);
+  107 |   });
+  108 | });
+  109 | 
+  110 | test.describe('File upload — extract-ai endpoint (regression #22)', () => {
+  111 |   test('forms/extract-ai REJECTS uploads above 10MB', async ({ request }) => {
+  112 |     // 2026-05-16: test.fail marker removed. Verified PASSING (i.e.
+  113 |     // oversize uploads correctly rejected) on the Next.js 16 preview
+  114 |     // deploy. Audit finding #22 closed pending engineering confirmation
+  115 |     // of fix shape (size cap landed at app/api/forms/extract-ai/route.ts).
+  116 |     // Permanent regression net.
+  117 | 
+  118 |     // 15MB random buffer. With no cap, the route forwards this to n8n
+  119 |     // and consumes a 5-minute function slot. With a cap, it should
+  120 |     // reject with 400/413 immediately.
+  121 |     const oversize = Buffer.alloc(15 * 1024 * 1024, 0xab);
+  122 | 
+  123 |     const r = await request.post('/api/forms/extract-ai', {
+  124 |       multipart: {
+  125 |         file: {
+  126 |           name: 'huge.pdf',
+  127 |           mimeType: 'application/pdf',
+  128 |           buffer: oversize,
+  129 |         },
+  130 |       },
+  131 |       timeout: 60_000,
+  132 |     });
+  133 | 
+  134 |     expect(
+  135 |       [400, 413] as readonly number[],
+  136 |       `red flag: extract-ai accepted 15MB upload (status ${r.status()}). With no cap, an authenticated user can DoS n8n by submitting GB-sized files. Expected 400/413.`,
+  137 |     ).toContain(r.status());
+  138 |   });
+  139 | 
+  140 |   test('forms/extract-ai REJECTS non-PDF MIME types', async ({ request }) => {
+  141 |     test.fail(
+  142 |       true,
+  143 |       'Risk Assessment finding #22: extract-ai has no MIME validation. Remove test.fail once content-type validation lands.',
+  144 |     );
+  145 | 
+  146 |     const r = await request.post('/api/forms/extract-ai', {
+  147 |       multipart: {
+  148 |         file: {
+  149 |           name: 'image.png',
+  150 |           mimeType: 'image/png',
+  151 |           buffer: ONE_PIXEL_PNG,
+  152 |         },
+  153 |       },
+  154 |     });
+  155 | 
+  156 |     expect(
+  157 |       r.status(),
+  158 |       `red flag: extract-ai accepted image/png (status ${r.status()}) — only application/pdf should be allowed.`,
+> 159 |     ).toBe(400);
+      |       ^ Error: red flag: extract-ai accepted image/png (status 500) — only application/pdf should be allowed.
+  160 |   });
+  161 | });
+  162 | 
+```
