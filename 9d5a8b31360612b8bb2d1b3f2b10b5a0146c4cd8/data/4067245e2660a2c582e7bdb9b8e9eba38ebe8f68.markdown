@@ -1,0 +1,451 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: suite/e2e/dashboard/games-as-host.journey.spec.ts >> Games-as-host journey — playrooms + toolkits >> every multi-player + single-player game in Adult Toolkit launches without error
+- Location: suite/e2e/dashboard/games-as-host.journey.spec.ts:204:7
+
+# Error details
+
+```
+Error: expect(locator).toBeVisible() failed
+
+Locator: getByTestId('show-playspace-button')
+Expected: visible
+Timeout: 30000ms
+Error: element(s) not found
+
+Call log:
+  - Expect "toBeVisible" with timeout 30000ms
+  - waiting for getByTestId('show-playspace-button')
+
+```
+
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e5]:
+        - img "PlaySpace Logo" [ref=e7]
+        - generic [ref=e8]: PlaySpace
+      - generic [ref=e10]:
+        - link "Home" [ref=e12] [cursor=pointer]:
+          - /url: /dashboard/home
+          - generic [ref=e14]:
+            - img [ref=e15]
+            - generic [ref=e18]: Home
+        - generic [ref=e19]:
+          - generic [ref=e20]: Session Prep
+          - link "Video Session" [ref=e21] [cursor=pointer]:
+            - /url: /dashboard/session
+            - generic [ref=e23]:
+              - img [ref=e24]
+              - generic [ref=e27]: Video Session
+          - link "In-Person Tools" [ref=e28] [cursor=pointer]:
+            - /url: /dashboard/in-person-session
+            - generic [ref=e30]:
+              - img [ref=e31]
+              - generic [ref=e34]: In-Person Tools
+          - link "Creative Suite" [ref=e35] [cursor=pointer]:
+            - /url: /dashboard/creative-suite
+            - generic [ref=e37]:
+              - img [ref=e38]
+              - generic [ref=e44]: Creative Suite
+        - generic [ref=e45]:
+          - generic [ref=e46]: Your Practice
+          - link "Calendar" [ref=e47] [cursor=pointer]:
+            - /url: /dashboard/appointments
+            - generic [ref=e49]:
+              - img [ref=e50]
+              - generic [ref=e52]: Calendar
+          - link "Clients" [ref=e53] [cursor=pointer]:
+            - /url: /dashboard/clients
+            - generic [ref=e55]:
+              - img [ref=e56]
+              - generic [ref=e60]: Clients
+          - link "Clinical Notes" [ref=e61] [cursor=pointer]:
+            - /url: /dashboard/clinical-notes
+            - generic [ref=e63]:
+              - img [ref=e64]
+              - generic [ref=e66]: Clinical Notes
+          - link "Forms" [ref=e67] [cursor=pointer]:
+            - /url: /dashboard/forms
+            - generic [ref=e69]:
+              - img [ref=e70]
+              - generic [ref=e73]: Forms
+        - generic [ref=e74]:
+          - generic [ref=e75]: Discover
+          - link "Community" [ref=e76] [cursor=pointer]:
+            - /url: /dashboard/community
+            - generic [ref=e78]:
+              - img [ref=e79]
+              - generic [ref=e83]: Community
+      - generic [ref=e84]:
+        - button "What's new — version 0.16.0" [ref=e85] [cursor=pointer]:
+          - generic [ref=e87]: v0.16.0
+          - generic [ref=e88]: What's new
+        - link "Settings" [ref=e89] [cursor=pointer]:
+          - /url: /dashboard/settings
+          - generic [ref=e90]:
+            - img [ref=e91]
+            - generic [ref=e94]: Settings
+    - generic [ref=e95]:
+      - banner [ref=e96]:
+        - button "Collapse sidebar" [ref=e98] [cursor=pointer]:
+          - img [ref=e99]
+        - button "UT User Test" [ref=e103] [cursor=pointer]:
+          - generic [ref=e105]: UT
+          - generic [ref=e106]: User Test
+          - img [ref=e107]
+      - main [ref=e109]:
+        - generic [ref=e110]:
+          - generic [ref=e111]:
+            - heading "Calendar" [level=1] [ref=e112]
+            - generic [ref=e113]:
+              - link "Appointment Settings" [ref=e114] [cursor=pointer]:
+                - /url: /dashboard/appointments/settings/appointment-types
+              - button "+ Add Appointment" [ref=e115] [cursor=pointer]
+          - region "Calendar view" [ref=e118]:
+            - generic [ref=e119]:
+              - generic [ref=e120]:
+                - button "Jump to today" [ref=e121] [cursor=pointer]: Today
+                - button "Privacy mode disabled, click to toggle" [ref=e122] [cursor=pointer]: Privacy
+              - radiogroup "Calendar view selector" [ref=e123]:
+                - radio "Day view" [checked] [ref=e124] [cursor=pointer]: Day
+                - radio "Week view" [ref=e125] [cursor=pointer]: Week
+                - radio "Month view" [ref=e126] [cursor=pointer]: Month
+            - generic [ref=e128]:
+              - generic [ref=e130]:
+                - generic [ref=e131]:
+                  - button "«" [ref=e132] [cursor=pointer]
+                  - button "‹" [ref=e133] [cursor=pointer]
+                  - button "July 2026" [ref=e134] [cursor=pointer]
+                  - button "›" [ref=e135] [cursor=pointer]
+                  - button "»" [ref=e136] [cursor=pointer]
+                - generic [ref=e140]:
+                  - generic [ref=e141]:
+                    - generic [ref=e142]: Sun
+                    - generic [ref=e143]: Mon
+                    - generic [ref=e144]: Tue
+                    - generic [ref=e145]: Wed
+                    - generic [ref=e146]: Thu
+                    - generic [ref=e147]: Fri
+                    - generic [ref=e148]: Sat
+                  - generic [ref=e149]:
+                    - button "June 28, 2026" [ref=e150] [cursor=pointer]: "28"
+                    - button "June 29, 2026" [ref=e151] [cursor=pointer]: "29"
+                    - button "June 30, 2026" [ref=e152] [cursor=pointer]: "30"
+                    - button "July 1, 2026" [ref=e153] [cursor=pointer]: "1"
+                    - button "July 2, 2026" [ref=e154] [cursor=pointer]: "2"
+                    - button "July 3, 2026" [ref=e155] [cursor=pointer]: "3"
+                    - button "July 4, 2026" [ref=e156] [cursor=pointer]: "4"
+                    - button "July 5, 2026" [ref=e157] [cursor=pointer]: "5"
+                    - button "July 6, 2026" [ref=e158] [cursor=pointer]: "6"
+                    - button "July 7, 2026" [ref=e159] [cursor=pointer]: "7"
+                    - button "July 8, 2026" [ref=e160] [cursor=pointer]: "8"
+                    - button "July 9, 2026" [ref=e161] [cursor=pointer]: "9"
+                    - button "July 10, 2026" [ref=e162] [cursor=pointer]: "10"
+                    - button "July 11, 2026" [ref=e163] [cursor=pointer]: "11"
+                    - button "July 12, 2026" [ref=e164] [cursor=pointer]: "12"
+                    - button "July 13, 2026" [ref=e165] [cursor=pointer]: "13"
+                    - button "July 14, 2026" [ref=e166] [cursor=pointer]: "14"
+                    - button "July 15, 2026" [ref=e167] [cursor=pointer]: "15"
+                    - button "July 16, 2026" [ref=e168] [cursor=pointer]: "16"
+                    - button "July 17, 2026" [ref=e169] [cursor=pointer]: "17"
+                    - button "July 18, 2026" [ref=e170] [cursor=pointer]: "18"
+                    - button "July 19, 2026" [ref=e171] [cursor=pointer]: "19"
+                    - button "July 20, 2026" [ref=e172] [cursor=pointer]: "20"
+                    - button "July 21, 2026" [ref=e173] [cursor=pointer]: "21"
+                    - button "July 22, 2026" [ref=e174] [cursor=pointer]: "22"
+                    - button "July 23, 2026" [ref=e175] [cursor=pointer]: "23"
+                    - button "July 24, 2026" [ref=e176] [cursor=pointer]: "24"
+                    - button "July 25, 2026" [ref=e177] [cursor=pointer]: "25"
+                    - button "July 26, 2026" [ref=e178] [cursor=pointer]: "26"
+                    - button "July 27, 2026" [ref=e179] [cursor=pointer]: "27"
+                    - button "July 28, 2026" [ref=e180] [cursor=pointer]: "28"
+                    - button "July 29, 2026" [ref=e181] [cursor=pointer]: "29"
+                    - button "July 30, 2026" [ref=e182] [cursor=pointer]: "30"
+                    - button "July 31, 2026" [ref=e183] [cursor=pointer]: "31"
+                    - button "August 1, 2026" [ref=e184] [cursor=pointer]: "1"
+              - generic [ref=e185]:
+                - heading "Thursday, July 16" [level=4] [ref=e186]
+                - region "Thursday, July 16" [ref=e187]:
+                  - generic [ref=e189]:
+                    - generic [ref=e190]:
+                      - generic [ref=e191]:
+                        - generic [ref=e192]:
+                          - generic [ref=e193]: 2:00 PM
+                          - generic [ref=e194]: 2026-07-16
+                        - generic [ref=e195]:
+                          - heading "Sally-1783661352971 SameEmail" [level=3] [ref=e196]:
+                            - generic [ref=e197]: Sally-1783661352971 SameEmail
+                            - button "View client profile" [ref=e198] [cursor=pointer]:
+                              - img
+                          - generic [ref=e199]:
+                            - generic [ref=e200]:
+                              - img [ref=e201]
+                              - generic [ref=e204]: virtual (30m)
+                            - generic [ref=e205]:
+                              - img [ref=e206]
+                              - generic [ref=e209]: Virtual
+                      - generic [ref=e210]:
+                        - button "Join session" [active] [ref=e211] [cursor=pointer]:
+                          - img
+                          - text: Join session
+                        - button "Copy Client Link" [ref=e212] [cursor=pointer]:
+                          - img
+                          - text: Copy Client Link
+                        - button "Create note" [ref=e213] [cursor=pointer]:
+                          - img
+                          - text: Create note
+                    - generic [ref=e214]:
+                      - button "Edit appointment" [ref=e215] [cursor=pointer]:
+                        - img
+                      - button "Delete appointment" [ref=e216] [cursor=pointer]:
+                        - img
+                  - generic [ref=e218]:
+                    - generic [ref=e219]:
+                      - generic [ref=e220]:
+                        - generic [ref=e221]:
+                          - generic [ref=e222]: 3:08 PM
+                          - generic [ref=e223]: 2026-07-16
+                        - generic [ref=e224]:
+                          - heading "Sally-1783661352971 SameEmail" [level=3] [ref=e225]:
+                            - generic [ref=e226]: Sally-1783661352971 SameEmail
+                            - button "View client profile" [ref=e227] [cursor=pointer]:
+                              - img
+                          - generic [ref=e228]:
+                            - generic [ref=e229]:
+                              - img [ref=e230]
+                              - generic [ref=e233]: virtual (30m)
+                            - generic [ref=e234]:
+                              - img [ref=e235]
+                              - generic [ref=e238]: Virtual
+                      - generic [ref=e239]:
+                        - button "Join session" [ref=e240] [cursor=pointer]:
+                          - img
+                          - text: Join session
+                        - button "Copy Client Link" [ref=e241] [cursor=pointer]:
+                          - img
+                          - text: Copy Client Link
+                        - button "Create note" [ref=e242] [cursor=pointer]:
+                          - img
+                          - text: Create note
+                    - generic [ref=e243]:
+                      - button "Edit appointment" [ref=e244] [cursor=pointer]:
+                        - img
+                      - button "Delete appointment" [ref=e245] [cursor=pointer]:
+                        - img
+  - region "Notifications (F8)":
+    - list
+  - region "Notifications alt+T"
+  - alert [ref=e246]
+  - iframe [ref=e247]
+  - button "Open Intercom Messenger" [ref=e248] [cursor=pointer]:
+    - img [ref=e250]
+    - generic:
+      - img
+```
+
+# Test source
+
+```ts
+  1   | import { expect, type Locator, type Page } from '@playwright/test';
+  2   | 
+  3   | // Page Object for the "Playspace games as host" surface — the area
+  4   | // that appears AFTER a practitioner has booked + joined a video
+  5   | // session and clicked "Show Playspace".
+  6   | //
+  7   | // Historical context: originally captured from a Blazemeter Chrome
+  8   | // Extension recording (Selenium YAML, 2026-05-24). The recording
+  9   | // referenced "Single Player Games" / "Multi-Player Games" tabs, but
+  10  | // the UI was redesigned before this conversion: the games surface is
+  11  | // now organized as Playrooms (4 themed 3D scenes) and Toolkits (4
+  12  | // activity bundles). This POM covers the redesigned UI.
+  13  | //
+  14  | // Architecture (verified via diagnostics 2026-05-24):
+  15  | //   - The video-session shell sits OUTSIDE the Whereby iframe
+  16  | //   - Whereby auto-joins via roomKey=<JWT> — no manual join click
+  17  | //   - "Show Playspace" toggles the right-side panel. The panel may
+  18  | //     not open on the first click (race with route effect); the
+  19  | //     `openPlayspace()` method retries up to 2 clicks and polls for
+  20  | //     the panel to actually expand (w-0 opacity-0 → w-[70%] opacity-100).
+  21  | //   - After Continue, URL becomes /video-session/playroom/<type>
+  22  | //     OR /video-session/toolkit/<type>, and the show-playspace-button
+  23  | //     is replaced by close-playspace-button.
+  24  | 
+  25  | export type CategoryTab = 'playrooms' | 'toolkits';
+  26  | 
+  27  | /** The 4 playroom variants present in the redesigned UI. */
+  28  | export const PLAYROOM_NAMES = [
+  29  |   'Child Playroom',
+  30  |   'Teen Playroom',
+  31  |   'Adult Playroom',
+  32  |   'Everything Playroom',
+  33  | ] as const;
+  34  | 
+  35  | /** The 4 toolkit variants present in the redesigned UI. */
+  36  | export const TOOLKIT_NAMES = [
+  37  |   'Child Toolkit',
+  38  |   'Teen Toolkit',
+  39  |   'Adult Toolkit',
+  40  |   'Everything Toolkit',
+  41  | ] as const;
+  42  | 
+  43  | export type PlayroomName = (typeof PLAYROOM_NAMES)[number];
+  44  | export type ToolkitName = (typeof TOOLKIT_NAMES)[number];
+  45  | 
+  46  | export class GamesAsHostPage {
+  47  |   readonly page: Page;
+  48  | 
+  49  |   readonly showPlayspaceButton: Locator;
+  50  |   readonly closePlayspaceButton: Locator;
+  51  |   readonly continueButton: Locator;
+  52  |   readonly playroomsTab: Locator;
+  53  |   readonly toolkitsTab: Locator;
+  54  | 
+  55  |   constructor(page: Page) {
+  56  |     this.page = page;
+  57  |     this.showPlayspaceButton = page.getByTestId('show-playspace-button');
+  58  |     this.closePlayspaceButton = page.getByTestId('close-playspace-button');
+  59  |     this.continueButton = page.getByRole('button', { name: /^Continue$/i });
+  60  |     this.playroomsTab = page
+  61  |       .getByTestId('tabs-trigger')
+  62  |       .filter({ hasText: /^Playrooms$/i });
+  63  |     this.toolkitsTab = page
+  64  |       .getByTestId('tabs-trigger')
+  65  |       .filter({ hasText: /^Toolkits$/i });
+  66  |   }
+  67  | 
+  68  |   /**
+  69  |    * Click "Show Playspace" and wait for the right-side panel to fully
+  70  |    * expand (CSS class `opacity-100`). Diagnostic 2026-05-24 found the
+  71  |    * panel sometimes stays `w-0 opacity-0` after a single click; a
+  72  |    * second click reliably opens it. We poll for the explicit open
+  73  |    * marker rather than tab DOM presence (the tab can attach before
+  74  |    * the panel has finished sliding open, leading to the Whereby
+  75  |    * iframe still overlapping it).
+  76  |    *
+  77  |    * Postcondition: panel class includes `opacity-100`, Playrooms tab
+  78  |    * is visible AND past CSS transition (we await an extra settle
+  79  |    * window so subsequent clicks don't race the slide animation).
+  80  |    */
+  81  |   async openPlayspace() {
+  82  |     // Note: the backend persists "last playroom" state per practitioner.
+  83  |     // If a prior session ended inside /video-session/playroom/<x>, the
+  84  |     // next video session auto-routes there and the Playspace panel
+  85  |     // opens directly into that playroom — there are NO Playrooms/
+  86  |     // Toolkits tabs to interact with in that case. Callers that need
+  87  |     // the selection screen should check the URL via inSelectionScreen()
+  88  |     // before invoking selectCategory/pickAndContinue. (Confirmed via
+  89  |     // diagnostics 2026-05-24; attempted page.goto override is blocked
+  90  |     // by server-side redirect to /playroom/<last>.)
+> 91  |     await expect(this.showPlayspaceButton).toBeVisible({ timeout: 30_000 });
+      |                                            ^ Error: expect(locator).toBeVisible() failed
+  92  | 
+  93  |     // Wait for Whereby to actually connect (the "Connected" status
+  94  |     // pill appears as a sibling of the iframe). Without this, the
+  95  |     // Show Playspace button click can silently no-op while Whereby
+  96  |     // is still negotiating, and the panel never opens.
+  97  |     await this.page
+  98  |       .getByText(/^Connected$/i)
+  99  |       .first()
+  100 |       .waitFor({ state: 'visible', timeout: 30_000 })
+  101 |       .catch(() => {
+  102 |         // Non-fatal: some sessions never show the pill but still
+  103 |         // render the panel correctly. Continue to click.
+  104 |       });
+  105 | 
+  106 |     // The panel is the only from-blue-50 gradient div that also animates
+  107 |     // (transition-all / duration-300, video-session/layout.tsx:1764) and
+  108 |     // toggles opacity-100 ↔ opacity-0. The two full-page loading screens
+  109 |     // (~1361/1386) share the gradient but are min-h-screen flex-centered and
+  110 |     // lack the transition — requiring transition-all excludes them so
+  111 |     // .first() can't latch onto a loading div.
+  112 |     const panelSel =
+  113 |       'div[class*="from-blue-50"][class*="transition-all"]';
+  114 |     const isOpen = (cls: string | null) =>
+  115 |       !!cls && /opacity-100/.test(cls) && !/opacity-0/.test(cls);
+  116 | 
+  117 |     const readClass = () =>
+  118 |       this.page
+  119 |         .locator(panelSel)
+  120 |         .first()
+  121 |         .getAttribute('class')
+  122 |         .catch(() => '' as string | null);
+  123 | 
+  124 |     let cls = await readClass();
+  125 |     if (!isOpen(cls)) {
+  126 |       await this.showPlayspaceButton.click();
+  127 |     }
+  128 | 
+  129 |     // Poll panel state up to 40s. Click the toggle every 8s if it
+  130 |     // hasn't reacted yet (Whereby/iframe race can swallow clicks).
+  131 |     const t0 = Date.now();
+  132 |     let nextClickAt = 8_000;
+  133 |     while (Date.now() - t0 < 40_000) {
+  134 |       cls = await readClass();
+  135 |       if (isOpen(cls)) break;
+  136 | 
+  137 |       const elapsed = Date.now() - t0;
+  138 |       if (elapsed > nextClickAt) {
+  139 |         const stillShow = await this.showPlayspaceButton.count();
+  140 |         if (stillShow > 0) {
+  141 |           await this.showPlayspaceButton.click().catch(() => {});
+  142 |         }
+  143 |         nextClickAt += 8_000;
+  144 |       }
+  145 |       await this.page.waitForTimeout(500);
+  146 |     }
+  147 |     if (!isOpen(cls)) {
+  148 |       throw new Error(
+  149 |         `Playspace panel never reached opacity-100 after 40s. Final class: ${cls}`,
+  150 |       );
+  151 |     }
+  152 | 
+  153 |     // Wait for the 300ms CSS transition to settle.
+  154 |     await this.page.waitForTimeout(600);
+  155 |   }
+  156 | 
+  157 |   /**
+  158 |    * True if the open playspace panel is on the selection screen
+  159 |    * (Playrooms / Toolkits tabs visible). False if the backend
+  160 |    * auto-routed the host directly into a saved playroom/toolkit.
+  161 |    * Call after `openPlayspace()`. Waits up to `timeoutMs` for either
+  162 |    * outcome to become apparent.
+  163 |    */
+  164 |   async inSelectionScreen(timeoutMs = 30_000): Promise<boolean> {
+  165 |     // Two distinguishing signals: URL containing /playroom/<x> or
+  166 |     // /toolkit/<x> means we're inside a destination; Playrooms tab
+  167 |     // visible means we're on the selection screen. The close-
+  168 |     // playspace-button is unreliable on its own — it can briefly
+  169 |     // render at URL `/video-session` (base) during a loading state
+  170 |     // before the panel content fully hydrates.
+  171 |     const isDestUrl = (u: string) =>
+  172 |       /\/video-session\/(playroom|toolkit)\/[a-z-]+/.test(u);
+  173 |     const t0 = Date.now();
+  174 |     while (Date.now() - t0 < timeoutMs) {
+  175 |       if (isDestUrl(this.page.url())) return false;
+  176 |       const tabVisible = await this.playroomsTab.isVisible().catch(() => false);
+  177 |       if (tabVisible) return true;
+  178 |       await this.page.waitForTimeout(500);
+  179 |     }
+  180 |     const url = this.page.url();
+  181 |     const body = await this.page.evaluate(() =>
+  182 |       (document.body.innerText || '').trim().slice(0, 500),
+  183 |     );
+  184 |     throw new Error(
+  185 |       `inSelectionScreen: neither Playrooms tab nor destination URL appeared within ${timeoutMs}ms. ` +
+  186 |         `URL: ${url}\nbody:\n${body}`,
+  187 |     );
+  188 |   }
+  189 | 
+  190 |   /**
+  191 |    * Switch tabs inside the open playspace panel. Uses force:true
+```
