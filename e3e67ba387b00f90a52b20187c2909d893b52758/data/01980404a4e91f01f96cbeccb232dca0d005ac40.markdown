@@ -1,0 +1,234 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: suite/e2e/dashboard/activity-shelf.journey.spec.ts >> Activity Shelf >> 5. search-by-title narrows the list
+- Location: suite/e2e/dashboard/activity-shelf.journey.spec.ts:171:7
+
+# Error details
+
+```
+Test timeout of 30000ms exceeded.
+```
+
+```
+Error: apiRequestContext.get: Request context disposed.
+Call log:
+  - → GET https://agentic-ps-staging.playspace.health/api/activities
+    - user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.7727.15 Safari/537.36
+    - accept: */*
+    - accept-encoding: gzip,deflate,br
+    - cookie: _gcl_au=1.1.622007006.1784295434; _ga=GA1.1.213425163.1784295435; _ga_1SHE26PCJC=GS2.1.s1784295435$o1$g0$t1784295435$j60$l0$h0; playspace-tokens=2YW%2BikiVqiCdoLExrQ803lOqa8vI0d1UP7DtT5ToYafPdI8794SEuIDrvIvp%2BxvWwWD%2FTT4XbmXHl3YBmiItqyW2qxOrH2qUSdwcY3khoGdcFi8iZS2Lycp6vs5qwuy41IVNRz6fWaRGxZM9QIZZpe%2Bh7fqUo7pa3kl0B3ZzqaaCO7k9xIRDllvnbdMv0TGk9wOWrf%2FwvS5CTo1DHismEDz8xBGiuxaiIV%2FT2gM1oNAfxw7Y6iVpG8xOnWM85IFigtRbfNmcmGhrp0Z3mcbu1Wm9mMpsyy9cAw8zHKV7SYEKFyLaTUNfcV1HFbcO3Mk1hImmfRr0RGvt%2BRD3Ju%2B9GGKQ54r6UaY%2BKfy%2Bk30INNuBV9WXxKlY3f6rudxrYWOJ1SBofoXwVqGF7HgSGz6xzMK9ejTjw4mDb6b8FgdyFAYmOxJWiQJb52PPXLPBoYh09xUIzG6FVkBQo8ogq65IhO19U2xOThyxTJXZxms7Q64d%2BH%2BO6aLbSZnimMR9Wf0iYs6BKX7ShvqiS6TsbHZu4GTflHAHg1biEEHzZINRq2%2Ftdpp5FUY5r89yT7me5fNFu26AhwGngvdPCZ1qmsm8b7bO3W%2B8s0FK3Tg%2B%2F9xgaU0%2FcOTXn%2F1RWHqFht9f8F%2B3aZT05JW1rZ3idzYcKbFb3x1VOP%2BBjL7OGTXE5rv2Ba5SkMzLtSejaHFJvY%2FTe8zJBVtYQMeJ9rPzXirscxHV1AsRheCy%2BVOEAGK%2FfyNv9rbMnbjZpy9FpW3SqiNyBCc2lQy9eneWd9bEHHLignbUOwot2crFPzj3smPKHkIbQRn06w%2B8coi2rWWZia1qWhrhWiNGKy7%2BC8EBVsDhKEWFFJb4416ILCd%2B7qO%2ByPpQVqoiSeSmj9dzN%2BNHv89jFZAWJscdeC3%2B7HKATbXTPQ8vXhBFxpX1%2FN8eGXpKszukvaP06bqvsHtwyTYTsuZT9rscYvtZ3NMBsazwrhFCjq4yJwe8Zqn%2BIJ6VmCrWfLGK5YXv4dW%2Fq9OoacQ2bADDar%2FhE%2Ba2ICc9Sbz7OyOwaOe2%2FSTvfn%2Be75wDQvYuCcbSBbY0HrYL%2Fb%2F3ZFdzBUq3d0KU0l8qYSIt20KeR5p%2B0lRyu%2BUGmmeueVoDdC42iuf7rlB5jHUvEp8It68CSBfK2UaK%2B9DhRGa3vYwyiPIwO%2BiJONdHYt9GyH4bibez9BPTsFbhWQoRs1ngioob3drQARBbXKIcnFusdLIg64y6REV2bJiuu2BZIrA0%2B9ajzm8PStpTzCLp2YWyZ8%2FXW4ZmQ0WUue1dmhUc2VTw11%2FLjk%2FyjdgsnO%2Bk26pDUY703EdbSSJCg4dtPeJuTfclZXrrof4rcdWohfWeHQkg4TN5xBCeTlf4JXG3mwn8vVcsRaPsgSl3rFO1PfcIoGdeRtuOIWhOfGY7ygMpbUi%2FdOTJa9C2J9JulkHZikxTlp0z7RTaMXv0zkKZa5lud%2FbwI%2BrZk%2BqV1iU7saoCfxXN3LvITh99inzXerLeGEIsE2VIgKR4PbktdWcZRkUOqYbqhqBw7HuaI%2FNrNe94b7P3ihTfzPSI1IRSoHQMsfOwSElBGq27ovzSjUn5JDQSjqG5l%2FyoLjHl0m0a4MDWEwjQhq%2FiB%2F0bgqldyspDqZREMm9JJOZeuPoAF7G8NAOTfON9zVUFiCgkFSSXJIIZABm78wJquF1ohopV9wHfAefWfAMezbiNTi3csy8xlh1RjYnrSM8x1IAC2UBRB537g1F4DKP8yd9M5ykk8Hp9GEhQnHqPPheMdABCWkhy%2Fo7v9LgJksR4KNf2K8Ty4zd%2BurM2efN0ecgj%2FJZpAGUgDCBS%2FctSe%2BZo7DphnAU3XdVsNQ0BWDAfin3colVxVeC9DbBtxOvDmnrLZYvOt2xFpiNXBTzy4Jag4wKddO6uuckvUFMcXtNYa6Egxd2DxNNhUNc7wTkJEJ5MTLu3dyApe7%2BjTKKGGbVq1V73FR4dkpq%2FfTMuTbXxDhKMv%2F5a9GUfDUistwJkGct3L2Z1uGChWtz98wl2gXvx2Wv%2BwoNb3tg4dfP2tMAiSl9g497O3CuEtyZTLcq5cIiZtoGfjsyjUMRBzu9H011yYFW0eHBtD34hnv0rmNyt6Jt3HGY7O%2F5Sv1y81mTGPIfh43oT%2Bx25pFT%2Fa4CI%2F7cXKiK7%2FjzZFYhFzDZk5mk25H%2FCOLkCTOh%2BVLEaniOOwarQslK%2B%2Fwod1KVUqXaq1S4D7cS2brpWG6AeYwHXnZdBz94sppuOJAzgP9Gtk8k8tjTr2QAJbodE36HeFLjBCCv3MnRK6ib4czidmn0Q9L46j2IbmVxDzJVNi0FahFYcdlwCGDsHDekD%2BLmuF2Wv3%2BaJdna%2FLNVCZ9jRIfcqVlWijGUjBCbMa1KRvDX0i%2BXY8XyVpAiolqgSJqfKYx5M7qJpX2l%2FG8rhA1toHyd3NRWLPmDaq9vKdg2DKP7SNuDxujKCyKKn4HafsT3sQyet59X%2Fv3vR8azLJPM3uCGIRWqEUnRs3ZPdqyYlVygBOrrcznOHckDydkpMd%2F12eo%2FZmgzIZjzUMiOWMPbVEffrrS5TR1OONeXfxDiz4yJgQ7mYO7z4NPa6ZR6YmiZjLA8L62ENImGmNu%2FuEMFIJ0h%2Fw3%2FlcFjTeDJ7qUVX5NrdjJ1KBQWyhP80ZzPrTU8tZXJp2zgKkAHEPrN4LCMGcSOlCLf6v%2BSp9KsCSmeKQiI9Y8a8DxzurE9twrBnkGc1t5xC11OUflfLPgdfw5JK0rqpH2pOR74qWnYhIKk4aNrkTCBQU6rYWTGQedyH8ZQXDULmplARFyZInlyuGLE6xYXzPcXq0T1r97uIdCXe4KN%2FtXNFyBMG9hm9kV%2BzbY9SOJfrnkAL3K53NwqXL6%2B664RuYaA4F%2BMjosKtCoqUJuUFJ7N%2BQs4GXfmLtxk3Np%2FJusNrMbw36agQaAL79fivrXfAikT0Q94snIhKdck1z5c729e%2Bh9EAEBp7yRCSd%2FCrQ5Ux2ojmJzBsbUKDCFcPiqIE83LF%2FSjLow8S0eWUXTl7XIT0r84fGsHW81YynmuiqV4TwDqnDJ4SOV57%2F3MxaSjN%2BA%3D%3D; playspace-session=eyJzdWIiOiJhdXRoMHw2OTMyZjQ2MWQxZDQyYjVkNGViOTNhZjciLCJlbWFpbCI6ImpsZGFtc0B5b3BtYWlsLmNvbSIsIm5hbWUiOiJqbGRhbXNAeW9wbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwib25ib2FyZGVkIjpmYWxzZSwicGVybWlzc2lvbnMiOlsibWFuYWdlOmFkbWlucyIsIm1hbmFnZTphbGwtY2xpZW50cyIsIm1hbmFnZTphbGwtY2xpbmljLWNvbW11bml0eSIsIm1hbmFnZTpjbGluaWMtZGV0YWlscyIsIm1hbmFnZTpsaWNlbnNlcyIsIm1hbmFnZTptZW1iZXJzIiwibWFuYWdlOm93bi1jb250ZW50IiwibWFuYWdlOm93bmVycyIsIm1hbmFnZTpwYXltZW50LW1ldGhvZCIsIm1vZGlmeTpjbGllbnQtcHJvZmlsZXMiLCJwdXJjaGFzZTpjbGluaWMtYWRkb25zIiwicHVyY2hhc2U6c2VsZi1hZGRvbnMiLCJzY2hlZHVsZTpvdGhlcnMiLCJzY2hlZHVsZTpvd24iLCJ0cmFuc2ZlcjpjbGllbnRzIiwidmlldzpjbGluaWMtY29tbXVuaXR5IiwidmlldzptZW1iZXJzIiwiYWNjZXNzOm93bi1tYXRlcmlhbHMiLCJtYW5hZ2U6b3duLWNsaWVudHMiXSwicm9sZXMiOlsiY2xpbmljLW93bmVyIiwic29sby10aGVyYXBpc3QiXSwicGVybWlzc2lvblZlcnNpb24iOjEsInNlc3Npb25JZCI6IjA1ZDRhZWM2LTU1MDUtNGQ4ZC04MTJkLTQ0Y2ZjOWUzNzJhNyIsInRva2VuRXhwaXJlc0F0IjoxNzg0MzgxODQxOTk1LCJoYXNSZWZyZXNoVG9rZW4iOnRydWUsImNyZWF0ZWRBdCI6MTc4NDI5NTQ0MTk5NSwiZXhwaXJlc0F0IjoxNzg0MzgxODQxOTk1LCJsYXN0QWN0aXZpdHlBdCI6MTc4NDI5NTQ0MjQwOX0; playspace-session-sig=187f805a.1784295442409; ph_phc_xfx6VN0K7N6Ha4Efh0usZcqQjeUO8dEZPy0RwTngfQb_posthog=%7B%22%24device_id%22%3A%22019f704b-a7e9-7308-a9aa-64feb44de067%22%2C%22distinct_id%22%3A%22019f704b-a7e9-7308-a9aa-64feb44de067%22%2C%22%24sesid%22%3A%5B1784295442625%2C%22019f704b-a977-7fdc-afe4-e7fc40e1b782%22%2C1784295434615%5D%2C%22%24user_state%22%3A%22anonymous%22%7D
+
+```
+
+# Test source
+
+```ts
+  73  |       return;
+  74  |     }
+  75  |     const filter = page
+  76  |       .getByRole('searchbox')
+  77  |       .or(page.getByPlaceholder(/search|filter/i))
+  78  |       .or(page.getByRole('combobox', { name: /filter|type|category/i }))
+  79  |       .or(page.getByRole('button', { name: /filter/i }))
+  80  |       .first();
+  81  |     if (!(await filter.isVisible({ timeout: 5_000 }).catch(() => false))) {
+  82  |       test.info().annotations.push({
+  83  |         type: 'env-condition',
+  84  |         description: 'No filter/search affordance visible on activity-shelf. Either the page is empty (no need for filter) or affordance copy differs.',
+  85  |       });
+  86  |       test.skip(true, 'no filter affordance on this env');
+  87  |       return;
+  88  |     }
+  89  |     await expect(filter).toBeVisible();
+  90  |   });
+  91  | 
+  92  |   test('3. activity-shelf list endpoint returns a sane shape', async ({ request }) => {
+  93  |     let working: { url: string; body: Record<string, unknown> } | null = null;
+  94  |     for (const url of ACTIVITY_API_CANDIDATES) {
+  95  |       const r = await request.get(url);
+  96  |       if (r.status() === 404) continue;
+  97  |       expect(
+  98  |         r.status(),
+  99  |         `red flag: ${url} returned ${r.status()}`,
+  100 |       ).toBeLessThan(500);
+  101 |       if (r.ok()) {
+  102 |         working = { url, body: (await r.json()) as Record<string, unknown> };
+  103 |         break;
+  104 |       }
+  105 |     }
+  106 |     if (!working) {
+  107 |       test.info().annotations.push({
+  108 |         type: 'product-issue',
+  109 |         description: `No activity-shelf list endpoint reachable: ${ACTIVITY_API_CANDIDATES.join(', ')}. Filed.`,
+  110 |       });
+  111 |       test.skip(true, 'no activity list endpoint reachable');
+  112 |       return;
+  113 |     }
+  114 |     const arr =
+  115 |       (working.body['activities'] as unknown[] | undefined) ??
+  116 |       (working.body['shelf'] as unknown[] | undefined) ??
+  117 |       (working.body['data'] as unknown[] | undefined) ??
+  118 |       (Array.isArray(working.body) ? (working.body as unknown as unknown[]) : null);
+  119 |     expect(
+  120 |       Array.isArray(arr),
+  121 |       `red flag: ${working.url} must return an array. Body keys: ${Object.keys(working.body).join(', ')}`,
+  122 |     ).toBe(true);
+  123 |   });
+  124 | 
+  125 |   test('4. Filter-by-type popover narrows the list', async ({ page }) => {
+  126 |     await page.goto('/dashboard/activity-shelf', { waitUntil: 'domcontentloaded' });
+  127 | 
+  128 |     const filterBtn = page.getByRole('button', { name: /^filter$/i }).first();
+  129 |     await expect(filterBtn).toBeVisible({ timeout: 10_000 });
+  130 | 
+  131 |     const beforeCount = await page.locator('h3').count();
+  132 |     await filterBtn.click();
+  133 | 
+  134 |     // Popover must expose at least the documented type checkboxes.
+  135 |     const popover = page
+  136 |       .locator('[role="dialog"], [role="menu"], [data-radix-popper-content-wrapper]')
+  137 |       .first();
+  138 |     await expect(
+  139 |       popover,
+  140 |       'red flag: Filter button click did not open a popover/menu',
+  141 |     ).toBeVisible();
+  142 | 
+  143 |     // The 3 known type filters: Worksheet / Storybook / Form.
+  144 |     for (const label of ['Worksheet', 'Storybook', 'Form']) {
+  145 |       const cb = popover.getByRole('checkbox', { name: new RegExp(`^${label}$`, 'i') });
+  146 |       await expect(
+  147 |         cb.first(),
+  148 |         `red flag: filter popover missing "${label}" checkbox`,
+  149 |       ).toBeVisible();
+  150 |     }
+  151 | 
+  152 |     // Toggle Worksheet only — the visible list must change.
+  153 |     await popover.getByRole('checkbox', { name: /^worksheet$/i }).first().click();
+  154 |     // Close popover so cards reflow if needed
+  155 |     await page.keyboard.press('Escape');
+  156 | 
+  157 |     // Wait up to 3s for the visible count to differ from the baseline.
+  158 |     await expect
+  159 |       .poll(async () => page.locator('h3').count(), {
+  160 |         timeout: 3_000,
+  161 |         message: `applying type filter did not change visible count within 3s (before=${beforeCount})`,
+  162 |       })
+  163 |       .not.toBe(beforeCount);
+  164 |     const afterCount = await page.locator('h3').count();
+  165 |     expect(
+  166 |       afterCount,
+  167 |       `red flag: applying type filter did not change the visible count (before=${beforeCount}, after=${afterCount})`,
+  168 |     ).not.toBe(beforeCount);
+  169 |   });
+  170 | 
+  171 |   test('5. search-by-title narrows the list', async ({ page, request }) => {
+  172 |     // Pick a known title from /api/activities so we can search for it.
+> 173 |     const r = await request.get('/api/activities');
+      |                             ^ Error: apiRequestContext.get: Request context disposed.
+  174 |     if (!r.ok()) {
+  175 |       test.skip(true, '/api/activities not OK; cannot pick a known title');
+  176 |       return;
+  177 |     }
+  178 |     const arr = (await r.json()) as Array<{ title?: string }>;
+  179 |     const target = arr.find((a) => a.title && a.title.length > 4);
+  180 |     if (!target?.title) {
+  181 |       test.skip(true, 'no titled activity to search for');
+  182 |       return;
+  183 |     }
+  184 | 
+  185 |     await page.goto('/dashboard/activity-shelf', { waitUntil: 'domcontentloaded' });
+  186 |     const searchInput = page.getByPlaceholder(/search by title/i);
+  187 |     await expect(searchInput).toBeVisible({ timeout: 10_000 });
+  188 | 
+  189 |     const beforeCount = await page.locator('h3').count();
+  190 |     // Use a 5-char prefix to avoid title overlap edge cases.
+  191 |     const query = target.title.slice(0, 5);
+  192 |     await searchInput.fill(query);
+  193 |     // Search is debounced + API-backed. Wait for the debounced request
+  194 |     // to settle before reading the card count.
+  195 |     await page.waitForLoadState('networkidle', { timeout: 3_000 }).catch(() => {});
+  196 |     const afterCount = await page.locator('h3').count();
+  197 |     expect(
+  198 |       afterCount,
+  199 |       `red flag: search for "${query}" did not narrow the list (before=${beforeCount}, after=${afterCount})`,
+  200 |     ).toBeLessThanOrEqual(beforeCount);
+  201 |     expect(
+  202 |       afterCount,
+  203 |       `red flag: search for "${query}" returned 0 matches even though "${target.title}" exists`,
+  204 |     ).toBeGreaterThan(0);
+  205 |   });
+  206 | 
+  207 |   test('6. bulk actions — publish / duplicate / share / delete affordances', async ({
+  208 |     page,
+  209 |   }) => {
+  210 |     test.fixme(true, 'PRODUCT/UI: no bulk-action affordance on activity-shelf (no select-all, no checkboxes, no per-card action menus). Source pointer says "Bulk publish/duplicate/share/delete". Remove fixme once UI ships.');
+  211 | 
+  212 |     await page.goto('/dashboard/activity-shelf', { waitUntil: 'domcontentloaded' });
+  213 | 
+  214 |     // When the feature ships, this branch activates. Look for any of:
+  215 |     //   - Select-all checkbox
+  216 |     //   - Per-card checkboxes
+  217 |     //   - Bulk-action toolbar (Publish / Duplicate / Share / Delete buttons
+  218 |     //     visible after selecting at least one item)
+  219 |     const checkboxes = await page.getByRole('checkbox').count();
+  220 |     expect(
+  221 |       checkboxes,
+  222 |       'red flag: bulk-select checkboxes missing — practitioner cannot multi-select activities',
+  223 |     ).toBeGreaterThan(0);
+  224 | 
+  225 |     // Once at least one card is selectable, the toolbar should expose
+  226 |     // Publish / Duplicate / Share / Delete buttons.
+  227 |     await page.getByRole('checkbox').first().click();
+  228 |     for (const action of ['publish', 'duplicate', 'share', 'delete']) {
+  229 |       const btn = page.getByRole('button', { name: new RegExp(action, 'i') }).first();
+  230 |       await expect(
+  231 |         btn,
+  232 |         `red flag: bulk "${action}" affordance missing after selection`,
+  233 |       ).toBeVisible({ timeout: 5_000 });
+  234 |     }
+  235 |   });
+  236 | 
+  237 |   test('7. drag-drop reorder', async ({ page }) => {
+  238 |     test.fixme(true, 'PRODUCT/UI: no draggable elements on activity-shelf cards. Source pointer says "Drag-drop reorder". Remove fixme once draggable handles are added.');
+  239 | 
+  240 |     await page.goto('/dashboard/activity-shelf', { waitUntil: 'domcontentloaded' });
+  241 | 
+  242 |     // When the feature ships, at least one card must expose either:
+  243 |     //   - draggable="true"
+  244 |     //   - a drag-handle testid (e.g. data-testid="drag-handle-...")
+  245 |     //   - role="button" aria-roledescription="draggable"
+  246 |     const draggableCount = await page
+  247 |       .locator('[draggable="true"], [data-testid*="drag-handle"], [aria-roledescription="draggable"]')
+  248 |       .count();
+  249 |     expect(
+  250 |       draggableCount,
+  251 |       'red flag: no draggable handles found — practitioner cannot reorder activities',
+  252 |     ).toBeGreaterThan(0);
+  253 |   });
+  254 | 
+  255 |   test('8. tag / duration filters (beyond type)', async ({ page }) => {
+  256 |     test.fixme(true, 'PRODUCT/UI: filter popover only exposes type (Worksheet/Storybook/Form). Source pointer says filter by type/tags/duration. Remove fixme once tags + duration filters land.');
+  257 | 
+  258 |     await page.goto('/dashboard/activity-shelf', { waitUntil: 'domcontentloaded' });
+  259 |     await page.getByRole('button', { name: /^filter$/i }).first().click();
+  260 | 
+  261 |     const popover = page
+  262 |       .locator('[role="dialog"], [role="menu"], [data-radix-popper-content-wrapper]')
+  263 |       .first();
+  264 |     await expect(popover).toBeVisible({ timeout: 3_000 });
+  265 |     const popoverText = ((await popover.textContent()) || '').toLowerCase();
+  266 | 
+  267 |     // Tag filter — typically renders a row of tag chips or a "Tags" heading.
+  268 |     expect(
+  269 |       popoverText.includes('tag'),
+  270 |       'red flag: filter popover does not expose Tags filter',
+  271 |     ).toBe(true);
+  272 | 
+  273 |     // Duration filter — usually a slider or radio (e.g. "<5 min", "5-15 min", ">15 min").
+```
