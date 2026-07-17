@@ -1,0 +1,176 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: suite/e2e/dashboard/clinic-client-detail.journey.spec.ts >> Clinic client detail >> renders a client’s detail (name + Personal Information tab)
+- Location: suite/e2e/dashboard/clinic-client-detail.journey.spec.ts:19:7
+
+# Error details
+
+```
+Error: expect(locator).toHaveCount(expected) failed
+
+Locator:  getByText(/client not found/i)
+Expected: 0
+Received: 1
+Timeout:  15000ms
+
+Call log:
+  - Expect "toHaveCount" with timeout 15000ms
+  - waiting for getByText(/client not found/i)
+    18 × locator resolved to 1 element
+       - unexpected value "1"
+
+```
+
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e5]:
+        - img "PlaySpace Logo" [ref=e7]
+        - generic [ref=e8]: PlaySpace
+      - generic [ref=e10]:
+        - link "Home" [ref=e12] [cursor=pointer]:
+          - /url: /dashboard/home
+          - generic [ref=e14]:
+            - img [ref=e15]
+            - generic [ref=e18]: Home
+        - generic [ref=e19]:
+          - generic [ref=e20]: Session Prep
+          - link "Video Session" [ref=e21] [cursor=pointer]:
+            - /url: /dashboard/session
+            - generic [ref=e23]:
+              - img [ref=e24]
+              - generic [ref=e27]: Video Session
+          - link "In-Person Tools" [ref=e28] [cursor=pointer]:
+            - /url: /dashboard/in-person-session
+            - generic [ref=e30]:
+              - img [ref=e31]
+              - generic [ref=e34]: In-Person Tools
+          - link "Creative Suite" [ref=e35] [cursor=pointer]:
+            - /url: /dashboard/creative-suite
+            - generic [ref=e37]:
+              - img [ref=e38]
+              - generic [ref=e44]: Creative Suite
+        - generic [ref=e45]:
+          - generic [ref=e46]: Your Practice
+          - link "Calendar" [ref=e47] [cursor=pointer]:
+            - /url: /dashboard/appointments
+            - generic [ref=e49]:
+              - img [ref=e50]
+              - generic [ref=e52]: Calendar
+          - link "Clients" [ref=e53] [cursor=pointer]:
+            - /url: /dashboard/clients
+            - generic [ref=e55]:
+              - img [ref=e56]
+              - generic [ref=e60]: Clients
+          - link "Clinical Notes" [ref=e61] [cursor=pointer]:
+            - /url: /dashboard/clinical-notes
+            - generic [ref=e63]:
+              - img [ref=e64]
+              - generic [ref=e66]: Clinical Notes
+          - link "Forms" [ref=e67] [cursor=pointer]:
+            - /url: /dashboard/forms
+            - generic [ref=e69]:
+              - img [ref=e70]
+              - generic [ref=e73]: Forms
+        - generic [ref=e74]:
+          - generic [ref=e75]: Discover
+          - link "Community" [ref=e76] [cursor=pointer]:
+            - /url: /dashboard/community
+            - generic [ref=e78]:
+              - img [ref=e79]
+              - generic [ref=e83]: Community
+      - generic [ref=e84]:
+        - button "What's new — version 0.16.0" [ref=e85] [cursor=pointer]:
+          - generic [ref=e87]: v0.16.0
+          - generic [ref=e88]: What's new
+        - link "Settings" [ref=e89] [cursor=pointer]:
+          - /url: /dashboard/settings
+          - generic [ref=e90]:
+            - img [ref=e91]
+            - generic [ref=e94]: Settings
+    - generic [ref=e95]:
+      - banner [ref=e96]:
+        - generic [ref=e97]:
+          - button "Collapse sidebar" [ref=e98] [cursor=pointer]:
+            - img [ref=e99]
+          - navigation "Breadcrumb" [ref=e103]:
+            - link "Clients" [ref=e104] [cursor=pointer]:
+              - /url: /dashboard/clients
+            - img [ref=e105]
+            - generic [ref=e107]: Client
+        - button "SE Shard 2 E2E" [ref=e109] [cursor=pointer]:
+          - generic [ref=e111]: SE
+          - generic [ref=e112]: Shard 2 E2E
+          - img [ref=e113]
+      - main [ref=e115]:
+        - generic [ref=e117]:
+          - heading "Client not found" [level=2] [ref=e118]
+          - paragraph [ref=e119]: The client you're looking for doesn't exist or you don't have access.
+          - button "Back to Clients" [ref=e120] [cursor=pointer]
+  - region "Notifications (F8)":
+    - list
+  - region "Notifications alt+T"
+  - alert [ref=e121]
+  - iframe [ref=e122]:
+    
+  - button "Open Intercom Messenger" [ref=e123] [cursor=pointer]:
+    - img [ref=e125]
+    - generic:
+      - img
+```
+
+# Test source
+
+```ts
+  1  | import { test, expect } from '@playwright/test';
+  2  | import { ClinicClientDetailPage } from '../../../pages/ClinicClientDetailPage';
+  3  | 
+  4  | // QA journey — clinic client detail page (/dashboard/clinic-clients/<id>).
+  5  | //
+  6  | // Closes a zero-coverage gap: the clinic client detail/edit surface (reached
+  7  | // from the Clients list) had no spec. Grounded live (staging 2026-07-01):
+  8  | // GET /api/clinic/clients/<id> backs a tabbed detail (name + Personal
+  9  | // Information / General); an unknown id shows "Client not found".
+  10 | //
+  11 | // PHI: shows a client's personal details — artifacts disabled file-wide.
+  12 | // No snapshot assertion (data-driven personal details).
+  13 | 
+  14 | test.use({ screenshot: 'off', video: 'off', trace: 'off' });
+  15 | 
+  16 | test.describe('Clinic client detail', () => {
+  17 |   test.describe.configure({ timeout: 90_000 });
+  18 | 
+  19 |   test('renders a client’s detail (name + Personal Information tab)', async ({ page, request }) => {
+  20 |     const clientId = await ClinicClientDetailPage.firstClientId(request);
+  21 |     const cc = new ClinicClientDetailPage(page);
+  22 |     await cc.open(clientId);
+  23 | 
+> 24 |     await expect(cc.notFound).toHaveCount(0);
+     |                               ^ Error: expect(locator).toHaveCount(expected) failed
+  25 |     await expect(cc.heading, 'the client name heading must render').toBeVisible();
+  26 |     await expect(cc.personalInfoTab).toBeVisible();
+  27 |     await expect(cc.generalSection).toBeVisible();
+  28 |   });
+  29 | 
+  30 |   test('an unknown client id shows "Client not found"', async ({ page }) => {
+  31 |     const cc = new ClinicClientDetailPage(page);
+  32 |     await cc.gotoRaw('00000000-0000-0000-0000-000000000000');
+  33 | 
+  34 |     await expect(
+  35 |       cc.notFound,
+  36 |       'an unknown client id must surface the not-found state',
+  37 |     ).toBeVisible({ timeout: 30_000 });
+  38 |     await expect(cc.personalInfoTab).toHaveCount(0);
+  39 |   });
+  40 | });
+  41 | 
+```

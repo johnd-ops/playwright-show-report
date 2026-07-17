@@ -1,0 +1,418 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: suite/e2e/dashboard/activity-shelf.journey.spec.ts >> Activity Shelf >> 4. Filter-by-type popover narrows the list
+- Location: suite/e2e/dashboard/activity-shelf.journey.spec.ts:125:7
+
+# Error details
+
+```
+Error: applying type filter did not change visible count within 3s (before=7)
+
+expect(received).not.toBe(expected) // Object.is equality
+
+Expected: not 7
+
+Call Log:
+- Timeout 3000ms exceeded while waiting on the predicate
+```
+
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e5]:
+        - img "PlaySpace Logo" [ref=e7]
+        - generic [ref=e8]: PlaySpace
+      - generic [ref=e10]:
+        - link "Home" [ref=e12] [cursor=pointer]:
+          - /url: /dashboard/home
+          - generic [ref=e14]:
+            - img [ref=e15]
+            - generic [ref=e18]: Home
+        - generic [ref=e19]:
+          - generic [ref=e20]: Session Prep
+          - link "Video Session" [ref=e21] [cursor=pointer]:
+            - /url: /dashboard/session
+            - generic [ref=e23]:
+              - img [ref=e24]
+              - generic [ref=e27]: Video Session
+          - link "In-Person Tools" [ref=e28] [cursor=pointer]:
+            - /url: /dashboard/in-person-session
+            - generic [ref=e30]:
+              - img [ref=e31]
+              - generic [ref=e34]: In-Person Tools
+          - link "Creative Suite" [ref=e35] [cursor=pointer]:
+            - /url: /dashboard/creative-suite
+            - generic [ref=e37]:
+              - img [ref=e38]
+              - generic [ref=e44]: Creative Suite
+        - generic [ref=e45]:
+          - generic [ref=e46]: Your Practice
+          - link "Calendar" [ref=e47] [cursor=pointer]:
+            - /url: /dashboard/appointments
+            - generic [ref=e49]:
+              - img [ref=e50]
+              - generic [ref=e52]: Calendar
+          - link "Clients" [ref=e53] [cursor=pointer]:
+            - /url: /dashboard/clients
+            - generic [ref=e55]:
+              - img [ref=e56]
+              - generic [ref=e60]: Clients
+          - link "Clinical Notes" [ref=e61] [cursor=pointer]:
+            - /url: /dashboard/clinical-notes
+            - generic [ref=e63]:
+              - img [ref=e64]
+              - generic [ref=e66]: Clinical Notes
+          - link "Forms" [ref=e67] [cursor=pointer]:
+            - /url: /dashboard/forms
+            - generic [ref=e69]:
+              - img [ref=e70]
+              - generic [ref=e73]: Forms
+        - generic [ref=e74]:
+          - generic [ref=e75]: Discover
+          - link "Community" [ref=e76] [cursor=pointer]:
+            - /url: /dashboard/community
+            - generic [ref=e78]:
+              - img [ref=e79]
+              - generic [ref=e83]: Community
+      - generic [ref=e84]:
+        - button "What's new — version 0.16.0" [ref=e85] [cursor=pointer]:
+          - generic [ref=e87]: v0.16.0
+          - generic [ref=e88]: What's new
+        - link "Settings" [ref=e89] [cursor=pointer]:
+          - /url: /dashboard/settings
+          - generic [ref=e90]:
+            - img [ref=e91]
+            - generic [ref=e94]: Settings
+    - generic [ref=e95]:
+      - banner [ref=e96]:
+        - generic [ref=e97]:
+          - button "Collapse sidebar" [ref=e98] [cursor=pointer]:
+            - img [ref=e99]
+          - navigation "Breadcrumb" [ref=e103]:
+            - generic [ref=e104]: Activity Shelf
+        - button "SE Shard 2 E2E" [ref=e106] [cursor=pointer]:
+          - generic [ref=e108]: SE
+          - generic [ref=e109]: Shard 2 E2E
+          - img [ref=e110]
+      - main [ref=e112]:
+        - generic [ref=e114]:
+          - generic [ref=e115]:
+            - heading "Activity Shelf" [level=1] [ref=e116]
+            - paragraph [ref=e117]: Create and manage activity templates for in-person and video sessions
+          - generic [ref=e118]:
+            - generic [ref=e119] [cursor=pointer]:
+              - img "Generate storybook" [ref=e121]
+              - generic [ref=e122]:
+                - heading "Generate storybook" [level=3] [ref=e123]
+                - paragraph [ref=e124]: Use AI to write stories and generate images in your chosen art style
+            - generic [ref=e125] [cursor=pointer]:
+              - img "Start from scratch" [ref=e127]
+              - generic [ref=e128]:
+                - heading "Start from scratch" [level=3] [ref=e129]
+                - paragraph [ref=e130]: Design storybooks, worksheets, or slides with the editor
+            - generic [ref=e131] [cursor=pointer]:
+              - img "Upload a file" [ref=e133]
+              - generic [ref=e134]:
+                - heading "Upload a Document" [level=3] [ref=e135]
+                - paragraph [ref=e136]: Import your own PDF or resource to use in sessions
+          - generic [ref=e137]:
+            - generic [ref=e138]:
+              - img [ref=e139]
+              - textbox "Search by title..." [ref=e143]
+            - button "Filter 1" [active] [ref=e144] [cursor=pointer]:
+              - img
+              - text: Filter
+              - generic [ref=e145]: "1"
+              - img
+          - generic [ref=e147]:
+            - generic [ref=e148]:
+              - generic [ref=e149]:
+                - generic [ref=e150]: Title
+                - button [ref=e151] [cursor=pointer]:
+                  - img [ref=e152]
+              - generic [ref=e154]: Type
+              - generic [ref=e155]: Published
+              - generic [ref=e156]:
+                - generic [ref=e157]: Last Updated
+                - button [ref=e158] [cursor=pointer]:
+                  - img [ref=e159]
+            - generic [ref=e162]:
+              - generic [ref=e163] [cursor=pointer]:
+                - generic [ref=e164]:
+                  - img "Thought-Log" [ref=e166]
+                  - heading "Thought-Log" [level=3] [ref=e168]
+                - generic [ref=e170]: Worksheet
+                - generic [ref=e172]:
+                  - generic [ref=e173]:
+                    - switch [checked] [ref=e174]
+                    - generic [ref=e175]: Published
+                  - generic [ref=e176]: Available in playrooms & toolkits
+                - generic [ref=e178]: Today
+                - button "Open activity actions" [ref=e180]:
+                  - img
+              - generic [ref=e181] [cursor=pointer]:
+                - generic [ref=e182]:
+                  - img "Handout Anger Umbrella Emotion K" [ref=e184]
+                  - heading "Handout Anger Umbrella Emotion K" [level=3] [ref=e186]
+                - generic [ref=e188]: Worksheet
+                - generic [ref=e190]:
+                  - generic [ref=e191]:
+                    - switch [checked] [ref=e192]
+                    - generic [ref=e193]: Published
+                  - generic [ref=e194]: Available in playrooms & toolkits
+                - generic [ref=e196]: Today
+                - button "Open activity actions" [ref=e198]:
+                  - img
+              - generic [ref=e199] [cursor=pointer]:
+                - generic [ref=e200]:
+                  - img "Coloring Book Mandalas" [ref=e202]
+                  - heading "Coloring Book Mandalas" [level=3] [ref=e204]
+                - generic [ref=e206]: Worksheet
+                - generic [ref=e208]:
+                  - generic [ref=e209]:
+                    - switch [checked] [ref=e210]
+                    - generic [ref=e211]: Published
+                  - generic [ref=e212]: Available in playrooms & toolkits
+                - generic [ref=e214]: Today
+                - button "Open activity actions" [ref=e216]:
+                  - img
+              - generic [ref=e217] [cursor=pointer]:
+                - generic [ref=e218]:
+                  - img "Cognitive Distortions For Teens" [ref=e220]
+                  - heading "Cognitive Distortions For Teens" [level=3] [ref=e222]
+                - generic [ref=e224]: Worksheet
+                - generic [ref=e226]:
+                  - generic [ref=e227]:
+                    - switch [checked] [ref=e228]
+                    - generic [ref=e229]: Published
+                  - generic [ref=e230]: Available in playrooms & toolkits
+                - generic [ref=e232]: Today
+                - button "Open activity actions" [ref=e234]:
+                  - img
+  - region "Notifications (F8)":
+    - list
+  - region "Notifications alt+T"
+  - alert [ref=e235]
+  - iframe [ref=e236]:
+    
+  - button "Open Intercom Messenger" [ref=e237] [cursor=pointer]:
+    - img [ref=e239]
+    - generic:
+      - img
+```
+
+# Test source
+
+```ts
+  58  |       .or(page.locator('[data-testid*="activity"]').first())
+  59  |       .or(page.getByText(/no activities|create your first/i))
+  60  |       .first();
+  61  |     await expect(
+  62  |       anchor,
+  63  |       'red flag: /dashboard/activity-shelf did not render any list / heading / empty state',
+  64  |     ).toBeVisible({ timeout: 15_000 });
+  65  |   });
+  66  | 
+  67  |   test('2. filter or search affordance is reachable', async ({ page }) => {
+  68  |     const res = await page.goto('/dashboard/activity-shelf', {
+  69  |       waitUntil: 'domcontentloaded',
+  70  |     });
+  71  |     if (!res || res.status() === 404) {
+  72  |       test.skip(true, 'no /dashboard/activity-shelf route');
+  73  |       return;
+  74  |     }
+  75  |     const filter = page
+  76  |       .getByRole('searchbox')
+  77  |       .or(page.getByPlaceholder(/search|filter/i))
+  78  |       .or(page.getByRole('combobox', { name: /filter|type|category/i }))
+  79  |       .or(page.getByRole('button', { name: /filter/i }))
+  80  |       .first();
+  81  |     if (!(await filter.isVisible({ timeout: 5_000 }).catch(() => false))) {
+  82  |       test.info().annotations.push({
+  83  |         type: 'env-condition',
+  84  |         description: 'No filter/search affordance visible on activity-shelf. Either the page is empty (no need for filter) or affordance copy differs.',
+  85  |       });
+  86  |       test.skip(true, 'no filter affordance on this env');
+  87  |       return;
+  88  |     }
+  89  |     await expect(filter).toBeVisible();
+  90  |   });
+  91  | 
+  92  |   test('3. activity-shelf list endpoint returns a sane shape', async ({ request }) => {
+  93  |     let working: { url: string; body: Record<string, unknown> } | null = null;
+  94  |     for (const url of ACTIVITY_API_CANDIDATES) {
+  95  |       const r = await request.get(url);
+  96  |       if (r.status() === 404) continue;
+  97  |       expect(
+  98  |         r.status(),
+  99  |         `red flag: ${url} returned ${r.status()}`,
+  100 |       ).toBeLessThan(500);
+  101 |       if (r.ok()) {
+  102 |         working = { url, body: (await r.json()) as Record<string, unknown> };
+  103 |         break;
+  104 |       }
+  105 |     }
+  106 |     if (!working) {
+  107 |       test.info().annotations.push({
+  108 |         type: 'product-issue',
+  109 |         description: `No activity-shelf list endpoint reachable: ${ACTIVITY_API_CANDIDATES.join(', ')}. Filed.`,
+  110 |       });
+  111 |       test.skip(true, 'no activity list endpoint reachable');
+  112 |       return;
+  113 |     }
+  114 |     const arr =
+  115 |       (working.body['activities'] as unknown[] | undefined) ??
+  116 |       (working.body['shelf'] as unknown[] | undefined) ??
+  117 |       (working.body['data'] as unknown[] | undefined) ??
+  118 |       (Array.isArray(working.body) ? (working.body as unknown as unknown[]) : null);
+  119 |     expect(
+  120 |       Array.isArray(arr),
+  121 |       `red flag: ${working.url} must return an array. Body keys: ${Object.keys(working.body).join(', ')}`,
+  122 |     ).toBe(true);
+  123 |   });
+  124 | 
+  125 |   test('4. Filter-by-type popover narrows the list', async ({ page }) => {
+  126 |     await page.goto('/dashboard/activity-shelf', { waitUntil: 'domcontentloaded' });
+  127 | 
+  128 |     const filterBtn = page.getByRole('button', { name: /^filter$/i }).first();
+  129 |     await expect(filterBtn).toBeVisible({ timeout: 10_000 });
+  130 | 
+  131 |     const beforeCount = await page.locator('h3').count();
+  132 |     await filterBtn.click();
+  133 | 
+  134 |     // Popover must expose at least the documented type checkboxes.
+  135 |     const popover = page
+  136 |       .locator('[role="dialog"], [role="menu"], [data-radix-popper-content-wrapper]')
+  137 |       .first();
+  138 |     await expect(
+  139 |       popover,
+  140 |       'red flag: Filter button click did not open a popover/menu',
+  141 |     ).toBeVisible();
+  142 | 
+  143 |     // The 3 known type filters: Worksheet / Storybook / Form.
+  144 |     for (const label of ['Worksheet', 'Storybook', 'Form']) {
+  145 |       const cb = popover.getByRole('checkbox', { name: new RegExp(`^${label}$`, 'i') });
+  146 |       await expect(
+  147 |         cb.first(),
+  148 |         `red flag: filter popover missing "${label}" checkbox`,
+  149 |       ).toBeVisible();
+  150 |     }
+  151 | 
+  152 |     // Toggle Worksheet only — the visible list must change.
+  153 |     await popover.getByRole('checkbox', { name: /^worksheet$/i }).first().click();
+  154 |     // Close popover so cards reflow if needed
+  155 |     await page.keyboard.press('Escape');
+  156 | 
+  157 |     // Wait up to 3s for the visible count to differ from the baseline.
+> 158 |     await expect
+      |     ^ Error: applying type filter did not change visible count within 3s (before=7)
+  159 |       .poll(async () => page.locator('h3').count(), {
+  160 |         timeout: 3_000,
+  161 |         message: `applying type filter did not change visible count within 3s (before=${beforeCount})`,
+  162 |       })
+  163 |       .not.toBe(beforeCount);
+  164 |     const afterCount = await page.locator('h3').count();
+  165 |     expect(
+  166 |       afterCount,
+  167 |       `red flag: applying type filter did not change the visible count (before=${beforeCount}, after=${afterCount})`,
+  168 |     ).not.toBe(beforeCount);
+  169 |   });
+  170 | 
+  171 |   test('5. search-by-title narrows the list', async ({ page, request }) => {
+  172 |     // Pick a known title from /api/activities so we can search for it.
+  173 |     const r = await request.get('/api/activities');
+  174 |     if (!r.ok()) {
+  175 |       test.skip(true, '/api/activities not OK; cannot pick a known title');
+  176 |       return;
+  177 |     }
+  178 |     const arr = (await r.json()) as Array<{ title?: string }>;
+  179 |     const target = arr.find((a) => a.title && a.title.length > 4);
+  180 |     if (!target?.title) {
+  181 |       test.skip(true, 'no titled activity to search for');
+  182 |       return;
+  183 |     }
+  184 | 
+  185 |     await page.goto('/dashboard/activity-shelf', { waitUntil: 'domcontentloaded' });
+  186 |     const searchInput = page.getByPlaceholder(/search by title/i);
+  187 |     await expect(searchInput).toBeVisible({ timeout: 10_000 });
+  188 | 
+  189 |     const beforeCount = await page.locator('h3').count();
+  190 |     // Use a 5-char prefix to avoid title overlap edge cases.
+  191 |     const query = target.title.slice(0, 5);
+  192 |     await searchInput.fill(query);
+  193 |     // Search is debounced + API-backed. Wait for the debounced request
+  194 |     // to settle before reading the card count.
+  195 |     await page.waitForLoadState('networkidle', { timeout: 3_000 }).catch(() => {});
+  196 |     const afterCount = await page.locator('h3').count();
+  197 |     expect(
+  198 |       afterCount,
+  199 |       `red flag: search for "${query}" did not narrow the list (before=${beforeCount}, after=${afterCount})`,
+  200 |     ).toBeLessThanOrEqual(beforeCount);
+  201 |     expect(
+  202 |       afterCount,
+  203 |       `red flag: search for "${query}" returned 0 matches even though "${target.title}" exists`,
+  204 |     ).toBeGreaterThan(0);
+  205 |   });
+  206 | 
+  207 |   test('6. bulk actions — publish / duplicate / share / delete affordances', async ({
+  208 |     page,
+  209 |   }) => {
+  210 |     test.fixme(true, 'PRODUCT/UI: no bulk-action affordance on activity-shelf (no select-all, no checkboxes, no per-card action menus). Source pointer says "Bulk publish/duplicate/share/delete". Remove fixme once UI ships.');
+  211 | 
+  212 |     await page.goto('/dashboard/activity-shelf', { waitUntil: 'domcontentloaded' });
+  213 | 
+  214 |     // When the feature ships, this branch activates. Look for any of:
+  215 |     //   - Select-all checkbox
+  216 |     //   - Per-card checkboxes
+  217 |     //   - Bulk-action toolbar (Publish / Duplicate / Share / Delete buttons
+  218 |     //     visible after selecting at least one item)
+  219 |     const checkboxes = await page.getByRole('checkbox').count();
+  220 |     expect(
+  221 |       checkboxes,
+  222 |       'red flag: bulk-select checkboxes missing — practitioner cannot multi-select activities',
+  223 |     ).toBeGreaterThan(0);
+  224 | 
+  225 |     // Once at least one card is selectable, the toolbar should expose
+  226 |     // Publish / Duplicate / Share / Delete buttons.
+  227 |     await page.getByRole('checkbox').first().click();
+  228 |     for (const action of ['publish', 'duplicate', 'share', 'delete']) {
+  229 |       const btn = page.getByRole('button', { name: new RegExp(action, 'i') }).first();
+  230 |       await expect(
+  231 |         btn,
+  232 |         `red flag: bulk "${action}" affordance missing after selection`,
+  233 |       ).toBeVisible({ timeout: 5_000 });
+  234 |     }
+  235 |   });
+  236 | 
+  237 |   test('7. drag-drop reorder', async ({ page }) => {
+  238 |     test.fixme(true, 'PRODUCT/UI: no draggable elements on activity-shelf cards. Source pointer says "Drag-drop reorder". Remove fixme once draggable handles are added.');
+  239 | 
+  240 |     await page.goto('/dashboard/activity-shelf', { waitUntil: 'domcontentloaded' });
+  241 | 
+  242 |     // When the feature ships, at least one card must expose either:
+  243 |     //   - draggable="true"
+  244 |     //   - a drag-handle testid (e.g. data-testid="drag-handle-...")
+  245 |     //   - role="button" aria-roledescription="draggable"
+  246 |     const draggableCount = await page
+  247 |       .locator('[draggable="true"], [data-testid*="drag-handle"], [aria-roledescription="draggable"]')
+  248 |       .count();
+  249 |     expect(
+  250 |       draggableCount,
+  251 |       'red flag: no draggable handles found — practitioner cannot reorder activities',
+  252 |     ).toBeGreaterThan(0);
+  253 |   });
+  254 | 
+  255 |   test('8. tag / duration filters (beyond type)', async ({ page }) => {
+  256 |     test.fixme(true, 'PRODUCT/UI: filter popover only exposes type (Worksheet/Storybook/Form). Source pointer says filter by type/tags/duration. Remove fixme once tags + duration filters land.');
+  257 | 
+  258 |     await page.goto('/dashboard/activity-shelf', { waitUntil: 'domcontentloaded' });
+```

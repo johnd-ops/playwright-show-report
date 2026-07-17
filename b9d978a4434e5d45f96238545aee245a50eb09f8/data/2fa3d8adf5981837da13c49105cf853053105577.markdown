@@ -1,0 +1,185 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: suite/e2e/dashboard/video-call-start.journey.spec.ts >> Video Call — practitioner starts a call with a client >> 2. practitioner clicks Join Session → Whereby room loads with a host roomKey
+- Location: suite/e2e/dashboard/video-call-start.journey.spec.ts:157:7
+
+# Error details
+
+```
+Error: red flag: in-session "Show Playspace" control did not render
+
+expect(locator).toBeVisible() failed
+
+Locator: getByTestId('show-playspace-button')
+Expected: visible
+Timeout: 15000ms
+Error: element(s) not found
+
+Call log:
+  - red flag: in-session "Show Playspace" control did not render with timeout 15000ms
+  - waiting for getByTestId('show-playspace-button')
+
+```
+
+# Test source
+
+```ts
+  152 |       apptInList!.appointment_clients?.[0]?.client_id,
+  153 |       'red flag: appointment has no client attached — cannot start a call WITH a client',
+  154 |     ).toBe(clientId);
+  155 |   });
+  156 | 
+  157 |   test('2. practitioner clicks Join Session → Whereby room loads with a host roomKey', async ({
+  158 |     page,
+  159 |     context,
+  160 |     request,
+  161 |   }) => {
+  162 |     // 2026-05-16: test.fail marker removed. Verified PASSING on Next.js
+  163 |     // 16 preview — full video-session join flow including Whereby room
+  164 |     // load with host roomKey works end-to-end. Downstream of Group A #2
+  165 |     // fix.
+  166 |     // Cap the test runtime — the Whereby iframe load is the longest async
+  167 |     // hop here (~10s typical). 90s leaves plenty of headroom without
+  168 |     // letting a real hang burn the budget.
+  169 |     test.setTimeout(120_000);
+  170 | 
+  171 |     // Seed a FRESH appointment for this test so a Playwright retry gets a
+  172 |     // clean Whereby room. Reusing Test 1's appointment would fail on
+  173 |     // retry because the host roomKey is one-time-use.
+  174 |     const clientId = await getFirstClientId(request);
+  175 |     const seeded = await seedVirtualAppointment(request, clientId);
+  176 |     createdAppointmentIds.add(seeded.id);
+  177 | 
+  178 |     await page.goto('/dashboard/appointments');
+  179 |     // Switch to Day view — that's where the appointment tile exposes
+  180 |     // "Join session" inline. Week view does not.
+  181 |     await page
+  182 |       .getByTestId('toggle-group-item')
+  183 |       .filter({ hasText: /^Day$/i })
+  184 |       .click();
+  185 |     await expect(
+  186 |       page.getByTestId('toggle-group-item').filter({ hasText: /^Day$/i }),
+  187 |     ).toBeChecked();
+  188 | 
+  189 |     const joinBtn = page
+  190 |       .getByRole('button', { name: /^join session$/i })
+  191 |       .first();
+  192 |     await expect(
+  193 |       joinBtn,
+  194 |       'red flag: no "Join session" button visible on the Day view tile — practitioner has no path to start the call',
+  195 |     ).toBeVisible({ timeout: 15_000 });
+  196 | 
+  197 |     // The click EITHER navigates the same page OR opens a popup —
+  198 |     // depends on whether the appointment tile uses an anchor with
+  199 |     // target=_blank. Race both outcomes; whichever resolves first is the
+  200 |     // page we then assert against.
+  201 |     const popupPromise = context
+  202 |       .waitForEvent('page', { timeout: 5_000 })
+  203 |       .catch(() => null);
+  204 | 
+  205 |     // Wire the Whereby-roomKey detector BEFORE the click. Whereby's
+  206 |     // iframe loads with `…?roomKey=<JWT>`, then immediately NAVIGATES the
+  207 |     // same iframe to the same URL with the key stripped — the key is a
+  208 |     // one-shot auth handoff. So polling page.frames() after the fact
+  209 |     // misses it. We catch the moment via framenavigated on both `page`
+  210 |     // and any popup that opens.
+  211 |     let sawRoomKey = false;
+  212 |     const roomKeyMatcher = (url: string): boolean =>
+  213 |       /whereby\.com\b/.test(url) && /[?&]roomKey=/.test(url);
+  214 |     const hookFrameNav = (p: Page) => {
+  215 |       p.on('framenavigated', (f) => {
+  216 |         if (roomKeyMatcher(f.url())) sawRoomKey = true;
+  217 |       });
+  218 |       // Catch frames that already exist when the listener attaches.
+  219 |       for (const f of p.frames()) {
+  220 |         if (roomKeyMatcher(f.url())) sawRoomKey = true;
+  221 |       }
+  222 |     };
+  223 |     hookFrameNav(page);
+  224 |     context.on('page', hookFrameNav);
+  225 | 
+  226 |     await joinBtn.click();
+  227 |     const popup = await popupPromise;
+  228 |     const callPage = popup ?? page;
+  229 |     await callPage.waitForLoadState('domcontentloaded');
+  230 |     await expect(callPage).toHaveURL(/\/video-session\b/, { timeout: 20_000 });
+  231 | 
+  232 |     // The Whereby iframe must navigate through a URL that includes the
+  233 |     // host roomKey JWT. SECURITY: do not log the matched URL — it
+  234 |     // contains the JWT. Poll the captured flag rather than the live URL.
+  235 |     await expect
+  236 |       .poll(() => sawRoomKey, {
+  237 |         timeout: 45_000,
+  238 |         message:
+  239 |           'red flag: Whereby iframe never loaded with a roomKey — call did not start (room not allocated, or POST /api/session/tokens failed)',
+  240 |       })
+  241 |       .toBe(true);
+  242 | 
+  243 |     // In-session host controls — proof the practitioner-side shell
+  244 |     // mounted around the iframe (not just a blank page with the iframe).
+  245 |     await expect(
+  246 |       callPage.getByTestId('take-note-button'),
+  247 |       'red flag: in-session "Take note" control did not render — practitioner shell broken',
+  248 |     ).toBeVisible({ timeout: 15_000 });
+  249 |     await expect(
+  250 |       callPage.getByTestId('show-playspace-button'),
+  251 |       'red flag: in-session "Show Playspace" control did not render',
+> 252 |     ).toBeVisible();
+      |       ^ Error: red flag: in-session "Show Playspace" control did not render
+  253 | 
+  254 |     // (No toast assertion: "Started video session as Practitioner with
+  255 |     // host privileges" appears on the page initially but the toast auto-
+  256 |     // dismisses within a few seconds. The Whereby roomKey iframe + the
+  257 |     // host controls above are stronger, non-transient signals that the
+  258 |     // call started successfully.)
+  259 | 
+  260 |     // Close the call page immediately. Whereby bills participant-minutes
+  261 |     // and we never clicked "Join meeting" inside the iframe, but keeping
+  262 |     // the host page alive longer than necessary risks edge-case minute
+  263 |     // accrual.
+  264 |     if (popup) await popup.close();
+  265 |     else await callPage.goto('about:blank').catch(() => {});
+  266 |   });
+  267 | 
+  268 |   // (No separate red-flag sweep test: Test 2's positive assertions
+  269 |   // implicitly cover it. A broken /video-session shell wouldn't render
+  270 |   // the host controls or the "Started video session" toast, so any error
+  271 |   // state — permissions denied, session not found, 5xx — would already
+  272 |   // fail Test 2.)
+  273 | });
+  274 | 
+  275 | // Cleanup the seeded appointment so it doesn't pollute the calendar.
+  276 | // Uses a fresh APIRequestContext because `request` is test-scoped and not
+  277 | // injected into afterAll. 60s timeout (default 30s) leaves headroom for
+  278 | // a slow DELETE while a session-cleanup chain wraps up server-side.
+  279 | test.afterAll(async () => {
+  280 |   test.setTimeout(60_000);
+  281 |   if (createdAppointmentIds.size === 0) return;
+  282 |   const baseURL = process.env.BASE_URL ?? 'https://agentic-ps-dev.playspace.health';
+  283 |   const ctx = await playwrightRequest.newContext({
+  284 |     baseURL,
+  285 |     storageState: '.auth/user.json',
+  286 |   });
+  287 |   try {
+  288 |     for (const id of createdAppointmentIds) {
+  289 |       const r = await ctx
+  290 |         .fetch(`/api/appointments/${id}`, { method: 'DELETE' })
+  291 |         .catch(() => null);
+  292 |       if (r && !r.ok() && r.status() !== 404) {
+  293 |         console.warn(
+  294 |           `[cleanup] DELETE /api/appointments/${id} returned ${r.status()}`,
+  295 |         );
+  296 |       }
+  297 |     }
+  298 |   } finally {
+  299 |     await ctx.dispose();
+  300 |   }
+  301 | });
+  302 | 
+```

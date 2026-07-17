@@ -1,0 +1,228 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: suite/e2e/dashboard/form-submissions-isolation.journey.spec.ts >> Form Submissions — practitioner journey + RLS isolation >> 1. send form to client — POST /api/email/send (form_submission_request)
+- Location: suite/e2e/dashboard/form-submissions-isolation.journey.spec.ts:105:7
+
+# Error details
+
+```
+Error: red flag: no forms on this account
+
+expect(received).toBeGreaterThan(expected)
+
+Expected: > 0
+Received:   0
+```
+
+# Test source
+
+```ts
+  9   | //
+  10  | // User story:
+  11  | //   As a clinic practitioner, I want my clients' form submissions to be
+  12  | //   strictly isolated to me at the database level, so that another
+  13  | //   practitioner — or an internal code path that accidentally drops the
+  14  | //   practitioner_id filter — can never see my submissions. The
+  15  | //   improvement is invisible during normal use; it only changes what
+  16  | //   happens in failure modes.
+  17  | //
+  18  | // Test cases:
+  19  | //   1. Send a form to a client — capture the share link
+  20  | //   2. Open the share link unauthenticated — public form loads
+  21  | //   3. Submit the form — submission persists
+  22  | //   4. View the submission as practitioner — list + detail load
+  23  | //   5. Download as PDF — endpoint returns a PDF (or UI download fires)
+  24  | //   6. RLS isolation — a *second* practitioner cannot read the
+  25  | //      submission via /api/forms/submissions/:id (gated on
+  26  | //      MULTI_CLINIC_USER_EMAIL/_PASSWORD; skips with env-condition
+  27  | //      otherwise)
+  28  | //
+  29  | // API surface (verified against
+  30  | // services/playspace-ehr/app/api/* on 2026-05-05):
+  31  | //   - GET    /api/forms                                 list of forms
+  32  | //   - GET    /api/client                                pick a client
+  33  | //   - GET    /api/me                                    practitioner identity
+  34  | //   - POST   /api/email/send  { template: 'form_submission_request',
+  35  | //                               recipientEmail, recipientFirstName,
+  36  | //                               recipientLastName, templateData: {
+  37  | //                                 formId, clientId, formTitle } }
+  38  | //                               → { success, formSubmissionUrl }
+  39  | //                               (mints JWT, creates pending submission row,
+  40  | //                                emails the secure URL via Mailgun)
+  41  | //   - GET    /forms/public/:id/submit?token=<JWT>       public form page
+  42  | //   - POST   /api/forms/public/:id/submit  { formData, token }  submit
+  43  | //                               (unauthenticated; updates the pre-existing
+  44  | //                                submission keyed by submissionId in the JWT)
+  45  | //   - GET    /api/forms/submissions                     list (RLS-filtered)
+  46  | //   - GET    /api/forms/submissions/:id                 detail
+  47  | //   - GET    /api/forms/submissions/:id/download        PDF download
+  48  | //
+  49  | // PHI: form submissions contain client-entered data. Artifacts off
+  50  | // file-wide; assertions on shape only, never on the answer text. Test
+  51  | // data uses an E2E-FORM-* prefix to ease bulk-purge if cleanup endpoints
+  52  | // are missing.
+  53  | 
+  54  | test.use({ screenshot: 'off', video: 'off', trace: 'off' });
+  55  | test.describe.configure({ mode: 'serial' });
+  56  | 
+  57  | type Form = {
+  58  |   id: string;
+  59  |   title?: string;
+  60  |   name?: string;
+  61  |   is_public?: boolean;
+  62  |   public_token?: string;
+  63  |   share_token?: string;
+  64  | };
+  65  | 
+  66  | type Submission = {
+  67  |   id: string;
+  68  |   form_id?: string;
+  69  |   practitioner_id?: string;
+  70  |   client_id?: string;
+  71  |   answers?: unknown;
+  72  |   created_at?: string;
+  73  | };
+  74  | 
+  75  | const E2E_PREFIX = 'E2E-FORM-SUB';
+  76  | 
+  77  | async function listForms(request: APIRequestContext): Promise<Form[]> {
+  78  |   const r = await request.get('/api/forms');
+  79  |   expect(r.ok(), `GET /api/forms failed (${r.status()})`).toBeTruthy();
+  80  |   const body = (await r.json()) as Record<string, unknown>;
+  81  |   return (
+  82  |     (body.forms as Form[] | undefined) ??
+  83  |     (body.data as Form[] | undefined) ??
+  84  |     (Array.isArray(body) ? (body as Form[]) : [])
+  85  |   );
+  86  | }
+  87  | 
+  88  | async function getFirstClient(
+  89  |   request: APIRequestContext,
+  90  | ): Promise<{ id: string; first_name?: string; last_name?: string; email?: string }> {
+  91  |   const r = await request.get('/api/client');
+  92  |   expect(r.ok(), `GET /api/client failed (${r.status()})`).toBeTruthy();
+  93  |   const body = await r.json();
+  94  |   const list = body.clients ?? body.data ?? body ?? [];
+  95  |   expect(list.length, 'red flag: no client on this account — cannot run journey').toBeGreaterThan(0);
+  96  |   return list[0];
+  97  | }
+  98  | 
+  99  | test.describe('Form Submissions — practitioner journey + RLS isolation', () => {
+  100 |   let formId = '';
+  101 |   let clientId = '';
+  102 |   let shareUrl: string | null = null;
+  103 |   let submissionId: string | null = null;
+  104 | 
+  105 |   test('1. send form to client — POST /api/email/send (form_submission_request)', async ({
+  106 |     request,
+  107 |   }) => {
+  108 |     const forms = await listForms(request);
+> 109 |     expect(forms.length, 'red flag: no forms on this account').toBeGreaterThan(0);
+      |                                                                ^ Error: red flag: no forms on this account
+  110 |     const form = forms[0];
+  111 |     formId = form.id;
+  112 | 
+  113 |     const client = await getFirstClient(request);
+  114 |     clientId = client.id;
+  115 | 
+  116 |     // The send route requires recipient identity. Use the client's real
+  117 |     // email when present so the token's `recipientEmail` claim matches a
+  118 |     // realistic inbox; fall back to a synthetic yopmail address.
+  119 |     const recipientEmail = client.email ?? `e2e-form-${Date.now()}@yopmail.com`;
+  120 |     const recipientFirstName = client.first_name ?? 'E2E';
+  121 |     const recipientLastName = client.last_name ?? 'Test';
+  122 | 
+  123 |     const sendRes = await request.post('/api/email/send', {
+  124 |       data: {
+  125 |         template: 'form_submission_request',
+  126 |         recipientEmail,
+  127 |         recipientFirstName,
+  128 |         recipientLastName,
+  129 |         templateData: {
+  130 |           formId,
+  131 |           clientId,
+  132 |           formTitle: form.title ?? form.name ?? 'E2E Form',
+  133 |         },
+  134 |       },
+  135 |     });
+  136 |     expect(
+  137 |       sendRes.status(),
+  138 |       `red flag: POST /api/email/send returned ${sendRes.status()}`,
+  139 |     ).toBeLessThan(500);
+  140 |     expect(
+  141 |       sendRes.ok(),
+  142 |       `red flag: POST /api/email/send not OK (${sendRes.status()})`,
+  143 |     ).toBeTruthy();
+  144 | 
+  145 |     const body = (await sendRes.json()) as {
+  146 |       success?: boolean;
+  147 |       formSubmissionUrl?: string;
+  148 |       error?: string;
+  149 |     };
+  150 |     if (!body.success) {
+  151 |       // Mailgun may be feature-flagged off on dev (no SMTP creds). The
+  152 |       // pending submission row is still created server-side, so we can
+  153 |       // continue with the URL if it was returned, otherwise skip the
+  154 |       // downstream tests gracefully.
+  155 |       test.info().annotations.push({
+  156 |         type: 'env-condition',
+  157 |         description: `POST /api/email/send returned success=false — Mailgun likely unconfigured on this env. Error: ${body.error ?? 'unknown'}.`,
+  158 |       });
+  159 |       if (!body.formSubmissionUrl) {
+  160 |         test.skip(true, 'send returned success=false and no URL — cannot exercise downstream tests');
+  161 |         return;
+  162 |       }
+  163 |     }
+  164 | 
+  165 |     shareUrl = body.formSubmissionUrl ?? null;
+  166 |     expect(
+  167 |       shareUrl,
+  168 |       'red flag: /api/email/send response must include formSubmissionUrl',
+  169 |     ).toBeTruthy();
+  170 |     console.log(`[form-submissions] share URL captured: ${shareUrl}`);
+  171 |   });
+  172 | 
+  173 |   test('2. open share link unauthenticated — public form loads', async ({ browser }) => {
+  174 |     test.skip(!shareUrl, 'no share URL captured in Test 1');
+  175 | 
+  176 |     // The share URL pattern from /api/email/send is
+  177 |     //   /forms/public/<formId>/submit?token=<JWT>
+  178 |     // Sanity-check the shape before we open it — a wrong-shaped URL
+  179 |     // surfaces a clearer failure than a 404 in headless chromium.
+  180 |     expect(
+  181 |       /\/forms\/public\/[^/]+\/submit\?token=/.test(shareUrl!),
+  182 |       `red flag: share URL ${shareUrl} doesn't match /forms/public/<id>/submit?token=...`,
+  183 |     ).toBe(true);
+  184 | 
+  185 |     const ctx = await browser.newContext({ storageState: { cookies: [], origins: [] } });
+  186 |     const publicPage = await ctx.newPage();
+  187 |     try {
+  188 |       const res = await publicPage.goto(shareUrl!, { waitUntil: 'domcontentloaded' });
+  189 |       expect(
+  190 |         res?.status() ?? 0,
+  191 |         `red flag: public form returned ${res?.status()}`,
+  192 |       ).toBeLessThan(500);
+  193 | 
+  194 |       // The page is a client component that goes:
+  195 |       //   "Validating access and loading form..." (spinner)
+  196 |       //   → terminal state: form fields | "Already Submitted" |
+  197 |       //                     "Access Error" | "Submitted Successfully"
+  198 |       // Wait for the spinner to clear (max 20s — token validation +
+  199 |       // form fetch + a margin) then assert one of the terminal states.
+  200 |       await publicPage
+  201 |         .getByText(/validating access and loading form/i)
+  202 |         .waitFor({ state: 'hidden', timeout: 20_000 })
+  203 |         .catch(() => null);
+  204 | 
+  205 |       const terminalText = (await publicPage.textContent('body'))?.toLowerCase() ?? '';
+  206 |       const hasFormChrome = await publicPage
+  207 |         .locator('input, textarea, [role="textbox"], button[type="submit"]')
+  208 |         .first()
+  209 |         .isVisible({ timeout: 5_000 })
+```
