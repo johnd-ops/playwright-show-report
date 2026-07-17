@@ -1,0 +1,123 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: setup/auth.setup.ts >> authenticate
+- Location: setup/auth.setup.ts:7:6
+
+# Error details
+
+```
+Error: expect(page).not.toHaveURL(expected) failed
+
+Expected pattern: not /\/login\b/
+Received string: "https://dev-hcp1velit44csg3n.us.auth0.com/u/login?state=hKFo2SAwc294SFhVMEFsYVBQRGZDTHVGaHBnczhpUUhpNFFGeaFur3VuaXZlcnNhbC1sb2dpbqN0aWTZIEpuaW5iQy1IUHduUktDcVlJek5QR3lxcXowY2pSYWpTo2NpZNkgVDR6bXFtMWs3WmpEM1pmdzJCbHNjdkZBNGtmS2NIZWk"
+Timeout: 15000ms
+
+Call log:
+  - Expect "not toHaveURL" with timeout 15000ms
+    19 × unexpected value "https://dev-hcp1velit44csg3n.us.auth0.com/u/login?state=hKFo2SAwc294SFhVMEFsYVBQRGZDTHVGaHBnczhpUUhpNFFGeaFur3VuaXZlcnNhbC1sb2dpbqN0aWTZIEpuaW5iQy1IUHduUktDcVlJek5QR3lxcXowY2pSYWpTo2NpZNkgVDR6bXFtMWs3WmpEM1pmdzJCbHNjdkZBNGtmS2NIZWk"
+
+```
+
+# Page snapshot
+
+```yaml
+- main [ref=e3]:
+  - generic [ref=e8]:
+    - generic [ref=e9]:
+      - img "Playspace" [ref=e10]
+      - heading "Playspace" [level=1] [ref=e11]
+      - paragraph [ref=e13]: Log in to Playspace
+    - generic [ref=e14]:
+      - generic [ref=e15]:
+        - generic [ref=e16]: Email is not valid. Password is required
+        - button: Continue
+        - generic [ref=e18]:
+          - generic [ref=e19]:
+            - generic [ref=e20]:
+              - generic [ref=e21]: Email address *
+              - textbox "Email address" [active] [ref=e22]: johnd+shard3@playspace.healthPass123!
+            - generic [ref=e23]: Email is not valid.
+          - generic [ref=e24]:
+            - generic [ref=e25]:
+              - generic [ref=e26]: Password *
+              - textbox "Password" [ref=e27]
+              - switch "Show password" [ref=e28] [cursor=pointer]
+            - generic [ref=e29]: Password is required
+        - paragraph [ref=e30]:
+          - link "Reset password" [ref=e31] [cursor=pointer]:
+            - /url: /u/login/password-reset-start/Username-Password-Authentication?state=hKFo2SAwc294SFhVMEFsYVBQRGZDTHVGaHBnczhpUUhpNFFGeaFur3VuaXZlcnNhbC1sb2dpbqN0aWTZIEpuaW5iQy1IUHduUktDcVlJek5QR3lxcXowY2pSYWpTo2NpZNkgVDR6bXFtMWs3WmpEM1pmdzJCbHNjdkZBNGtmS2NIZWk
+        - button "Continue" [ref=e33] [cursor=pointer]
+      - paragraph [ref=e35]:
+        - text: Don't have an account?
+        - link "Sign up" [ref=e36] [cursor=pointer]:
+          - /url: /u/signup?state=hKFo2SAwc294SFhVMEFsYVBQRGZDTHVGaHBnczhpUUhpNFFGeaFur3VuaXZlcnNhbC1sb2dpbqN0aWTZIEpuaW5iQy1IUHduUktDcVlJek5QR3lxcXowY2pSYWpTo2NpZNkgVDR6bXFtMWs3WmpEM1pmdzJCbHNjdkZBNGtmS2NIZWk
+      - generic [ref=e38]: Or
+      - generic [ref=e39]:
+        - button "Continue with Google" [ref=e41] [cursor=pointer]:
+          - generic [ref=e43]: Continue with Google
+        - button "Continue with Microsoft Account" [ref=e45] [cursor=pointer]:
+          - generic [ref=e47]: Continue with Microsoft Account
+```
+
+# Test source
+
+```ts
+  1  | import { test as setup, expect, request as apiRequest } from '@playwright/test';
+  2  | import { LoginPage } from '../pages/LoginPage';
+  3  | import path from 'node:path';
+  4  | 
+  5  | export const STORAGE_STATE = path.join(__dirname, '../.auth/user.json');
+  6  | 
+  7  | setup('authenticate', async ({ page }) => {
+  8  |   const email = process.env.TEST_USER_EMAIL;
+  9  |   const password = process.env.TEST_USER_PASSWORD;
+  10 |   if (!email || !password) {
+  11 |     throw new Error('TEST_USER_EMAIL and TEST_USER_PASSWORD must be set in .env');
+  12 |   }
+  13 | 
+  14 |   // Vercel deployment-protection bypass (only on the PR preview flow, where
+  15 |   // VERCEL_AUTOMATION_BYPASS_SECRET is set). Prime Vercel's ORIGIN-SCOPED bypass
+  16 |   // cookie, then copy it into the browser context so every spec inherits it.
+  17 |   //
+  18 |   // The secret is sent ONLY as a request HEADER on a SEPARATE APIRequestContext
+  19 |   // — never as a URL query param, and never on the browser page. This keeps it
+  20 |   // out of the Playwright trace / video / screenshot that are retained as CI
+  21 |   // artifacts (a navigated `?x-vercel-protection-bypass=…` URL would be captured
+  22 |   // there). maxRedirects:0 keeps it single-origin (the Set-Cookie comes on
+  23 |   // Vercel's first response, before any app redirect to Auth0). No-op on
+  24 |   // dev/staging (secret unset).
+  25 |   const bypass = process.env.VERCEL_AUTOMATION_BYPASS_SECRET;
+  26 |   const base = process.env.BASE_URL;
+  27 |   if (bypass && base) {
+  28 |     const primer = await apiRequest.newContext({
+  29 |       baseURL: base,
+  30 |       extraHTTPHeaders: {
+  31 |         'x-vercel-protection-bypass': bypass,
+  32 |         'x-vercel-set-bypass-cookie': 'true',
+  33 |       },
+  34 |     });
+  35 |     try {
+  36 |       await primer.get('/', { maxRedirects: 0 }).catch(() => {});
+  37 |       const { cookies } = await primer.storageState();
+  38 |       if (cookies?.length) await page.context().addCookies(cookies);
+  39 |     } finally {
+  40 |       await primer.dispose();
+  41 |     }
+  42 |   }
+  43 | 
+  44 |   const login = new LoginPage(page);
+  45 |   await login.goto();
+  46 |   await login.login(email, password);
+  47 | 
+> 48 |   await expect(page).not.toHaveURL(/\/login\b/, { timeout: 15_000 });
+     |                          ^ Error: expect(page).not.toHaveURL(expected) failed
+  49 |   await page.context().storageState({ path: STORAGE_STATE });
+  50 | });
+  51 | 
+```

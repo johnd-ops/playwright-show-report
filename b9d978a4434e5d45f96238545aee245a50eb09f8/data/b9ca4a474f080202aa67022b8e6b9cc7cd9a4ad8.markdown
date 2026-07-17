@@ -1,0 +1,264 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: suite/e2e/dashboard/clients.journey.spec.ts >> Clients — user journey >> navigating from home to Clients loads the list and calls /api/client
+- Location: suite/e2e/dashboard/clients.journey.spec.ts:9:7
+
+# Error details
+
+```
+Error: expect(locator).toBeVisible() failed
+
+Locator: getByTestId('tabs-trigger').filter({ hasText: /^Clinic Clients$/i })
+Expected: visible
+Timeout: 15000ms
+Error: element(s) not found
+
+Call log:
+  - Expect "toBeVisible" with timeout 15000ms
+  - waiting for getByTestId('tabs-trigger').filter({ hasText: /^Clinic Clients$/i })
+
+```
+
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e5]:
+        - img "PlaySpace Logo" [ref=e7]
+        - generic [ref=e8]: PlaySpace
+      - generic [ref=e10]:
+        - link "Home" [ref=e12] [cursor=pointer]:
+          - /url: /dashboard/home
+          - generic [ref=e14]:
+            - img [ref=e15]
+            - generic [ref=e18]: Home
+        - generic [ref=e19]:
+          - generic [ref=e20]: Session Prep
+          - link "Video Session" [ref=e21] [cursor=pointer]:
+            - /url: /dashboard/session
+            - generic [ref=e23]:
+              - img [ref=e24]
+              - generic [ref=e27]: Video Session
+          - link "In-Person Tools" [ref=e28] [cursor=pointer]:
+            - /url: /dashboard/in-person-session
+            - generic [ref=e30]:
+              - img [ref=e31]
+              - generic [ref=e34]: In-Person Tools
+          - link "Creative Suite" [ref=e35] [cursor=pointer]:
+            - /url: /dashboard/creative-suite
+            - generic [ref=e37]:
+              - img [ref=e38]
+              - generic [ref=e44]: Creative Suite
+        - generic [ref=e45]:
+          - generic [ref=e46]: Your Practice
+          - link "Calendar" [ref=e47] [cursor=pointer]:
+            - /url: /dashboard/appointments
+            - generic [ref=e49]:
+              - img [ref=e50]
+              - generic [ref=e52]: Calendar
+          - link "Clients" [ref=e53] [cursor=pointer]:
+            - /url: /dashboard/clients
+            - generic [ref=e55]:
+              - img [ref=e56]
+              - generic [ref=e60]: Clients
+          - link "Clinical Notes" [ref=e61] [cursor=pointer]:
+            - /url: /dashboard/clinical-notes
+            - generic [ref=e63]:
+              - img [ref=e64]
+              - generic [ref=e66]: Clinical Notes
+          - link "Forms" [ref=e67] [cursor=pointer]:
+            - /url: /dashboard/forms
+            - generic [ref=e69]:
+              - img [ref=e70]
+              - generic [ref=e73]: Forms
+        - generic [ref=e74]:
+          - generic [ref=e75]: Discover
+          - link "Community" [ref=e76] [cursor=pointer]:
+            - /url: /dashboard/community
+            - generic [ref=e78]:
+              - img [ref=e79]
+              - generic [ref=e83]: Community
+      - generic [ref=e84]:
+        - button "What's new — version 0.16.0" [ref=e85] [cursor=pointer]:
+          - generic [ref=e87]: v0.16.0
+          - generic [ref=e88]: What's new
+        - link "Settings" [ref=e89] [cursor=pointer]:
+          - /url: /dashboard/settings
+          - generic [ref=e90]:
+            - img [ref=e91]
+            - generic [ref=e94]: Settings
+    - generic [ref=e95]:
+      - banner [ref=e96]:
+        - generic [ref=e97]:
+          - button "Collapse sidebar" [ref=e98] [cursor=pointer]:
+            - img [ref=e99]
+          - navigation "Breadcrumb" [ref=e103]:
+            - generic [ref=e104]: Clients
+        - button "SE Shard 2 E2E" [ref=e106] [cursor=pointer]:
+          - generic [ref=e108]: SE
+          - generic [ref=e109]: Shard 2 E2E
+          - img [ref=e110]
+      - main [ref=e112]:
+        - generic [ref=e113]:
+          - generic [ref=e114]:
+            - heading "Clients" [level=1] [ref=e115]
+            - generic [ref=e116]:
+              - link "Client Settings" [ref=e117] [cursor=pointer]:
+                - /url: /dashboard/clients/onboarding-settings
+                - button "Client Settings" [ref=e118]
+              - link "Add client" [ref=e119] [cursor=pointer]:
+                - /url: /dashboard/clients/creation
+                - button "Add client" [ref=e120]:
+                  - img
+                  - text: Add client
+          - generic [ref=e122]:
+            - tablist [ref=e123]:
+              - tab "Active" [selected] [ref=e124] [cursor=pointer]
+              - tab "Archived" [ref=e125] [cursor=pointer]
+            - generic [ref=e127]:
+              - img [ref=e128]
+              - textbox "Search by name..." [ref=e132]
+            - tabpanel "Active" [ref=e133]:
+              - generic [ref=e134]:
+                - table [ref=e137]:
+                  - rowgroup [ref=e138]:
+                    - row "Name Next Appointment Phone Number Email Address" [ref=e139]:
+                      - columnheader "Name" [ref=e140]
+                      - columnheader "Next Appointment" [ref=e141]
+                      - columnheader "Phone Number" [ref=e142]
+                      - columnheader "Email Address" [ref=e143]
+                      - columnheader [ref=e144]
+                  - rowgroup [ref=e145]:
+                    - row "E2E-CLIENT-1784297829178 TestCreate - 5550100010 e2e-client-create-1784297829178@yopmail.com Open client actions" [ref=e146] [cursor=pointer]:
+                      - cell "E2E-CLIENT-1784297829178 TestCreate" [ref=e147]:
+                        - generic [ref=e149]: E2E-CLIENT-1784297829178 TestCreate
+                      - cell "-" [ref=e150]
+                      - cell "5550100010" [ref=e151]
+                      - cell "e2e-client-create-1784297829178@yopmail.com" [ref=e152]
+                      - cell "Open client actions" [ref=e153]:
+                        - button "Open client actions" [ref=e154]:
+                          - img
+                    - row "E2E-CLIENT-1784273489971 TestCreate - 5550100010 e2e-client-create-1784273489971@yopmail.com Open client actions" [ref=e155] [cursor=pointer]:
+                      - cell "E2E-CLIENT-1784273489971 TestCreate" [ref=e156]:
+                        - generic [ref=e158]: E2E-CLIENT-1784273489971 TestCreate
+                      - cell "-" [ref=e159]
+                      - cell "5550100010" [ref=e160]
+                      - cell "e2e-client-create-1784273489971@yopmail.com" [ref=e161]
+                      - cell "Open client actions" [ref=e162]:
+                        - button "Open client actions" [ref=e163]:
+                          - img
+                    - row "Sample Client - - johnd+shard2+sampleclient@playspace.health Open client actions" [ref=e164] [cursor=pointer]:
+                      - cell "Sample Client" [ref=e165]:
+                        - generic [ref=e167]: Sample Client
+                      - cell "-" [ref=e168]
+                      - cell "-" [ref=e169]
+                      - cell "johnd+shard2+sampleclient@playspace.health" [ref=e170]
+                      - cell "Open client actions" [ref=e171]:
+                        - button "Open client actions" [ref=e172]:
+                          - img
+                - generic [ref=e173]:
+                  - generic [ref=e174]: Showing 1 to 3 of 3 results
+                  - generic [ref=e175]:
+                    - button "Previous" [disabled]:
+                      - img
+                      - text: Previous
+                    - button "1" [ref=e176] [cursor=pointer]
+                    - button "Next" [disabled]:
+                      - text: Next
+                      - img
+  - region "Notifications (F8)":
+    - list
+  - region "Notifications alt+T"
+  - alert [ref=e177]
+  - iframe [ref=e178]:
+    
+  - button "Open Intercom Messenger" [ref=e179] [cursor=pointer]:
+    - img [ref=e181]
+    - generic:
+      - img
+```
+
+# Test source
+
+```ts
+  1  | import { expect, type Locator, type Page } from '@playwright/test';
+  2  | 
+  3  | type ClientsTab = 'Active' | 'Archived' | 'Clinic Clients';
+  4  | 
+  5  | export class ClientsPage {
+  6  |   readonly page: Page;
+  7  |   readonly heading: Locator;
+  8  |   readonly tabsList: Locator;
+  9  |   // Each tab renders rows with its OWN testid prefix in source
+  10 |   // (clients/page.tsx): Active → client-row-, Archived → archived-client-row-,
+  11 |   // Clinic Clients → clinic-client-row-. `clientRows` is the Active tab
+  12 |   // (kept as the default for back-compat); use rowsForTab() to be explicit.
+  13 |   readonly clientRows: Locator;
+  14 |   readonly archivedClientRows: Locator;
+  15 |   readonly clinicClientRows: Locator;
+  16 | 
+  17 |   constructor(page: Page) {
+  18 |     this.page = page;
+  19 |     this.heading = page.getByRole('heading', { level: 1, name: /^clients$/i });
+  20 |     this.tabsList = page.getByTestId('tabs-list');
+  21 |     this.clientRows = page.locator('[data-testid^="client-row-"]');
+  22 |     this.archivedClientRows = page.locator(
+  23 |       '[data-testid^="archived-client-row-"]',
+  24 |     );
+  25 |     this.clinicClientRows = page.locator(
+  26 |       '[data-testid^="clinic-client-row-"]',
+  27 |     );
+  28 |   }
+  29 | 
+  30 |   /** Rows for a given tab — each tab uses a distinct testid prefix. */
+  31 |   rowsForTab(tab: ClientsTab): Locator {
+  32 |     switch (tab) {
+  33 |       case 'Archived':
+  34 |         return this.archivedClientRows;
+  35 |       case 'Clinic Clients':
+  36 |         return this.clinicClientRows;
+  37 |       default:
+  38 |         return this.clientRows;
+  39 |     }
+  40 |   }
+  41 | 
+  42 |   async goto() {
+  43 |     await this.page.goto('/dashboard/clients');
+  44 |   }
+  45 | 
+  46 |   tab(name: ClientsTab) {
+  47 |     return this.page.getByTestId('tabs-trigger').filter({ hasText: new RegExp(`^${name}$`, 'i') });
+  48 |   }
+  49 | 
+  50 |   async selectTab(name: ClientsTab) {
+  51 |     await this.tab(name).click();
+  52 |   }
+  53 | 
+  54 |   /**
+  55 |    * Assert the page loaded and the expected tabs are present. Which tabs
+  56 |    * render is role-dependent in source: the "Clinic Clients" tab only shows
+  57 |    * for clinic owner/admin non-solo accounts, and Active/Archived are hidden
+  58 |    * for admin-only users. Defaults to all three (the owner test account);
+  59 |    * pass the subset a given persona should see to keep the assertion honest.
+  60 |    */
+  61 |   async expectLoaded(
+  62 |     expectedTabs: ClientsTab[] = ['Active', 'Archived', 'Clinic Clients'],
+  63 |   ) {
+  64 |     await expect(this.heading).toBeVisible();
+  65 |     await expect(this.tabsList).toBeVisible();
+  66 |     for (const t of expectedTabs) {
+> 67 |       await expect(this.tab(t)).toBeVisible();
+     |                                 ^ Error: expect(locator).toBeVisible() failed
+  68 |     }
+  69 |   }
+  70 | }
+  71 | 
+```

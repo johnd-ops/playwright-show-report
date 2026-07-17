@@ -1,0 +1,228 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: suite/e2e/dashboard/form-submissions-isolation.journey.spec.ts >> Form Submissions — practitioner journey + RLS isolation >> 2. open share link unauthenticated — public form loads
+- Location: suite/e2e/dashboard/form-submissions-isolation.journey.spec.ts:173:7
+
+# Error details
+
+```
+Error: red flag: public form rendered no form chrome AND no status card. Body: e2e-seed-form-1784297241631e2e seed formfrom:shard 2 e2elink expires:6 days remainingplease complete this formthis form has no fields yet.privacy protectedthis form contains confidential information. 
+
+expect(received).toBe(expected) // Object.is equality
+
+Expected: true
+Received: false
+```
+
+# Test source
+
+```ts
+  127 |         recipientFirstName,
+  128 |         recipientLastName,
+  129 |         templateData: {
+  130 |           formId,
+  131 |           clientId,
+  132 |           formTitle: form.title ?? form.name ?? 'E2E Form',
+  133 |         },
+  134 |       },
+  135 |     });
+  136 |     expect(
+  137 |       sendRes.status(),
+  138 |       `red flag: POST /api/email/send returned ${sendRes.status()}`,
+  139 |     ).toBeLessThan(500);
+  140 |     expect(
+  141 |       sendRes.ok(),
+  142 |       `red flag: POST /api/email/send not OK (${sendRes.status()})`,
+  143 |     ).toBeTruthy();
+  144 | 
+  145 |     const body = (await sendRes.json()) as {
+  146 |       success?: boolean;
+  147 |       formSubmissionUrl?: string;
+  148 |       error?: string;
+  149 |     };
+  150 |     if (!body.success) {
+  151 |       // Mailgun may be feature-flagged off on dev (no SMTP creds). The
+  152 |       // pending submission row is still created server-side, so we can
+  153 |       // continue with the URL if it was returned, otherwise skip the
+  154 |       // downstream tests gracefully.
+  155 |       test.info().annotations.push({
+  156 |         type: 'env-condition',
+  157 |         description: `POST /api/email/send returned success=false — Mailgun likely unconfigured on this env. Error: ${body.error ?? 'unknown'}.`,
+  158 |       });
+  159 |       if (!body.formSubmissionUrl) {
+  160 |         test.skip(true, 'send returned success=false and no URL — cannot exercise downstream tests');
+  161 |         return;
+  162 |       }
+  163 |     }
+  164 | 
+  165 |     shareUrl = body.formSubmissionUrl ?? null;
+  166 |     expect(
+  167 |       shareUrl,
+  168 |       'red flag: /api/email/send response must include formSubmissionUrl',
+  169 |     ).toBeTruthy();
+  170 |     console.log(`[form-submissions] share URL captured: ${shareUrl}`);
+  171 |   });
+  172 | 
+  173 |   test('2. open share link unauthenticated — public form loads', async ({ browser }) => {
+  174 |     test.skip(!shareUrl, 'no share URL captured in Test 1');
+  175 | 
+  176 |     // The share URL pattern from /api/email/send is
+  177 |     //   /forms/public/<formId>/submit?token=<JWT>
+  178 |     // Sanity-check the shape before we open it — a wrong-shaped URL
+  179 |     // surfaces a clearer failure than a 404 in headless chromium.
+  180 |     expect(
+  181 |       /\/forms\/public\/[^/]+\/submit\?token=/.test(shareUrl!),
+  182 |       `red flag: share URL ${shareUrl} doesn't match /forms/public/<id>/submit?token=...`,
+  183 |     ).toBe(true);
+  184 | 
+  185 |     const ctx = await browser.newContext({ storageState: { cookies: [], origins: [] } });
+  186 |     const publicPage = await ctx.newPage();
+  187 |     try {
+  188 |       const res = await publicPage.goto(shareUrl!, { waitUntil: 'domcontentloaded' });
+  189 |       expect(
+  190 |         res?.status() ?? 0,
+  191 |         `red flag: public form returned ${res?.status()}`,
+  192 |       ).toBeLessThan(500);
+  193 | 
+  194 |       // The page is a client component that goes:
+  195 |       //   "Validating access and loading form..." (spinner)
+  196 |       //   → terminal state: form fields | "Already Submitted" |
+  197 |       //                     "Access Error" | "Submitted Successfully"
+  198 |       // Wait for the spinner to clear (max 20s — token validation +
+  199 |       // form fetch + a margin) then assert one of the terminal states.
+  200 |       await publicPage
+  201 |         .getByText(/validating access and loading form/i)
+  202 |         .waitFor({ state: 'hidden', timeout: 20_000 })
+  203 |         .catch(() => null);
+  204 | 
+  205 |       const terminalText = (await publicPage.textContent('body'))?.toLowerCase() ?? '';
+  206 |       const hasFormChrome = await publicPage
+  207 |         .locator('input, textarea, [role="textbox"], button[type="submit"]')
+  208 |         .first()
+  209 |         .isVisible({ timeout: 5_000 })
+  210 |         .catch(() => false);
+  211 |       const hasStatusCard = /already submitted|access error|submitted successfully|form expired|invalid/i.test(
+  212 |         terminalText,
+  213 |       );
+  214 | 
+  215 |       // Spinner cleared and SOMETHING rendered — either the form is
+  216 |       // editable or a status card explains why it isn't. A page that
+  217 |       // stays blank or stuck on the spinner past 20s is the real bug.
+  218 |       if (!hasFormChrome && !hasStatusCard) {
+  219 |         test.info().annotations.push({
+  220 |           type: 'product-issue',
+  221 |           description: `Public form page rendered neither form chrome nor a documented status card after spinner cleared. URL: ${shareUrl}. Body excerpt: ${terminalText.slice(0, 200)}`,
+  222 |         });
+  223 |       }
+  224 |       expect(
+  225 |         hasFormChrome || hasStatusCard,
+  226 |         `red flag: public form rendered no form chrome AND no status card. Body: ${terminalText.slice(0, 200)}`,
+> 227 |       ).toBe(true);
+      |         ^ Error: red flag: public form rendered no form chrome AND no status card. Body: e2e-seed-form-1784297241631e2e seed formfrom:shard 2 e2elink expires:6 days remainingplease complete this formthis form has no fields yet.privacy protectedthis form contains confidential information. 
+  228 | 
+  229 |       // If we landed on a status card (not the form), downstream tests
+  230 |       // can't proceed — surface that and skip the rest of the chain.
+  231 |       if (!hasFormChrome) {
+  232 |         test.info().annotations.push({
+  233 |           type: 'env-condition',
+  234 |           description: `Public form landed on a status card (likely "Already Submitted" — a previous run already submitted this submissionId). Re-run after the existing submission is purged, or send to a fresh client.`,
+  235 |         });
+  236 |         shareUrl = null; // signal downstream tests to skip
+  237 |       }
+  238 |     } finally {
+  239 |       await ctx.close();
+  240 |     }
+  241 |   });
+  242 | 
+  243 |   test('3. submit the form — POST /api/forms/public/:id/submit (unauthenticated, token-bound)', async ({
+  244 |     browser,
+  245 |   }) => {
+  246 |     test.skip(!shareUrl, 'no share URL from Test 1');
+  247 | 
+  248 |     // Extract the JWT from the share URL — the public submit route
+  249 |     // requires it for token validation (it's bound to formId, clientId,
+  250 |     // and the pre-existing submission row created at send-time).
+  251 |     const tokenMatch = shareUrl!.match(/[?&]token=([^&]+)/);
+  252 |     expect(
+  253 |       tokenMatch?.[1],
+  254 |       `red flag: share URL ${shareUrl} has no token query param — JWT minting on send may have failed`,
+  255 |     ).toBeTruthy();
+  256 |     const token = decodeURIComponent(tokenMatch![1]);
+  257 | 
+  258 |     // Use a fresh unauthenticated browser context — the public submit
+  259 |     // route explicitly does NOT require Auth0 authentication, and we
+  260 |     // want to verify it works without any practitioner session leaking.
+  261 |     const browserCtx = await browser.newContext({
+  262 |       storageState: { cookies: [], origins: [] },
+  263 |     });
+  264 |     const stamp = Date.now();
+  265 |     try {
+  266 |       const submitRes = await browserCtx.request.post(`/api/forms/public/${formId}/submit`, {
+  267 |         data: {
+  268 |           formData: { __e2e_marker: `${E2E_PREFIX}-${stamp}` },
+  269 |           token,
+  270 |         },
+  271 |       });
+  272 |       expect(
+  273 |         submitRes.status(),
+  274 |         `red flag: POST /api/forms/public/${formId}/submit returned ${submitRes.status()}`,
+  275 |       ).toBeLessThan(500);
+  276 |       expect(
+  277 |         submitRes.ok(),
+  278 |         `red flag: public submit not OK (${submitRes.status()})`,
+  279 |       ).toBeTruthy();
+  280 | 
+  281 |       const body = (await submitRes.json()) as Record<string, unknown>;
+  282 |       const id =
+  283 |         (body.submissionId as string | undefined) ??
+  284 |         (body.id as string | undefined) ??
+  285 |         ((body.submission as Record<string, unknown> | undefined)?.id as string | undefined) ??
+  286 |         ((body.data as Record<string, unknown> | undefined)?.id as string | undefined);
+  287 | 
+  288 |       expect(
+  289 |         id,
+  290 |         `red flag: public submit response must include the submission id (response keys: ${Object.keys(body).join(', ')})`,
+  291 |       ).toBeTruthy();
+  292 | 
+  293 |       submissionId = id ?? null;
+  294 |       console.log(`[form-submissions] submission ${submissionId} confirmed via public submit`);
+  295 | 
+  296 |       // The submission row was created at send-time (Test 1). It now
+  297 |       // transitions from in_progress → completed. There's no documented
+  298 |       // DELETE — annotate the orphan for periodic purge.
+  299 |       test.info().annotations.push({
+  300 |         type: 'cleanup-deferred',
+  301 |         description: `Submission ${submissionId} transitioned to completed via the public-form path. Created at send-time, marker ${E2E_PREFIX}-${stamp}. No documented DELETE — annotate for periodic E2E-FORM-SUB-* purge.`,
+  302 |       });
+  303 |     } finally {
+  304 |       await browserCtx.close();
+  305 |     }
+  306 |   });
+  307 | 
+  308 |   test('4. view submission as practitioner — list + detail load with the new submission', async ({
+  309 |     page,
+  310 |     request,
+  311 |   }) => {
+  312 |     test.skip(!submissionId, 'no submissionId from Test 3');
+  313 | 
+  314 |     // API list — must include our new id.
+  315 |     const listRes = await request.get('/api/forms/submissions');
+  316 |     expect(listRes.ok()).toBeTruthy();
+  317 |     const listBody = (await listRes.json()) as Record<string, unknown>;
+  318 |     const list =
+  319 |       (listBody.submissions as Submission[] | undefined) ??
+  320 |       (listBody.data as Submission[] | undefined) ??
+  321 |       (Array.isArray(listBody) ? (listBody as Submission[]) : []);
+  322 |     expect(
+  323 |       list.find((s) => s.id === submissionId),
+  324 |       `red flag: practitioner cannot see their own submission ${submissionId} in /api/forms/submissions`,
+  325 |     ).toBeTruthy();
+  326 | 
+  327 |     // API detail — must return the submission and confirm ownership.
+```
