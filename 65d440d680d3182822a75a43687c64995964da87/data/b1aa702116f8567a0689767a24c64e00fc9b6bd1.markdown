@@ -1,0 +1,131 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: suite/security/lint-no-waitfortimeout.spec.ts >> Lint — no page.waitForTimeout outside helpers (regression #43) >> zero waitForTimeout uses in suite/e2e/* (excluding allow-listed files)
+- Location: suite/security/lint-no-waitfortimeout.spec.ts:69:7
+
+# Error details
+
+```
+Error: red flag: 122 page.waitForTimeout uses — exceeds baseline 63. Refactor to waitForResponse / waitFor / expect.poll. See test output for file:line list.
+
+expect(received).toBeLessThanOrEqual(expected)
+
+Expected: <= 63
+Received:    122
+```
+
+# Test source
+
+```ts
+  10  | // CI load the wall-clock waits close before the UI settles → flaky.
+  11  | //
+  12  | // This canary scans suite/e2e/* for occurrences and fails if any
+  13  | // land in journey/spec files. Helpers and the visual-baseline
+  14  | // pre-screenshot pause are allowed (they have a documented reason).
+  15  | //
+  16  | // To grandfather an existing legitimate use, add the file path to
+  17  | // ALLOWED_FILES below with a justification comment.
+  18  | 
+  19  | const ALLOWED_FILES = new Set<string>([
+  20  |   // Visual baselines need a small settle pause before screenshot.
+  21  |   // Documented in the spec header.
+  22  |   'suite/e2e/visual/visual-baselines.spec.ts',
+  23  | ]);
+  24  | 
+  25  | const SCAN_ROOTS = ['suite/e2e', 'suite/cs', 'suite/multi-clinic'];
+  26  | const FORBIDDEN_PATTERN = /\bpage\.waitForTimeout\s*\(/;
+  27  | 
+  28  | function findViolations(): Array<{ file: string; line: number; content: string }> {
+  29  |   const repoRoot = path.resolve(__dirname, '../../');
+  30  |   const violations: Array<{ file: string; line: number; content: string }> = [];
+  31  | 
+  32  |   for (const root of SCAN_ROOTS) {
+  33  |     const dir = path.join(repoRoot, root);
+  34  |     if (!fs.existsSync(dir)) continue;
+  35  |     walk(dir);
+  36  |   }
+  37  |   return violations;
+  38  | 
+  39  |   function walk(dir: string) {
+  40  |     for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+  41  |       const p = path.join(dir, entry.name);
+  42  |       if (entry.isDirectory()) {
+  43  |         if (entry.name === 'node_modules' || entry.name.startsWith('.')) continue;
+  44  |         walk(p);
+  45  |         continue;
+  46  |       }
+  47  |       if (!entry.isFile()) continue;
+  48  |       if (!/\.spec\.ts$/.test(entry.name)) continue;
+  49  | 
+  50  |       const relPath = path.relative(repoRoot, p).replace(/\\/g, '/');
+  51  |       if (ALLOWED_FILES.has(relPath)) continue;
+  52  | 
+  53  |       const content = fs.readFileSync(p, 'utf-8');
+  54  |       const lines = content.split('\n');
+  55  |       for (let i = 0; i < lines.length; i++) {
+  56  |         if (FORBIDDEN_PATTERN.test(lines[i])) {
+  57  |           violations.push({
+  58  |             file: relPath,
+  59  |             line: i + 1,
+  60  |             content: lines[i].trim().slice(0, 120),
+  61  |           });
+  62  |         }
+  63  |       }
+  64  |     }
+  65  |   }
+  66  | }
+  67  | 
+  68  | test.describe('Lint — no page.waitForTimeout outside helpers (regression #43)', () => {
+  69  |   test('zero waitForTimeout uses in suite/e2e/* (excluding allow-listed files)', () => {
+  70  |     const violations = findViolations();
+  71  | 
+  72  |     // Baseline gate: today the suite has ~70 occurrences (per the
+  73  |     // audit). Failing on every existing use would block CI. Instead
+  74  |     // this canary uses test.fail with an explicit baseline — when the
+  75  |     // count drops to zero the team can remove the test.fail marker
+  76  |     // and this becomes a permanent zero-tolerance lint.
+  77  |     //
+  78  |     // Update the baseline as cleanup progresses to ratchet the count
+  79  |     // downward.
+  80  |     // Ratchet: every cleanup PR that drops the count must also lower
+  81  |     // this number so the next regression trips the alarm. The number
+  82  |     // is set ONE below the current actual count — that way the test
+  83  |     // expects to fail today, and the moment someone removes another
+  84  |     // call the assertion starts passing → test.fail flags an
+  85  |     // "unexpected pass" → forces this number to come down again.
+  86  |     //
+  87  |     // History:
+  88  |     //   - 2026-05-19: BASELINE 80, actual ~117 (per ENG ticket)
+  89  |     //   - 2026-06-04: post-sweep cleanup, actual 64. Baseline ratcheted.
+  90  |     const BASELINE_MAX_VIOLATIONS = 63;
+  91  | 
+  92  |     test.fail(
+  93  |       violations.length > 0,
+  94  |       `Risk Assessment finding #43: ${violations.length} page.waitForTimeout uses across the suite. Replace with waitForResponse / expect(locator).toBeVisible / expect.poll. Once the count hits zero, remove this test.fail marker. Current violations: see test output.`,
+  95  |     );
+  96  | 
+  97  |     if (violations.length > 0) {
+  98  |       console.warn(`[lint-waitfortimeout] ${violations.length} violations:`);
+  99  |       for (const v of violations.slice(0, 30)) {
+  100 |         console.warn(`  ${v.file}:${v.line}  ${v.content}`);
+  101 |       }
+  102 |       if (violations.length > 30) {
+  103 |         console.warn(`  ... and ${violations.length - 30} more`);
+  104 |       }
+  105 |     }
+  106 | 
+  107 |     expect(
+  108 |       violations.length,
+  109 |       `red flag: ${violations.length} page.waitForTimeout uses — exceeds baseline ${BASELINE_MAX_VIOLATIONS}. Refactor to waitForResponse / waitFor / expect.poll. See test output for file:line list.`,
+> 110 |     ).toBeLessThanOrEqual(BASELINE_MAX_VIOLATIONS);
+      |       ^ Error: red flag: 122 page.waitForTimeout uses — exceeds baseline 63. Refactor to waitForResponse / waitFor / expect.poll. See test output for file:line list.
+  111 |   });
+  112 | });
+  113 | 
+```

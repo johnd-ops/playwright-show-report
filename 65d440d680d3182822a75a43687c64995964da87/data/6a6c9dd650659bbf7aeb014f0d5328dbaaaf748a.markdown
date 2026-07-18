@@ -1,0 +1,262 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: suite/e2e/dashboard/clients-creation.journey.spec.ts >> Clients — new client form >> /dashboard/clients/creation renders the new-client form sections
+- Location: suite/e2e/dashboard/clients-creation.journey.spec.ts:12:7
+
+# Error details
+
+```
+Error: expected H2 "Therapist Details" section
+
+expect(locator).toBeVisible() failed
+
+Locator: getByRole('heading', { name: /^Therapist Details$/i, level: 2 })
+Expected: visible
+Timeout: 15000ms
+Error: element(s) not found
+
+Call log:
+  - expected H2 "Therapist Details" section with timeout 15000ms
+  - waiting for getByRole('heading', { name: /^Therapist Details$/i, level: 2 })
+
+```
+
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e5]:
+        - img "PlaySpace Logo" [ref=e7]
+        - generic [ref=e8]: PlaySpace
+      - generic [ref=e10]:
+        - link "Home" [ref=e12] [cursor=pointer]:
+          - /url: /dashboard/home
+          - generic [ref=e14]:
+            - img [ref=e15]
+            - generic [ref=e18]: Home
+        - generic [ref=e19]:
+          - generic [ref=e20]: Session Prep
+          - link "Video Session" [ref=e21] [cursor=pointer]:
+            - /url: /dashboard/session
+            - generic [ref=e23]:
+              - img [ref=e24]
+              - generic [ref=e27]: Video Session
+          - link "In-Person Tools" [ref=e28] [cursor=pointer]:
+            - /url: /dashboard/in-person-session
+            - generic [ref=e30]:
+              - img [ref=e31]
+              - generic [ref=e34]: In-Person Tools
+          - link "Creative Suite" [ref=e35] [cursor=pointer]:
+            - /url: /dashboard/creative-suite
+            - generic [ref=e37]:
+              - img [ref=e38]
+              - generic [ref=e44]: Creative Suite
+        - generic [ref=e45]:
+          - generic [ref=e46]: Your Practice
+          - link "Calendar" [ref=e47] [cursor=pointer]:
+            - /url: /dashboard/appointments
+            - generic [ref=e49]:
+              - img [ref=e50]
+              - generic [ref=e52]: Calendar
+          - link "Clients" [ref=e53] [cursor=pointer]:
+            - /url: /dashboard/clients
+            - generic [ref=e55]:
+              - img [ref=e56]
+              - generic [ref=e60]: Clients
+          - link "Clinical Notes" [ref=e61] [cursor=pointer]:
+            - /url: /dashboard/clinical-notes
+            - generic [ref=e63]:
+              - img [ref=e64]
+              - generic [ref=e66]: Clinical Notes
+          - link "Forms" [ref=e67] [cursor=pointer]:
+            - /url: /dashboard/forms
+            - generic [ref=e69]:
+              - img [ref=e70]
+              - generic [ref=e73]: Forms
+        - generic [ref=e74]:
+          - generic [ref=e75]: Discover
+          - link "Community" [ref=e76] [cursor=pointer]:
+            - /url: /dashboard/community
+            - generic [ref=e78]:
+              - img [ref=e79]
+              - generic [ref=e83]: Community
+      - generic [ref=e84]:
+        - button "What's new — version 0.16.0" [ref=e85] [cursor=pointer]:
+          - generic [ref=e87]: v0.16.0
+          - generic [ref=e88]: What's new
+        - link "Settings" [ref=e89] [cursor=pointer]:
+          - /url: /dashboard/settings
+          - generic [ref=e90]:
+            - img [ref=e91]
+            - generic [ref=e94]: Settings
+    - generic [ref=e95]:
+      - banner [ref=e96]:
+        - button "Collapse sidebar" [ref=e98] [cursor=pointer]:
+          - img [ref=e99]
+        - button "SE Shard 2 E2E" [ref=e103] [cursor=pointer]:
+          - generic [ref=e105]: SE
+          - generic [ref=e106]: Shard 2 E2E
+          - img [ref=e107]
+      - main [ref=e109]:
+        - generic [ref=e110]:
+          - generic [ref=e112]:
+            - generic [ref=e113]:
+              - button "Client Info (current)" [disabled] [ref=e114]:
+                - generic [ref=e115]: "1"
+              - generic [ref=e117]: Client Info
+            - generic [ref=e119]:
+              - button "Caregiver Settings" [disabled] [ref=e120]:
+                - generic [ref=e121]: "2"
+              - generic [ref=e123]: Caregiver Settings
+            - generic [ref=e125]:
+              - button "Review" [disabled] [ref=e126]:
+                - generic [ref=e127]: "3"
+              - generic [ref=e129]: Review
+          - generic [ref=e130]:
+            - generic [ref=e131]:
+              - generic [ref=e132]:
+                - heading "General" [level=2] [ref=e134]
+                - generic [ref=e135]:
+                  - generic [ref=e136]:
+                    - generic [ref=e137]:
+                      - generic [ref=e138]: First Name *
+                      - textbox "First Name *" [ref=e140]:
+                        - /placeholder: John
+                    - generic [ref=e141]:
+                      - generic [ref=e142]: Last Name *
+                      - textbox "Last Name *" [ref=e144]:
+                        - /placeholder: Smith
+                  - generic [ref=e146]:
+                    - text: Preferred Name
+                    - textbox "Preferred Name" [ref=e148]:
+                      - /placeholder: e.g. Johnny
+                  - generic [ref=e149]:
+                    - generic [ref=e150]:
+                      - text: Legal Name
+                      - textbox "Legal Name" [ref=e152]:
+                        - /placeholder: John Smith
+                    - generic [ref=e153]:
+                      - text: Gender
+                      - combobox "Gender" [ref=e154] [cursor=pointer]:
+                        - generic: Select one...
+                        - img [ref=e155]
+                      - combobox [ref=e157]
+                  - generic [ref=e158]:
+                    - generic [ref=e159]:
+                      - text: Pronouns
+                      - textbox "Pronouns" [ref=e161]:
+                        - /placeholder: e.g. He/Him
+                    - generic [ref=e162]:
+                      - generic [ref=e163]: Date of Birth
+                      - button "Date of Birth" [ref=e164] [cursor=pointer]:
+                        - img
+                        - text: Pick a date
+              - generic [ref=e165]:
+                - heading "Contact" [level=2] [ref=e167]
+                - generic [ref=e168]:
+                  - generic [ref=e169]:
+                    - generic [ref=e170]:
+                      - generic [ref=e171]: Email *
+                      - textbox "Email *" [ref=e173]:
+                        - /placeholder: john@gmail.com
+                    - generic [ref=e174]:
+                      - text: Alternative Email
+                      - textbox "Alternative Email" [ref=e176]:
+                        - /placeholder: john.alt@gmail.com
+                  - generic [ref=e177]:
+                    - generic [ref=e178]:
+                      - text: Phone Number
+                      - textbox "Phone Number" [ref=e180]:
+                        - /placeholder: 123-456-7890
+                    - generic [ref=e181]:
+                      - text: Alternative Phone Number
+                      - textbox "Alternative Phone Number" [ref=e183]:
+                        - /placeholder: 123-456-7890
+              - generic [ref=e184]:
+                - heading "Address" [level=2] [ref=e186]
+                - generic [ref=e187]:
+                  - generic [ref=e188]:
+                    - generic [ref=e189]:
+                      - text: Street Address
+                      - textbox "Street Address" [ref=e191]:
+                        - /placeholder: 123 Main St
+                    - generic [ref=e192]:
+                      - text: Apartment, Suite, Box Number, etc.
+                      - textbox "Apartment, Suite, Box Number, etc." [ref=e194]:
+                        - /placeholder: Apt 4B
+                  - generic [ref=e195]:
+                    - generic [ref=e196]:
+                      - text: City/Town
+                      - textbox "City/Town" [ref=e198]:
+                        - /placeholder: Springfield
+                    - generic [ref=e199]:
+                      - text: Country
+                      - textbox "Country" [ref=e201]:
+                        - /placeholder: United States
+                  - generic [ref=e202]:
+                    - generic [ref=e203]:
+                      - text: State/Province/Region
+                      - textbox "State/Province/Region" [ref=e205]:
+                        - /placeholder: California
+                    - generic [ref=e206]:
+                      - text: Timezone
+                      - combobox "Timezone" [ref=e207] [cursor=pointer]:
+                        - generic: GMT-5 (Eastern)
+                        - img [ref=e208]
+                      - combobox [ref=e210]
+                  - generic [ref=e212]:
+                    - text: Postal Code
+                    - textbox "Postal Code" [ref=e214]:
+                      - /placeholder: "90210"
+            - button "Next" [ref=e216] [cursor=pointer]:
+              - text: Next
+              - img
+  - region "Notifications (F8)":
+    - list
+  - region "Notifications alt+T"
+  - alert [ref=e217]
+  - iframe [ref=e218]:
+    
+  - button "Open Intercom Messenger" [ref=e219] [cursor=pointer]:
+    - img [ref=e221]
+    - generic:
+      - img
+```
+
+# Test source
+
+```ts
+  1  | import { test, expect } from '@playwright/test';
+  2  | 
+  3  | // PHI: this route is the new-client form. Visiting it doesn't create
+  4  | // anything, but the form layout reflects PHI fields (name, contact). Off.
+  5  | test.use({ screenshot: 'off', video: 'off', trace: 'off' });
+  6  | 
+  7  | // New client form has 4 section headings: General, Contact, Address,
+  8  | // Therapist Details. Test asserts the form scaffold renders without
+  9  | // filling or submitting (avoids accidental client creation).
+  10 | 
+  11 | test.describe('Clients — new client form', () => {
+  12 |   test('/dashboard/clients/creation renders the new-client form sections', async ({ page }) => {
+  13 |     await page.goto('/dashboard/clients/creation');
+  14 |     await expect(page).toHaveURL(/\/dashboard\/clients\/creation\b/);
+  15 | 
+  16 |     for (const section of ['General', 'Contact', 'Address', 'Therapist Details'] as const) {
+  17 |       await expect(
+  18 |         page.getByRole('heading', { level: 2, name: new RegExp(`^${section}$`, 'i') }),
+  19 |         `expected H2 "${section}" section`,
+> 20 |       ).toBeVisible();
+     |         ^ Error: expected H2 "Therapist Details" section
+  21 |     }
+  22 |   });
+  23 | });
+  24 | 
+```
