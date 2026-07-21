@@ -1,0 +1,287 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: suite/e2e/dashboard/profile-country-select.journey.spec.ts >> Profile — country write flow >> user can change country via country-select and see the display update
+- Location: suite/e2e/dashboard/profile-country-select.journey.spec.ts:65:7
+
+# Error details
+
+```
+Test timeout of 90000ms exceeded while running "afterEach" hook.
+```
+
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e5]:
+        - img "PlaySpace Logo" [ref=e7]
+        - generic [ref=e8]: PlaySpace
+      - generic [ref=e10]:
+        - link "Home" [ref=e12] [cursor=pointer]:
+          - /url: /dashboard/home
+          - generic [ref=e14]:
+            - img [ref=e15]
+            - generic [ref=e18]: Home
+        - generic [ref=e19]:
+          - generic [ref=e20]: Session Prep
+          - link "Video Session" [ref=e21] [cursor=pointer]:
+            - /url: /dashboard/session
+            - generic [ref=e23]:
+              - img [ref=e24]
+              - generic [ref=e27]: Video Session
+          - link "In-Person Tools" [ref=e28] [cursor=pointer]:
+            - /url: /dashboard/in-person-session
+            - generic [ref=e30]:
+              - img [ref=e31]
+              - generic [ref=e34]: In-Person Tools
+          - link "Creative Suite" [ref=e35] [cursor=pointer]:
+            - /url: /dashboard/creative-suite
+            - generic [ref=e37]:
+              - img [ref=e38]
+              - generic [ref=e44]: Creative Suite
+        - generic [ref=e45]:
+          - generic [ref=e46]: Your Practice
+          - link "Calendar" [ref=e47] [cursor=pointer]:
+            - /url: /dashboard/appointments
+            - generic [ref=e49]:
+              - img [ref=e50]
+              - generic [ref=e52]: Calendar
+          - link "Clients" [ref=e53] [cursor=pointer]:
+            - /url: /dashboard/clients
+            - generic [ref=e55]:
+              - img [ref=e56]
+              - generic [ref=e60]: Clients
+          - link "Clinical Notes" [ref=e61] [cursor=pointer]:
+            - /url: /dashboard/clinical-notes
+            - generic [ref=e63]:
+              - img [ref=e64]
+              - generic [ref=e66]: Clinical Notes
+          - link "Forms" [ref=e67] [cursor=pointer]:
+            - /url: /dashboard/forms
+            - generic [ref=e69]:
+              - img [ref=e70]
+              - generic [ref=e73]: Forms
+        - generic [ref=e74]:
+          - generic [ref=e75]: Discover
+          - link "Community" [ref=e76] [cursor=pointer]:
+            - /url: /dashboard/community
+            - generic [ref=e78]:
+              - img [ref=e79]
+              - generic [ref=e83]: Community
+        - generic [ref=e84]:
+          - generic [ref=e85]: Clinic Management
+          - link "Team" [ref=e86] [cursor=pointer]:
+            - /url: /dashboard/clinic
+            - generic [ref=e88]:
+              - img [ref=e89]
+              - generic [ref=e93]: Team
+          - link "Internal Library" [ref=e94] [cursor=pointer]:
+            - /url: /dashboard/clinic-community
+            - generic [ref=e96]:
+              - img [ref=e97]
+              - generic [ref=e99]: Internal Library
+      - generic [ref=e100]:
+        - button "What's new — version 0.16.0" [ref=e101] [cursor=pointer]:
+          - generic [ref=e103]: v0.16.0
+          - generic [ref=e104]: What's new
+        - link "Settings" [ref=e105] [cursor=pointer]:
+          - /url: /dashboard/settings
+          - generic [ref=e106]:
+            - img [ref=e107]
+            - generic [ref=e110]: Settings
+    - generic [ref=e111]:
+      - banner [ref=e112]:
+        - generic [ref=e113]:
+          - button "Collapse sidebar" [ref=e114] [cursor=pointer]:
+            - img [ref=e115]
+          - navigation "Breadcrumb" [ref=e119]:
+            - link "Settings" [ref=e120] [cursor=pointer]:
+              - /url: /dashboard/settings
+            - img [ref=e121]
+            - generic [ref=e123]: Profile
+        - button "SE shard 6 e2e" [ref=e125] [cursor=pointer]:
+          - generic [ref=e127]: SE
+          - generic [ref=e128]: shard 6 e2e
+          - img [ref=e129]
+      - main [ref=e131]:
+        - generic [ref=e132]:
+          - complementary [ref=e133]:
+            - navigation [ref=e135]:
+              - generic [ref=e136]:
+                - heading "Team & Billing" [level=3] [ref=e137]
+                - navigation [ref=e138]:
+                  - link "My Profile" [ref=e139] [cursor=pointer]:
+                    - /url: /dashboard/settings/profile
+                  - link "Clinic Members" [ref=e140] [cursor=pointer]:
+                    - /url: /dashboard/settings/members
+                  - link "Subscription" [ref=e141] [cursor=pointer]:
+                    - /url: /dashboard/settings/subscription
+              - generic [ref=e142]:
+                - heading "Your Practice" [level=3] [ref=e143]
+                - navigation [ref=e144]:
+                  - link "Appointment Settings" [ref=e145] [cursor=pointer]:
+                    - /url: /dashboard/settings/appointments
+                  - link "Client Onboarding" [ref=e146] [cursor=pointer]:
+                    - /url: /dashboard/settings/client-onboarding
+                  - link "Invoices & Payments" [ref=e147] [cursor=pointer]:
+                    - /url: /dashboard/settings/invoices
+                  - link "Clinical Note Templates" [ref=e148] [cursor=pointer]:
+                    - /url: /dashboard/settings/note-templates
+          - main [ref=e149]:
+            - generic [ref=e151]:
+              - heading "My Profile" [level=1] [ref=e152]
+              - generic [ref=e153]:
+                - generic [ref=e154]:
+                  - generic [ref=e156]: Basics
+                  - generic [ref=e158]:
+                    - generic [ref=e159]:
+                      - text: First Name
+                      - paragraph [ref=e160]: shard 6
+                    - generic [ref=e161]:
+                      - text: Last Name
+                      - paragraph [ref=e162]: e2e
+                    - generic [ref=e163]:
+                      - text: Email
+                      - paragraph [ref=e164]: johnd+shard6@playspace.health
+                    - generic [ref=e165]:
+                      - text: Phone Number
+                      - paragraph [ref=e166]: "+639292957085"
+                    - generic [ref=e167]:
+                      - text: Role
+                      - paragraph [ref=e168]: Owner
+                - generic [ref=e169]:
+                  - generic [ref=e171]: Address
+                  - generic [ref=e173]:
+                    - generic [ref=e174]:
+                      - text: Street Address
+                      - paragraph [ref=e175]: Not provided
+                    - generic [ref=e176]:
+                      - text: Apartment, Suite, Box Number, etc.
+                      - paragraph [ref=e177]: Not provided
+                    - generic [ref=e178]:
+                      - text: City/Town
+                      - paragraph [ref=e179]: Not provided
+                    - generic [ref=e180]:
+                      - text: Country
+                      - paragraph [ref=e181]: Andorra
+                    - generic [ref=e182]:
+                      - text: State/Province/Region
+                      - paragraph [ref=e183]: Not provided
+                    - generic [ref=e184]:
+                      - text: Timezone
+                      - paragraph [ref=e185]: Asia/Manila
+                    - generic [ref=e186]:
+                      - text: Postal Code
+                      - paragraph [ref=e187]: Not provided
+                - generic [ref=e188]:
+                  - generic [ref=e189]:
+                    - generic [ref=e190]: Password
+                    - generic [ref=e191]: Change your account password
+                  - generic [ref=e193]:
+                    - paragraph [ref=e194]: "********"
+                    - button "Change Password" [ref=e195] [cursor=pointer]
+              - button "Edit" [ref=e197] [cursor=pointer]
+  - region "Notifications (F8)":
+    - list
+  - region "Notifications alt+T"
+  - alert [ref=e198]
+  - iframe [ref=e199]:
+    
+  - button "Open Intercom Messenger" [ref=e200] [cursor=pointer]:
+    - img [ref=e202]
+    - generic:
+      - img
+```
+
+# Test source
+
+```ts
+  1  | import { test, expect, type Page } from '@playwright/test';
+  2  | 
+  3  | // Third profile write flow — exercises the country-select component
+  4  | // (another Radix Select instance on the profile edit form). Complements
+  5  | // profile-edit (text input) and profile-timezone (timezone-select).
+  6  | 
+  7  | let originalCountry: string | null = null;
+  8  | 
+  9  | async function savePage(page: Page) {
+  10 |   // 30s budget — CI runners under load occasionally take >15s for the
+  11 |   // /api/profile round-trip; failure mode here was a flake, not a bug.
+  12 |   const saveResponse = page.waitForResponse(
+  13 |     (r) => r.url().includes('/api/profile') && r.request().method() !== 'GET',
+  14 |     { timeout: 30_000 },
+  15 |   );
+  16 |   await page.getByTestId('save-profile-button').click();
+  17 |   const res = await saveResponse;
+  18 |   expect(res.ok()).toBeTruthy();
+  19 | }
+  20 | 
+  21 | async function selectCountryOther(page: Page, notEqual: string) {
+  22 |   await page.getByTestId('edit-profile-button').click();
+  23 |   await expect(page).toHaveURL(/\/dashboard\/settings\/profile/);
+  24 |   await page.getByTestId('country-select').click();
+  25 |   const options = page.getByRole('option');
+  26 |   await options.first().waitFor({ state: 'visible', timeout: 10_000 });
+  27 |   const total = Math.min(await options.count(), 30);
+  28 |   for (let i = 0; i < total; i++) {
+  29 |     const text = ((await options.nth(i).textContent()) || '').trim();
+  30 |     if (text && !text.includes(notEqual)) {
+  31 |       await options.nth(i).click();
+  32 |       return text;
+  33 |     }
+  34 |   }
+  35 |   throw new Error('no non-current country option found');
+  36 | }
+  37 | 
+  38 | test.describe.configure({ mode: 'serial' });
+  39 | 
+  40 | test.describe('Profile — country write flow', () => {
+> 41 |   test.afterEach(async ({ page }) => {
+     |        ^ Test timeout of 90000ms exceeded while running "afterEach" hook.
+  42 |     if (!originalCountry) return;
+  43 |     try {
+  44 |       await page.goto('/dashboard/settings/profile');
+  45 |       const current = ((await page.getByTestId('display-country').textContent()) || '').trim();
+  46 |       if (current !== originalCountry) {
+  47 |         await page.getByTestId('edit-profile-button').click();
+  48 |         await page.getByTestId('country-select').click();
+  49 |         const options = page.getByRole('option');
+  50 |         const total = await options.count();
+  51 |         for (let i = 0; i < total; i++) {
+  52 |           const text = ((await options.nth(i).textContent()) || '').trim();
+  53 |           if (text && text.includes(originalCountry!)) {
+  54 |             await options.nth(i).click();
+  55 |             break;
+  56 |           }
+  57 |         }
+  58 |         await savePage(page);
+  59 |       }
+  60 |     } catch {
+  61 |       // best-effort
+  62 |     }
+  63 |   });
+  64 | 
+  65 |   test('user can change country via country-select and see the display update', async ({ page }) => {
+  66 |     test.slow(); // serial write-flow + afterEach restore — 90s budget covers a loaded CI runner
+  67 |     await page.goto('/dashboard/settings/profile');
+  68 |     await expect(page.getByTestId('settings-profile-page')).toBeVisible();
+  69 |     originalCountry = ((await page.getByTestId('display-country').textContent()) || '').trim() || null;
+  70 |     expect(originalCountry, 'original country must render').toBeTruthy();
+  71 | 
+  72 |     await selectCountryOther(page, originalCountry!);
+  73 |     await savePage(page);
+  74 | 
+  75 |     const updated = ((await page.getByTestId('display-country').textContent()) || '').trim();
+  76 |     expect(updated, 'country display should have changed after save').not.toBe(originalCountry);
+  77 |   });
+  78 | });
+  79 | 
+```

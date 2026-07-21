@@ -1,0 +1,217 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: suite/e2e/dashboard/playspace-session-creation.journey.spec.ts >> Create Playspace Session >> generating a session produces a shareable link
+- Location: suite/e2e/dashboard/playspace-session-creation.journey.spec.ts:55:7
+
+# Error details
+
+```
+Error: a shareable session link must be generated
+
+expect(locator).toBeVisible() failed
+
+Locator: getByText(/session link generated/i)
+Expected: visible
+Timeout: 10000ms
+Error: element(s) not found
+
+Call log:
+  - a shareable session link must be generated with timeout 10000ms
+  - waiting for getByText(/session link generated/i)
+
+```
+
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e5]:
+        - img "PlaySpace Logo" [ref=e7]
+        - generic [ref=e8]: PlaySpace
+      - generic [ref=e10]:
+        - link "Home" [ref=e12] [cursor=pointer]:
+          - /url: /dashboard/home
+          - generic [ref=e14]:
+            - img [ref=e15]
+            - generic [ref=e18]: Home
+        - generic [ref=e19]:
+          - generic [ref=e20]: Session Prep
+          - link "Video Session" [ref=e21] [cursor=pointer]:
+            - /url: /dashboard/session
+            - generic [ref=e23]:
+              - img [ref=e24]
+              - generic [ref=e27]: Video Session
+          - link "In-Person Tools" [ref=e28] [cursor=pointer]:
+            - /url: /dashboard/in-person-session
+            - generic [ref=e30]:
+              - img [ref=e31]
+              - generic [ref=e34]: In-Person Tools
+          - link "Creative Suite" [ref=e35] [cursor=pointer]:
+            - /url: /dashboard/creative-suite
+            - generic [ref=e37]:
+              - img [ref=e38]
+              - generic [ref=e44]: Creative Suite
+        - generic [ref=e45]:
+          - generic [ref=e46]: Your Practice
+          - link "Calendar" [ref=e47] [cursor=pointer]:
+            - /url: /dashboard/appointments
+            - generic [ref=e49]:
+              - img [ref=e50]
+              - generic [ref=e52]: Calendar
+          - link "Clients" [ref=e53] [cursor=pointer]:
+            - /url: /dashboard/clients
+            - generic [ref=e55]:
+              - img [ref=e56]
+              - generic [ref=e60]: Clients
+          - link "Clinical Notes" [ref=e61] [cursor=pointer]:
+            - /url: /dashboard/clinical-notes
+            - generic [ref=e63]:
+              - img [ref=e64]
+              - generic [ref=e66]: Clinical Notes
+          - link "Forms" [ref=e67] [cursor=pointer]:
+            - /url: /dashboard/forms
+            - generic [ref=e69]:
+              - img [ref=e70]
+              - generic [ref=e73]: Forms
+        - generic [ref=e74]:
+          - generic [ref=e75]: Discover
+          - link "Community" [ref=e76] [cursor=pointer]:
+            - /url: /dashboard/community
+            - generic [ref=e78]:
+              - img [ref=e79]
+              - generic [ref=e83]: Community
+      - generic [ref=e84]:
+        - button "What's new — version 0.16.0" [ref=e85] [cursor=pointer]:
+          - generic [ref=e87]: v0.16.0
+          - generic [ref=e88]: What's new
+        - link "Settings" [ref=e89] [cursor=pointer]:
+          - /url: /dashboard/settings
+          - generic [ref=e90]:
+            - img [ref=e91]
+            - generic [ref=e94]: Settings
+    - generic [ref=e95]:
+      - banner [ref=e96]:
+        - button "Collapse sidebar" [ref=e98] [cursor=pointer]:
+          - img [ref=e99]
+        - button "SE shard 8 e2e" [ref=e103] [cursor=pointer]:
+          - generic [ref=e105]: SE
+          - generic [ref=e106]: shard 8 e2e
+          - img [ref=e107]
+      - main [ref=e109]:
+        - generic [ref=e110]:
+          - generic [ref=e111]:
+            - heading "Create Playspace Session" [level=1] [ref=e112]
+            - paragraph [ref=e113]: Select a client to generate a session link
+          - generic [ref=e114]:
+            - generic [ref=e115]:
+              - text: Select Client
+              - combobox "Select Client" [ref=e116] [cursor=pointer]:
+                - generic: Giselle Shard 8 (giselleshard8@yopmail.com)
+                - img [ref=e117]
+            - button "Generate Session Link" [ref=e119] [cursor=pointer]
+  - region "Notifications (F8)":
+    - list
+  - region "Notifications alt+T"
+  - alert [ref=e120]
+  - iframe [ref=e121]:
+    
+  - button "Open Intercom Messenger" [ref=e122] [cursor=pointer]:
+    - img [ref=e124]
+    - generic:
+      - img
+```
+
+# Test source
+
+```ts
+  1  | import { test, expect } from '@playwright/test';
+  2  | import { PlayspaceSessionCreationPage } from '../../../pages/PlayspaceSessionCreationPage';
+  3  | import { getOrCreateClient } from '../../../helpers/seed-appointment';
+  4  | 
+  5  | // QA journey — Create Playspace Session (/dashboard/playspace-session-creation).
+  6  | //
+  7  | // Closes a zero-coverage gap (no spec touched this route). A practitioner picks
+  8  | // a client and generates a shareable session link
+  9  | // (…/playspace-session/<colyseusRoomId>).
+  10 | //
+  11 | // Grounded live (staging 2026-07-01):
+  12 | //   - The client Select is populated from GET /api/client; "Generate Session
+  13 | //     Link" is disabled until a client is chosen.
+  14 | //   - KNOWN BUG: POST /api/session returns 500 "Failed to create session" for
+  15 | //     every client (reproduced across 3 clients + via the UI) — the server's
+  16 | //     Colyseus room creation (Authorization: Bearer TEMP placeholder) / session
+  17 | //     insert fails, so no link is produced. The happy-path test is therefore
+  18 | //     marked test.fail; it will flip to an UNEXPECTED PASS (failing the run)
+  19 | //     when /api/session is fixed — that's the signal to remove the marker.
+  20 | //
+  21 | // No snapshot assertion: dynamic, data-driven (client list); not a baseline route.
+  22 | 
+  23 | test.use({ screenshot: 'off', video: 'off', trace: 'retain-on-failure' });
+  24 | 
+  25 | test.describe('Create Playspace Session', () => {
+  26 |   // Self-provision the precondition: the client picker is populated from
+  27 |   // /api/client. On an empty account the spec fails before it can even reach
+  28 |   // the (separately test.fail-marked) session-create step. Idempotent.
+  29 |   test.beforeEach(async ({ request }) => {
+  30 |     await getOrCreateClient(request);
+  31 |   });
+  32 | 
+  33 |   test('page loads with the client picker and Generate gated', async ({ page }) => {
+  34 |     const sc = new PlayspaceSessionCreationPage(page);
+  35 |     await sc.goto();
+  36 | 
+  37 |     await expect(sc.clientSelectTrigger).toBeVisible();
+  38 |     await expect(
+  39 |       sc.generateButton,
+  40 |       'Generate must be disabled until a client is selected',
+  41 |     ).toBeDisabled();
+  42 |   });
+  43 | 
+  44 |   test('selecting a client (from /api/client) enables Generate', async ({ page }) => {
+  45 |     const sc = new PlayspaceSessionCreationPage(page);
+  46 |     await sc.goto();
+  47 | 
+  48 |     await sc.selectFirstClient();
+  49 |     await expect(
+  50 |       sc.generateButton,
+  51 |       'Generate must enable once a client is selected',
+  52 |     ).toBeEnabled();
+  53 |   });
+  54 | 
+  55 |   test('generating a session produces a shareable link', async ({ page }) => {
+  56 |     // KNOWN BUG (staging 2026-07-01) — ENG-2700: POST /api/session → 500
+  57 |     // "Failed to create session" for every client. Remove this marker when
+  58 |     // ENG-2700 is fixed (when it works this also creates a session row — no
+  59 |     // DELETE endpoint exists, so annotate the orphan at that point).
+  60 |     test.fail(
+  61 |       true,
+  62 |       'KNOWN BUG (ENG-2700): POST /api/session returns 500 "Failed to create session" on staging — server-side Colyseus room creation (Bearer TEMP) / session insert fails. Remove when fixed.',
+  63 |     );
+  64 | 
+  65 |     const sc = new PlayspaceSessionCreationPage(page);
+  66 |     await sc.goto();
+  67 |     await sc.selectFirstClient();
+  68 |     await sc.generate();
+  69 | 
+  70 |     await expect(
+  71 |       sc.generatedLinkLabel,
+  72 |       'a shareable session link must be generated',
+> 73 |     ).toBeVisible({ timeout: 10_000 });
+     |       ^ Error: a shareable session link must be generated
+  74 |     const link = await sc.generatedLinkInput.inputValue();
+  75 |     expect(link, 'the link must point to a playspace session room').toMatch(
+  76 |       /\/playspace-session\//,
+  77 |     );
+  78 |     await expect(sc.copyButton).toBeVisible();
+  79 |   });
+  80 | });
+  81 | 
+```

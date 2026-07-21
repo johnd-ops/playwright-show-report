@@ -1,0 +1,172 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: suite/e2e/dashboard/session-early-arrival.journey.spec.ts >> Video session — early arrival + typed link errors (ENG-2936) >> 3. /session-error with no reason shows the generic heading
+- Location: suite/e2e/dashboard/session-early-arrival.journey.spec.ts:41:7
+
+# Error details
+
+```
+Error: expect(locator).toHaveText(expected) failed
+
+Locator:  locator('h1')
+Expected: "This session isn't available"
+Received: "This session is not available yet"
+Timeout:  15000ms
+
+Call log:
+  - Expect "toHaveText" with timeout 15000ms
+  - waiting for locator('h1')
+    18 × locator resolved to <h1 class="text-2xl font-bold text-gray-900 mb-4">This session is not available yet</h1>
+       - unexpected value "This session is not available yet"
+
+```
+
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - generic [ref=e4]:
+      - img [ref=e6]
+      - heading "This session is not available yet" [level=1] [ref=e8]
+    - generic [ref=e9]:
+      - paragraph [ref=e10]:
+        - text: You can join your session
+        - strong [ref=e11]: 30 minutes before it starts
+        - text: .
+      - paragraph [ref=e12]:
+        - text: Session links automatically expire
+        - strong [ref=e13]: 24 hours after the start time
+        - text: to protect your privacy and keep every session secure.
+      - paragraph [ref=e14]: If your appointment time has changed, please check your updated link or contact your therapist.
+    - paragraph [ref=e16]:
+      - text: Need help? Contact your our support team
+      - link "support@playspace.health" [ref=e17] [cursor=pointer]:
+        - /url: mailto:support@playspace.health
+      - text: .
+  - region "Notifications alt+T"
+  - alert [ref=e18]
+  - iframe [ref=e19]:
+    
+```
+
+# Test source
+
+```ts
+  1   | import { test, expect } from '@playwright/test';
+  2   | import { SessionErrorPage } from '../../../pages/SessionErrorPage';
+  3   | import { EarlyArrivalWaitingRoomPage } from '../../../pages/EarlyArrivalWaitingRoomPage';
+  4   | import { getFirstClientId } from '../../../helpers/seed-appointment';
+  5   | 
+  6   | // QA journey — ENG-2936 / PR #534: "user unable to join video session".
+  7   | //
+  8   | // Incident: a client opened a scheduled session link ~2h early via a hand-copied
+  9   | // bare link, hit the token nbf (not-yet-active) rejection, and landed on a
+  10  | // dead-end /session-error page with no recovery path. The fix adds:
+  11  | //   1. an in-place early-arrival WAITING ROOM (countdown, auto-admit) on
+  12  | //      /video-session when the token is not-yet-active, and
+  13  | //   2. typed, audience-neutral /session-error variants for terminal rejections.
+  14  | //
+  15  | // Both surfaces are PUBLIC (no login). The waiting-room case seeds a FUTURE
+  16  | // appointment (~2h out) so its client token's nbf (start − 30min) is in the
+  17  | // future — reproducing the incident deterministically. Grounded in PR #534
+  18  | // (app/session-error/page.tsx, components/video/EarlyArrivalWaitingRoom.tsx,
+  19  | // AppointmentDetailsModal's POST /api/session/tokens → client_jwt).
+  20  | 
+  21  | // Security: test 5 navigates /video-session?token=<live client_jwt>, and the
+  22  | // page then sends that token to /api/session/tokens. Disable screenshot / video
+  23  | // / trace file-wide so a live session JWT never lands in CI failure/retry
+  24  | // artifacts (matches the sibling video-session journeys).
+  25  | test.use({ screenshot: 'off', video: 'off', trace: 'off' });
+  26  | 
+  27  | test.describe('Video session — early arrival + typed link errors (ENG-2936)', () => {
+  28  |   // ── The public /session-error variants (PR #534's Acceptance Criteria) ──────
+  29  |   test('1. /session-error?reason=expired shows the expired heading', async ({ page }) => {
+  30  |     const err = new SessionErrorPage(page);
+  31  |     await err.goto('expired');
+  32  |     await expect(err.heading).toHaveText('This session link has expired');
+  33  |   });
+  34  | 
+  35  |   test('2. /session-error?reason=invalid shows the invalid heading', async ({ page }) => {
+  36  |     const err = new SessionErrorPage(page);
+  37  |     await err.goto('invalid');
+  38  |     await expect(err.heading).toHaveText("This session link isn't valid");
+  39  |   });
+  40  | 
+  41  |   test('3. /session-error with no reason shows the generic heading', async ({ page }) => {
+  42  |     const err = new SessionErrorPage(page);
+  43  |     await err.goto();
+> 44  |     await expect(err.heading).toHaveText("This session isn't available");
+      |                               ^ Error: expect(locator).toHaveText(expected) failed
+  45  |   });
+  46  | 
+  47  |   test('4. /session-error copy is audience-neutral (no "your therapist")', async ({ page }) => {
+  48  |     const err = new SessionErrorPage(page);
+  49  |     await err.goto('expired');
+  50  |     await expect(page.locator('body')).not.toContainText(/your therapist/i);
+  51  |   });
+  52  | 
+  53  |   // ── The early-arrival waiting room (the actual bug fix) ─────────────────────
+  54  |   test('5. opening a session link before the join window shows the waiting room, not a dead-end', async ({
+  55  |     page,
+  56  |     request,
+  57  |   }) => {
+  58  |     // Seed a virtual appointment ~2h out so the minted client token is
+  59  |     // not-yet-active (nbf = start − 30min → future), mirroring the incident.
+  60  |     const clientId = await getFirstClientId(request);
+  61  |     const start = new Date(Date.now() + 2 * 60 * 60 * 1000);
+  62  |     const end = new Date(start.getTime() + 30 * 60_000);
+  63  |     const name = `E2E-ENG2936-early-${Date.now()}`;
+  64  |     const apptRes = await request.post('/api/appointments', {
+  65  |       data: {
+  66  |         name,
+  67  |         description: '',
+  68  |         typeOfSession: 'virtual',
+  69  |         duration: 30,
+  70  |         startTime: start.toISOString(),
+  71  |         endTime: end.toISOString(),
+  72  |         timezone: 'Asia/Manila',
+  73  |         clientIds: [clientId],
+  74  |         sessionPrep: '',
+  75  |       },
+  76  |     });
+  77  |     expect(
+  78  |       apptRes.ok(),
+  79  |       `seed appointment failed (${apptRes.status()}): ${(await apptRes.text()).slice(0, 200)}`,
+  80  |     ).toBeTruthy();
+  81  |     const appointmentId = (await apptRes.json()).appointment.id as string;
+  82  | 
+  83  |     try {
+  84  |       // Mint the client link token exactly as the "Copy client link" flow does.
+  85  |       const tokRes = await request.post('/api/session/tokens', {
+  86  |         data: { client_id: clientId, appointment_id: appointmentId },
+  87  |       });
+  88  |       expect(
+  89  |         tokRes.ok(),
+  90  |         `mint client token failed (${tokRes.status()}): ${(await tokRes.text()).slice(0, 200)}`,
+  91  |       ).toBeTruthy();
+  92  |       const clientJwt = (await tokRes.json()).client_jwt as string;
+  93  |       expect(clientJwt, 'POST /api/session/tokens must return client_jwt').toBeTruthy();
+  94  | 
+  95  |       // Open the bare client link (as the client would). The token drives the
+  96  |       // early-arrival flow regardless of the dashboard session.
+  97  |       const room = new EarlyArrivalWaitingRoomPage(page);
+  98  |       await room.gotoWithToken(clientJwt);
+  99  | 
+  100 |       // The fix: early arrival → waiting room, NOT the old dead-end.
+  101 |       await expect(room.heading).toBeVisible({ timeout: 15_000 });
+  102 |       await expect(room.countdown.or(room.joinOpens).first()).toBeVisible();
+  103 |       await expect(page).not.toHaveURL(/\/session-error/);
+  104 |     } finally {
+  105 |       await request.delete(`/api/appointments/${appointmentId}`).catch(() => {});
+  106 |     }
+  107 |   });
+  108 | });
+  109 | 
+```
