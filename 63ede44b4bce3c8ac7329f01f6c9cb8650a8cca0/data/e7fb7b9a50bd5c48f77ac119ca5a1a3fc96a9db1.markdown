@@ -1,0 +1,358 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: suite/e2e/dashboard/playroom-edit.journey.spec.ts >> Playrooms — editor (design / publish / content) on a copy >> Content — optional content adds/removes; the mandatory one cannot be removed
+- Location: suite/e2e/dashboard/playroom-edit.journey.spec.ts:148:7
+
+# Error details
+
+```
+Test timeout of 90000ms exceeded.
+```
+
+```
+Error: locator.getAttribute: Test timeout of 90000ms exceeded.
+Call log:
+  - waiting for getByRole('heading', { name: 'Dollhouse', exact: true, level: 4 }).locator('xpath=following::*[@role="switch"][1]')
+
+```
+
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e5]:
+        - img "PlaySpace Logo" [ref=e7]
+        - generic [ref=e8]: PlaySpace
+      - generic [ref=e10]:
+        - link "Home" [ref=e12] [cursor=pointer]:
+          - /url: /dashboard/home
+          - generic [ref=e14]:
+            - img [ref=e15]
+            - generic [ref=e18]: Home
+        - generic [ref=e19]:
+          - generic [ref=e20]: Session Prep
+          - link "Video Session" [ref=e21] [cursor=pointer]:
+            - /url: /dashboard/session
+            - generic [ref=e23]:
+              - img [ref=e24]
+              - generic [ref=e27]: Video Session
+          - link "In-Person Tools" [ref=e28] [cursor=pointer]:
+            - /url: /dashboard/in-person-session
+            - generic [ref=e30]:
+              - img [ref=e31]
+              - generic [ref=e34]: In-Person Tools
+          - link "Creative Suite" [ref=e35] [cursor=pointer]:
+            - /url: /dashboard/creative-suite
+            - generic [ref=e37]:
+              - img [ref=e38]
+              - generic [ref=e44]: Creative Suite
+        - generic [ref=e45]:
+          - generic [ref=e46]: Your Practice
+          - link "Calendar" [ref=e47] [cursor=pointer]:
+            - /url: /dashboard/appointments
+            - generic [ref=e49]:
+              - img [ref=e50]
+              - generic [ref=e52]: Calendar
+          - link "Clients" [ref=e53] [cursor=pointer]:
+            - /url: /dashboard/clients
+            - generic [ref=e55]:
+              - img [ref=e56]
+              - generic [ref=e60]: Clients
+          - link "Clinical Notes" [ref=e61] [cursor=pointer]:
+            - /url: /dashboard/clinical-notes
+            - generic [ref=e63]:
+              - img [ref=e64]
+              - generic [ref=e66]: Clinical Notes
+          - link "Forms" [ref=e67] [cursor=pointer]:
+            - /url: /dashboard/forms
+            - generic [ref=e69]:
+              - img [ref=e70]
+              - generic [ref=e73]: Forms
+        - generic [ref=e74]:
+          - generic [ref=e75]: Discover
+          - link "Community" [ref=e76] [cursor=pointer]:
+            - /url: /dashboard/community
+            - generic [ref=e78]:
+              - img [ref=e79]
+              - generic [ref=e83]: Community
+        - generic [ref=e84]:
+          - generic [ref=e85]: Clinic Management
+          - link "Team" [ref=e86] [cursor=pointer]:
+            - /url: /dashboard/clinic
+            - generic [ref=e88]:
+              - img [ref=e89]
+              - generic [ref=e93]: Team
+          - link "Internal Library" [ref=e94] [cursor=pointer]:
+            - /url: /dashboard/clinic-community
+            - generic [ref=e96]:
+              - img [ref=e97]
+              - generic [ref=e99]: Internal Library
+      - generic [ref=e100]:
+        - button "What's new — version 0.16.0" [ref=e101] [cursor=pointer]:
+          - generic [ref=e103]: v0.16.0
+          - generic [ref=e104]: What's new
+        - link "Settings" [ref=e105] [cursor=pointer]:
+          - /url: /dashboard/settings
+          - generic [ref=e106]:
+            - img [ref=e107]
+            - generic [ref=e110]: Settings
+    - generic [ref=e111]:
+      - banner [ref=e112]:
+        - generic [ref=e113]:
+          - button "Collapse sidebar" [ref=e114] [cursor=pointer]:
+            - img [ref=e115]
+          - navigation "Breadcrumb" [ref=e119]:
+            - link "Playrooms" [ref=e120] [cursor=pointer]:
+              - /url: /dashboard/playrooms
+            - img [ref=e121]
+            - generic [ref=e123]: Playroom Editor
+        - button "SE shard 6 e2e" [ref=e125] [cursor=pointer]:
+          - generic [ref=e127]: SE
+          - generic [ref=e128]: shard 6 e2e
+          - img [ref=e129]
+      - main [ref=e131]:
+        - generic [ref=e135]:
+          - generic [ref=e137]:
+            - generic [ref=e138]:
+              - heading "Playroom Editor" [level=1] [ref=e140]
+              - paragraph [ref=e141]: Edit your playroom design and content
+            - generic [ref=e143]:
+              - generic [ref=e144]: Published
+              - switch [ref=e145] [cursor=pointer]
+          - generic [ref=e147]:
+            - radiogroup [ref=e148]:
+              - radio "Room Design" [ref=e149] [cursor=pointer]
+              - radio "Content" [checked] [ref=e150] [cursor=pointer]
+            - generic [ref=e153]:
+              - generic [ref=e155]:
+                - heading "Content" [level=2] [ref=e156]
+                - paragraph [ref=e157]: 1 active items
+                - paragraph [ref=e158]: Enable or disable tools in the playroom. Disabled tools will still appear in the playroom, but you won't be able to interact with them.
+              - generic [ref=e159]:
+                - generic [ref=e162]:
+                  - generic [ref=e163]: 📚
+                  - generic [ref=e165]:
+                    - generic [ref=e166]:
+                      - heading "Activity Shelf" [level=4] [ref=e167]
+                      - paragraph [ref=e168]: Worksheets, storybooks, forms, and interactive activities for therapy sessions
+                      - button "Manage" [disabled]:
+                        - img
+                        - text: Manage
+                    - switch [active] [ref=e170] [cursor=pointer]
+                - generic [ref=e173]:
+                  - generic [ref=e174]: 🎯
+                  - generic [ref=e176]:
+                    - generic [ref=e177]:
+                      - heading "Multiplayer Games" [level=4] [ref=e178]
+                      - paragraph [ref=e179]: Collaborative games for group therapy sessions
+                      - button "Manage" [ref=e180] [cursor=pointer]:
+                        - img
+                        - text: Manage
+                    - switch [checked] [disabled] [ref=e182]
+                - generic [ref=e185]:
+                  - generic [ref=e186]: 🎮
+                  - generic [ref=e188]:
+                    - generic [ref=e189]:
+                      - heading "Single Player Games" [level=4] [ref=e190]
+                      - paragraph [ref=e191]: Individual games for focused therapeutic work
+                      - button "Manage" [disabled]:
+                        - img
+                        - text: Manage
+                    - switch [ref=e193] [cursor=pointer]
+                - generic [ref=e196]:
+                  - generic [ref=e197]: 📝
+                  - generic [ref=e199]:
+                    - generic [ref=e200]:
+                      - heading "Whiteboard" [level=4] [ref=e201]
+                      - paragraph [ref=e202]: Draw, write, and collaborate in real-time during sessions
+                    - switch [ref=e204] [cursor=pointer]
+                - generic [ref=e207]:
+                  - generic [ref=e208]: 🏖️
+                  - generic [ref=e210]:
+                    - generic [ref=e211]:
+                      - heading "Sand Tray" [level=4] [ref=e212]
+                      - paragraph [ref=e213]: Virtual sand tray therapy environment
+                    - switch [ref=e215] [cursor=pointer]
+                - generic [ref=e218]:
+                  - generic [ref=e219]: 🏠
+                  - generic [ref=e221]:
+                    - generic [ref=e222]:
+                      - heading "Dollhouse" [level=4] [ref=e223]
+                      - paragraph [ref=e224]: Interactive dollhouse for play therapy
+                    - switch [ref=e226] [cursor=pointer]
+  - region "Notifications (F8)":
+    - list
+  - region "Notifications alt+T"
+  - alert [ref=e233]
+  - iframe [ref=e234]
+  - button "Open Intercom Messenger" [ref=e235] [cursor=pointer]:
+    - img [ref=e237]
+    - generic:
+      - img
+```
+
+# Test source
+
+```ts
+  1   | import { expect, type Locator, type Page } from '@playwright/test';
+  2   | 
+  3   | // Content / session-item switch kit — extracts the near-identical logic
+  4   | // duplicated between the Playroom editor ("Content" tab) and the Toolkit
+  5   | // editor ("Session Items"). Both render the same set of content types, each
+  6   | // as a heading followed (in document order) by a role="switch" toggle, and
+  7   | // both enforce a "keep at least one" rule (the last enabled toggle becomes
+  8   | // disabled so the room/toolkit always has ≥1 content).
+  9   | //
+  10  | // Used by:
+  11  | //   - playroom-edit.journey.spec.ts   (Content tab, <h4> headings)
+  12  | //   - toolkit-crud.journey.spec.ts    (Session Items, any-level headings)
+  13  | //
+  14  | // The locator scopes by heading so it avoids the editor's separate publish
+  15  | // switch and the Legacy Content Library cards (same names, but rendered as
+  16  | // cards, not headings).
+  17  | 
+  18  | // The six content / session-item types shown in both editors, in display
+  19  | // order.
+  20  | export const CONTENT_SWITCH_TYPES = [
+  21  |   'Activity Shelf',
+  22  |   'Multiplayer Games',
+  23  |   'Single Player Games',
+  24  |   'Whiteboard',
+  25  |   'Sand Tray',
+  26  |   'Dollhouse',
+  27  | ] as const;
+  28  | 
+  29  | /**
+  30  |  * Locator for a single content/session-item toggle: the first role="switch"
+  31  |  * that follows the type's heading in document order.
+  32  |  *
+  33  |  * `headingLevel` narrows to a specific heading level — the Playroom editor
+  34  |  * uses <h4> rows, so pass `4` there to disambiguate. Omit it (Toolkit, whose
+  35  |  * Session Items headings aren't a fixed level) to match any heading level and
+  36  |  * take the first.
+  37  |  */
+  38  | export function contentSwitch(
+  39  |   page: Page,
+  40  |   name: string,
+  41  |   headingLevel?: number,
+  42  | ): Locator {
+  43  |   const heading = headingLevel
+  44  |     ? page.getByRole('heading', { name, level: headingLevel, exact: true })
+  45  |     : page.getByRole('heading', { name, exact: true }).first();
+  46  |   return heading.locator('xpath=following::*[@role="switch"][1]');
+  47  | }
+  48  | 
+  49  | /**
+  50  |  * Collect the content/session-item switches that are actually present, in
+  51  |  * display order. Types absent from a given editor are skipped.
+  52  |  */
+  53  | export async function collectContentSwitches(
+  54  |   page: Page,
+  55  |   headingLevel?: number,
+  56  | ): Promise<Locator[]> {
+  57  |   const found: Locator[] = [];
+  58  |   for (const t of CONTENT_SWITCH_TYPES) {
+  59  |     const s = contentSwitch(page, t, headingLevel);
+  60  |     if (await s.count()) found.push(s);
+  61  |   }
+  62  |   return found;
+  63  | }
+  64  | 
+  65  | /**
+  66  |  * Read a switch's on/off state from `aria-checked`. This is a lightweight DOM
+  67  |  * read that — unlike `Locator.isChecked()` — does NOT auto-wait on
+  68  |  * actionability/stability, which hangs to the test timeout when the heavy
+  69  |  * 3D/Colyseus editor repaints under full-suite CPU load.
+  70  |  */
+  71  | async function switchOn(s: Locator): Promise<boolean> {
+> 72  |   return (await s.getAttribute('aria-checked')) === 'true';
+      |                   ^ Error: locator.getAttribute: Test timeout of 90000ms exceeded.
+  73  | }
+  74  | 
+  75  | /**
+  76  |  * Whether a switch can still be toggled. The "keep at least one" rule disables
+  77  |  * the last-on toggle. Read the disabled attributes rather than `isEnabled()`
+  78  |  * to avoid the same actionability wait.
+  79  |  */
+  80  | async function switchEnabled(s: Locator): Promise<boolean> {
+  81  |   const [ariaDisabled, disabled, dataDisabled] = await Promise.all([
+  82  |     s.getAttribute('aria-disabled'),
+  83  |     s.getAttribute('disabled'),
+  84  |     s.getAttribute('data-disabled'),
+  85  |   ]);
+  86  |   return ariaDisabled !== 'true' && disabled === null && dataDisabled === null;
+  87  | }
+  88  | 
+  89  | /** The subset of the given switches that are currently checked (on). */
+  90  | export async function checkedSwitches(switches: Locator[]): Promise<Locator[]> {
+  91  |   const on: Locator[] = [];
+  92  |   for (const s of switches) if (await switchOn(s)) on.push(s);
+  93  |   return on;
+  94  | }
+  95  | 
+  96  | /**
+  97  |  * Drive + assert the shared "items can be toggled but at least one must
+  98  |  * remain" rule used by both the Playroom (Content) and Toolkit (Session
+  99  |  * Items) editors:
+  100 |  *
+  101 |  *   1. enable items until at least two are on
+  102 |  *   2. disable down to exactly one remaining
+  103 |  *   3. assert the last remaining toggle is DISABLED (the keep-≥1 rule is
+  104 |  *      enforced so the editor can't be left with zero content)
+  105 |  *
+  106 |  * `label` only flavours the assertion messages ("content" vs "session").
+  107 |  */
+  108 | export async function assertKeepAtLeastOne(
+  109 |   page: Page,
+  110 |   switches: Locator[],
+  111 |   label = 'content',
+  112 | ): Promise<void> {
+  113 |   expect(
+  114 |     switches.length,
+  115 |     `${label} items must list multiple items`,
+  116 |   ).toBeGreaterThan(1);
+  117 | 
+  118 |   // ADD: enable items until at least two are on. `force` clicks skip the
+  119 |   // actionability/stability wait that hangs on the repainting editor.
+  120 |   for (const s of switches) {
+  121 |     if ((await checkedSwitches(switches)).length >= 2) break;
+  122 |     if (!(await switchOn(s)) && (await switchEnabled(s))) {
+  123 |       await s.click({ force: true });
+  124 |       await page.waitForTimeout(400);
+  125 |     }
+  126 |   }
+  127 |   let on = await checkedSwitches(switches);
+  128 |   expect(
+  129 |     on.length,
+  130 |     `must be able to enable at least two ${label} items`,
+  131 |   ).toBeGreaterThanOrEqual(2);
+  132 | 
+  133 |   // REMOVE: disable down to exactly one remaining.
+  134 |   for (let i = 0; i < on.length - 1; i++) {
+  135 |     if (await switchEnabled(on[i])) {
+  136 |       await on[i].click({ force: true });
+  137 |       await page.waitForTimeout(400);
+  138 |     }
+  139 |   }
+  140 |   on = await checkedSwitches(switches);
+  141 |   expect(
+  142 |     on.length,
+  143 |     `${label} items must be reducible to one remaining`,
+  144 |   ).toBe(1);
+  145 | 
+  146 |   // KEEP-AT-LEAST-ONE: the last remaining item must NOT be removable.
+  147 |   await expect(
+  148 |     on[0],
+  149 |     `red flag: the last remaining ${label} item is still removable — the "keep at least one" rule is not enforced`,
+  150 |   ).toBeDisabled();
+  151 | }
+  152 | 
+```

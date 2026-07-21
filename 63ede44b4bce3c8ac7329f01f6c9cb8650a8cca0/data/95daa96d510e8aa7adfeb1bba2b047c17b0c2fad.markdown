@@ -1,0 +1,193 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: suite/e2e/dashboard/playroom-edit.journey.spec.ts >> Playrooms — editor (design / publish / content) on a copy >> Content — optional content adds/removes; the mandatory one cannot be removed
+- Location: suite/e2e/dashboard/playroom-edit.journey.spec.ts:148:7
+
+# Error details
+
+```
+Test timeout of 90000ms exceeded.
+```
+
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e5]:
+        - img "PlaySpace Logo" [ref=e7]
+        - generic [ref=e8]: PlaySpace
+      - generic [ref=e10]:
+        - link "Home" [ref=e12] [cursor=pointer]:
+          - /url: /dashboard/home
+          - generic [ref=e14]:
+            - img [ref=e15]
+            - generic [ref=e18]: Home
+        - generic [ref=e19]:
+          - generic [ref=e20]: Session Prep
+          - link "Video Session" [ref=e21] [cursor=pointer]:
+            - /url: /dashboard/session
+            - generic [ref=e23]:
+              - img [ref=e24]
+              - generic [ref=e27]: Video Session
+          - link "In-Person Tools" [ref=e28] [cursor=pointer]:
+            - /url: /dashboard/in-person-session
+            - generic [ref=e30]:
+              - img [ref=e31]
+              - generic [ref=e34]: In-Person Tools
+          - link "Creative Suite" [ref=e35] [cursor=pointer]:
+            - /url: /dashboard/creative-suite
+            - generic [ref=e37]:
+              - img [ref=e38]
+              - generic [ref=e44]: Creative Suite
+        - generic [ref=e45]:
+          - generic [ref=e46]: Your Practice
+          - link "Calendar" [ref=e47] [cursor=pointer]:
+            - /url: /dashboard/appointments
+            - generic [ref=e49]:
+              - img [ref=e50]
+              - generic [ref=e52]: Calendar
+          - link "Clients" [ref=e53] [cursor=pointer]:
+            - /url: /dashboard/clients
+            - generic [ref=e55]:
+              - img [ref=e56]
+              - generic [ref=e60]: Clients
+          - link "Clinical Notes" [ref=e61] [cursor=pointer]:
+            - /url: /dashboard/clinical-notes
+            - generic [ref=e63]:
+              - img [ref=e64]
+              - generic [ref=e66]: Clinical Notes
+          - link "Forms" [ref=e67] [cursor=pointer]:
+            - /url: /dashboard/forms
+            - generic [ref=e69]:
+              - img [ref=e70]
+              - generic [ref=e73]: Forms
+        - generic [ref=e74]:
+          - generic [ref=e75]: Discover
+          - link "Community" [ref=e76] [cursor=pointer]:
+            - /url: /dashboard/community
+            - generic [ref=e78]:
+              - img [ref=e79]
+              - generic [ref=e83]: Community
+        - generic [ref=e84]:
+          - generic [ref=e85]: Clinic Management
+          - link "Team" [ref=e86] [cursor=pointer]:
+            - /url: /dashboard/clinic
+            - generic [ref=e88]:
+              - img [ref=e89]
+              - generic [ref=e93]: Team
+          - link "Internal Library" [ref=e94] [cursor=pointer]:
+            - /url: /dashboard/clinic-community
+            - generic [ref=e96]:
+              - img [ref=e97]
+              - generic [ref=e99]: Internal Library
+      - generic [ref=e100]:
+        - button "What's new — version 0.16.0" [ref=e101] [cursor=pointer]:
+          - generic [ref=e103]: v0.16.0
+          - generic [ref=e104]: What's new
+        - link "Settings" [ref=e105] [cursor=pointer]:
+          - /url: /dashboard/settings
+          - generic [ref=e106]:
+            - img [ref=e107]
+            - generic [ref=e110]: Settings
+    - generic [ref=e111]:
+      - banner [ref=e112]:
+        - generic [ref=e113]:
+          - button "Collapse sidebar" [ref=e114] [cursor=pointer]:
+            - img [ref=e115]
+          - navigation "Breadcrumb" [ref=e119]:
+            - link "Playrooms" [ref=e120] [cursor=pointer]:
+              - /url: /dashboard/playrooms
+            - img [ref=e121]
+            - generic [ref=e123]: Playroom Editor
+        - button "SE shard 6 e2e" [ref=e125] [cursor=pointer]:
+          - generic [ref=e127]: SE
+          - generic [ref=e128]: shard 6 e2e
+          - img [ref=e129]
+      - main [ref=e131]:
+        - generic [ref=e135]:
+          - generic [ref=e137]:
+            - generic [ref=e138]:
+              - heading "Playroom Editor" [level=1] [ref=e140]
+              - paragraph [ref=e141]: Edit your playroom design and content
+            - generic [ref=e143]:
+              - generic [ref=e144]: Published
+              - switch [ref=e145] [cursor=pointer]
+          - generic [ref=e147]:
+            - radiogroup [ref=e148]:
+              - radio "Room Design" [ref=e149] [cursor=pointer]
+              - radio "Content" [checked] [ref=e150] [cursor=pointer]
+            - generic [ref=e153]:
+              - generic [ref=e155]:
+                - heading "Content" [level=2] [ref=e156]
+                - paragraph [ref=e157]: 1 active items
+                - paragraph [ref=e158]: Enable or disable tools in the playroom. Disabled tools will still appear in the playroom, but you won't be able to interact with them.
+              - generic [ref=e159]:
+                - generic [ref=e162]:
+                  - generic [ref=e163]: 📚
+                  - generic [ref=e165]:
+                    - generic [ref=e166]:
+                      - heading "Activity Shelf" [level=4] [ref=e167]
+                      - paragraph [ref=e168]: Worksheets, storybooks, forms, and interactive activities for therapy sessions
+                      - button "Manage" [disabled]:
+                        - img
+                        - text: Manage
+                    - switch [active] [ref=e170] [cursor=pointer]
+                - generic [ref=e173]:
+                  - generic [ref=e174]: 🎯
+                  - generic [ref=e176]:
+                    - generic [ref=e177]:
+                      - heading "Multiplayer Games" [level=4] [ref=e178]
+                      - paragraph [ref=e179]: Collaborative games for group therapy sessions
+                      - button "Manage" [ref=e180] [cursor=pointer]:
+                        - img
+                        - text: Manage
+                    - switch [checked] [disabled] [ref=e182]
+                - generic [ref=e185]:
+                  - generic [ref=e186]: 🎮
+                  - generic [ref=e188]:
+                    - generic [ref=e189]:
+                      - heading "Single Player Games" [level=4] [ref=e190]
+                      - paragraph [ref=e191]: Individual games for focused therapeutic work
+                      - button "Manage" [disabled]:
+                        - img
+                        - text: Manage
+                    - switch [ref=e193] [cursor=pointer]
+                - generic [ref=e196]:
+                  - generic [ref=e197]: 📝
+                  - generic [ref=e199]:
+                    - generic [ref=e200]:
+                      - heading "Whiteboard" [level=4] [ref=e201]
+                      - paragraph [ref=e202]: Draw, write, and collaborate in real-time during sessions
+                    - switch [ref=e204] [cursor=pointer]
+                - generic [ref=e207]:
+                  - generic [ref=e208]: 🏖️
+                  - generic [ref=e210]:
+                    - generic [ref=e211]:
+                      - heading "Sand Tray" [level=4] [ref=e212]
+                      - paragraph [ref=e213]: Virtual sand tray therapy environment
+                    - switch [ref=e215] [cursor=pointer]
+                - generic [ref=e218]:
+                  - generic [ref=e219]: 🏠
+                  - generic [ref=e221]:
+                    - generic [ref=e222]:
+                      - heading "Dollhouse" [level=4] [ref=e223]
+                      - paragraph [ref=e224]: Interactive dollhouse for play therapy
+                    - switch [ref=e226] [cursor=pointer]
+  - region "Notifications (F8)":
+    - list
+  - region "Notifications alt+T"
+  - alert [ref=e233]
+  - iframe [ref=e234]
+  - button "Open Intercom Messenger" [ref=e235] [cursor=pointer]:
+    - img [ref=e237]
+    - generic:
+      - img
+```
