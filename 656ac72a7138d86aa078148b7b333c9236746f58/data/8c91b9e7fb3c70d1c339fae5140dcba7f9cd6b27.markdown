@@ -1,0 +1,245 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: suite/e2e/dashboard/toolkit-sessions.journey.spec.ts >> Toolkit Sessions — in-consult activity selection >> 3. /video-session/toolkit/<slug> security gate — Auth Error without session
+- Location: suite/e2e/dashboard/toolkit-sessions.journey.spec.ts:130:7
+
+# Error details
+
+```
+Error: red flag: iframe mounted on /video-session/toolkit/sandtray after the auth gate resolved
+
+expect(received).toBe(expected) // Object.is equality
+
+Expected: 0
+Received: 1
+```
+
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - img [ref=e4]
+    - heading "Authentication Error" [level=2] [ref=e6]
+    - paragraph [ref=e7]: No valid session found. Please use a valid session link.
+    - link "Return to Dashboard" [ref=e8] [cursor=pointer]:
+      - /url: /dashboard/home
+      - button "Return to Dashboard" [ref=e9]
+  - region "Notifications alt+T"
+  - alert [ref=e10]
+  - iframe [ref=e11]:
+    
+```
+
+# Test source
+
+```ts
+  76  |   return arr!;
+  77  | }
+  78  | 
+  79  | async function getToolkit(request: APIRequestContext, id: string): Promise<Toolkit> {
+  80  |   const r = await request.get(`/api/toolkits/${id}`);
+  81  |   expect(r.ok(), `GET /api/toolkits/${id} failed (${r.status()})`).toBeTruthy();
+  82  |   return (await r.json()) as Toolkit;
+  83  | }
+  84  | 
+  85  | test.describe('Toolkit Sessions — in-consult activity selection', () => {
+  86  |   test('1. /api/toolkits returns ≥1 toolkit with required fields', async ({ request }) => {
+  87  |     const toolkits = await listToolkits(request);
+  88  |     // The dev seed has 4 default toolkits (Child / Teen / Adult / Everything).
+  89  |     // A brand-new clinic might have 0 — but the contract still needs to be
+  90  |     // a valid array of toolkit-shaped objects.
+  91  |     if (toolkits.length === 0) {
+  92  |       test.info().annotations.push({
+  93  |         type: 'env-condition',
+  94  |         description: '/api/toolkits returned an empty array — toolkit-selection flow has nothing to surface in the in-session UI on this env.',
+  95  |       });
+  96  |       return;
+  97  |     }
+  98  |     for (const tk of toolkits.slice(0, 3)) {
+  99  |       expect(tk.id, 'each toolkit must carry an id').toBeTruthy();
+  100 |       expect(
+  101 |         typeof tk.title === 'string' && tk.title.length > 0,
+  102 |         `red flag: toolkit ${tk.id} has no title — won't render in the selector`,
+  103 |       ).toBe(true);
+  104 |     }
+  105 |   });
+  106 | 
+  107 |   test('2. /api/toolkits/<id> exposes enabled_session_items (drives the activity shelf)', async ({
+  108 |     request,
+  109 |   }) => {
+  110 |     const toolkits = await listToolkits(request);
+  111 |     if (toolkits.length === 0) {
+  112 |       test.skip(true, 'no toolkits to probe');
+  113 |       return;
+  114 |     }
+  115 |     const tk = await getToolkit(request, toolkits[0].id);
+  116 |     expect(
+  117 |       Array.isArray(tk.enabled_session_items),
+  118 |       `red flag: toolkit ${tk.id} missing enabled_session_items array — activity shelf cannot decide what to render`,
+  119 |     ).toBe(true);
+  120 |     expect(
+  121 |       tk.enabled_session_items!.length,
+  122 |       `red flag: toolkit ${tk.id} has empty enabled_session_items — practitioner sees an empty shelf in-session`,
+  123 |     ).toBeGreaterThan(0);
+  124 |     // Each item should be a non-empty string.
+  125 |     for (const item of tk.enabled_session_items!) {
+  126 |       expect(typeof item === 'string' && item.length > 0).toBe(true);
+  127 |     }
+  128 |   });
+  129 | 
+  130 |   test('3. /video-session/toolkit/<slug> security gate — Auth Error without session', async ({
+  131 |     page,
+  132 |   }) => {
+  133 |     // Direct visit without a valid session token must show the Auth
+  134 |     // Error empty state, NOT mount any canvas / iframe / activity shelf.
+  135 |     //
+  136 |     // Timing: some toolkits (observed: sandtray) sit on a transient
+  137 |     // "Preparing Session" state before the auth gate resolves, and can briefly
+  138 |     // mount an iframe during that window. Asserting on a fixed 2s wait caught
+  139 |     // that mid-load frame → false "iframe mounted without session". So we WAIT
+  140 |     // for each route to SETTLE on the Auth Error gate, then assert the no-live-
+  141 |     // shell invariant. A slug that hasn't reached the gate in time is skipped
+  142 |     // (not asserted mid-load); we require at least one to confirm the gate.
+  143 |     const slugCandidates = ['sandtray', 'dollhouse', 'whiteboard', 'games'];
+  144 |     let gateConfirmed = false;
+  145 |     let exampleSlug = '';
+  146 |     for (const slug of slugCandidates) {
+  147 |       const r = await page.goto(`/video-session/toolkit/${slug}`, {
+  148 |         waitUntil: 'domcontentloaded',
+  149 |       });
+  150 |       expect(
+  151 |         r?.status() ?? 0,
+  152 |         `red flag: /video-session/toolkit/${slug} returned ${r?.status()} (must be < 500)`,
+  153 |       ).toBeLessThan(500);
+  154 | 
+  155 |       // Wait for the auth gate to resolve to its canonical empty state.
+  156 |       const authError = page
+  157 |         .getByText(/authentication error|no valid session/i)
+  158 |         .first();
+  159 |       const settled = await authError
+  160 |         .waitFor({ state: 'visible', timeout: 15_000 })
+  161 |         .then(() => true)
+  162 |         .catch(() => false);
+  163 |       // Not yet gated (e.g. still "Preparing Session") — don't assert mid-load.
+  164 |       if (!settled) continue;
+  165 | 
+  166 |       // Gate has resolved for this slug — no live shell may be mounted.
+  167 |       const canvasCount = await page.locator('canvas').count();
+  168 |       const iframeCount = await page.locator('iframe').count();
+  169 |       expect(
+  170 |         canvasCount,
+  171 |         `red flag: canvas mounted on /video-session/toolkit/${slug} after the auth gate resolved — security regression`,
+  172 |       ).toBe(0);
+  173 |       expect(
+  174 |         iframeCount,
+  175 |         `red flag: iframe mounted on /video-session/toolkit/${slug} after the auth gate resolved`,
+> 176 |       ).toBe(0);
+      |         ^ Error: red flag: iframe mounted on /video-session/toolkit/sandtray after the auth gate resolved
+  177 |       gateConfirmed = true;
+  178 |       exampleSlug = exampleSlug || slug;
+  179 |     }
+  180 |     expect(
+  181 |       gateConfirmed,
+  182 |       `red flag: no toolkit-session route reached the Auth Error gate — tried ${slugCandidates.join(', ')}`,
+  183 |     ).toBe(true);
+  184 |     expect(exampleSlug.length).toBeGreaterThan(0);
+  185 |   });
+  186 | 
+  187 |   test('4. /api/toolkits/<id>/activities returns 4xx (not 5xx) without proper session auth', async ({
+  188 |     request,
+  189 |   }) => {
+  190 |     const toolkits = await listToolkits(request);
+  191 |     if (toolkits.length === 0) {
+  192 |       test.skip(true, 'no toolkits to probe');
+  193 |       return;
+  194 |     }
+  195 |     const r = await request.get(`/api/toolkits/${toolkits[0].id}/activities`);
+  196 |     // The activities endpoint requires a session token — must NOT 5xx.
+  197 |     expect(
+  198 |       r.status(),
+  199 |       `red flag: /api/toolkits/<id>/activities returned ${r.status()} for an unauth'd probe — must be < 500`,
+  200 |     ).toBeLessThan(500);
+  201 |     // Accept either "401 not auth'd for this session" or "404 the endpoint
+  202 |     // is gated behind a different path on this env" — both prove the gate
+  203 |     // exists. A 200 here would be a security regression.
+  204 |     expect(
+  205 |       [401, 403, 404].includes(r.status()),
+  206 |       `red flag: expected 401/403/404 from unauth'd activities probe, got ${r.status()}`,
+  207 |     ).toBe(true);
+  208 |   });
+  209 | 
+  210 |   test('5. (env-gated) full runtime — toolkit picker → activity shelf → launch game → Colyseus', async ({
+  211 |     page,
+  212 |     request,
+  213 |   }) => {
+  214 |     test.setTimeout(120_000);
+  215 | 
+  216 |     // We need a real session token to reach the runtime. The probe confirms
+  217 |     // /api/appointments listings on dev currently strip session_id/token —
+  218 |     // when those become available (or another way to expose a usable
+  219 |     // token lands), this test activates.
+  220 |     const apptsRes = await request.get('/api/appointments');
+  221 |     if (!apptsRes.ok()) {
+  222 |       test.skip(true, 'cannot list appointments to find a session token');
+  223 |       return;
+  224 |     }
+  225 |     const apptBody = (await apptsRes.json()) as {
+  226 |       appointments?: Array<{
+  227 |         id?: string;
+  228 |         session_id?: string;
+  229 |         sessionId?: string;
+  230 |         token?: string;
+  231 |         session_token?: string;
+  232 |       }>;
+  233 |     };
+  234 |     const appts = apptBody.appointments ?? [];
+  235 |     const seedable = appts.find(
+  236 |       (a) => (a.session_id || a.sessionId) && (a.token || a.session_token),
+  237 |     );
+  238 |     if (!seedable) {
+  239 |       test.info().annotations.push({
+  240 |         type: 'env-condition',
+  241 |         description:
+  242 |           'No appointment exposes both session_id AND token via /api/appointments on this env. Toolkit-session runtime test cannot be exercised without a real token. Activates automatically when product surfaces these on the listing OR when /api/appointments/:id (currently 405) is shipped.',
+  243 |       });
+  244 |       test.skip(true, 'no session token reachable — runtime unreachable');
+  245 |       return;
+  246 |     }
+  247 | 
+  248 |     const toolkits = await listToolkits(request);
+  249 |     if (toolkits.length === 0) {
+  250 |       test.skip(true, 'no toolkits — nothing to launch');
+  251 |       return;
+  252 |     }
+  253 | 
+  254 |     const sessionId = (seedable.session_id ?? seedable.sessionId)!;
+  255 |     const token = (seedable.token ?? seedable.session_token)!;
+  256 | 
+  257 |     // Watch for PlayspaceGameRoom WebSocket connection.
+  258 |     let gameRoomWsUrl: string | null = null;
+  259 |     page.on('websocket', (ws) => {
+  260 |       if (
+  261 |         (/playspace-game-room|playspaceGameRoom/i.test(ws.url()) ||
+  262 |           /colyseus/i.test(ws.url())) &&
+  263 |         !gameRoomWsUrl
+  264 |       ) {
+  265 |         gameRoomWsUrl = ws.url();
+  266 |       }
+  267 |     });
+  268 | 
+  269 |     // Pick a slug that a default toolkit supports — try whiteboard first
+  270 |     // since it's in `enabled_session_items` for all default toolkits.
+  271 |     const slug = 'whiteboard';
+  272 |     await page.goto(
+  273 |       `/video-session/toolkit/${slug}?token=${encodeURIComponent(token)}&session=${encodeURIComponent(sessionId)}`,
+  274 |       { waitUntil: 'domcontentloaded' },
+  275 |     );
+  276 |     await page.waitForTimeout(8_000);
+```
