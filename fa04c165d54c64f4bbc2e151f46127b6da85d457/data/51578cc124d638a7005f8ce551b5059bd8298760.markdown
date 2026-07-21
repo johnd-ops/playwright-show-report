@@ -1,0 +1,324 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: suite/e2e/dashboard/game-create.journey.spec.ts >> PlayStudio — create a game by prompt >> first-time create surface — prompt ready + "Your Apps" gallery present
+- Location: suite/e2e/dashboard/game-create.journey.spec.ts:77:7
+
+# Error details
+
+```
+Error: builder prompt did not render after 3 reloads (reflex iframe "Connection Error" / not hydrated)
+
+expect(locator).toBeVisible() failed
+
+Locator: locator('#create-games-iframe').contentFrame().locator('#prompt')
+Expected: visible
+Timeout: 10000ms
+Error: element(s) not found
+
+Call log:
+  - builder prompt did not render after 3 reloads (reflex iframe "Connection Error" / not hydrated) with timeout 10000ms
+  - waiting for locator('#create-games-iframe').contentFrame().locator('#prompt')
+
+```
+
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e5]:
+        - img "PlaySpace Logo" [ref=e7]
+        - generic [ref=e8]: PlaySpace
+      - generic [ref=e10]:
+        - link "Home" [ref=e12] [cursor=pointer]:
+          - /url: /dashboard/home
+          - generic [ref=e14]:
+            - img [ref=e15]
+            - generic [ref=e18]: Home
+        - generic [ref=e19]:
+          - generic [ref=e20]: Session Prep
+          - link "Video Session" [ref=e21] [cursor=pointer]:
+            - /url: /dashboard/session
+            - generic [ref=e23]:
+              - img [ref=e24]
+              - generic [ref=e27]: Video Session
+          - link "In-Person Tools" [ref=e28] [cursor=pointer]:
+            - /url: /dashboard/in-person-session
+            - generic [ref=e30]:
+              - img [ref=e31]
+              - generic [ref=e34]: In-Person Tools
+          - link "Creative Suite" [ref=e35] [cursor=pointer]:
+            - /url: /dashboard/creative-suite
+            - generic [ref=e37]:
+              - img [ref=e38]
+              - generic [ref=e44]: Creative Suite
+        - generic [ref=e45]:
+          - generic [ref=e46]: Your Practice
+          - link "Calendar" [ref=e47] [cursor=pointer]:
+            - /url: /dashboard/appointments
+            - generic [ref=e49]:
+              - img [ref=e50]
+              - generic [ref=e52]: Calendar
+          - link "Clients" [ref=e53] [cursor=pointer]:
+            - /url: /dashboard/clients
+            - generic [ref=e55]:
+              - img [ref=e56]
+              - generic [ref=e60]: Clients
+          - link "Clinical Notes" [ref=e61] [cursor=pointer]:
+            - /url: /dashboard/clinical-notes
+            - generic [ref=e63]:
+              - img [ref=e64]
+              - generic [ref=e66]: Clinical Notes
+          - link "Forms" [ref=e67] [cursor=pointer]:
+            - /url: /dashboard/forms
+            - generic [ref=e69]:
+              - img [ref=e70]
+              - generic [ref=e73]: Forms
+        - generic [ref=e74]:
+          - generic [ref=e75]: Discover
+          - link "Community" [ref=e76] [cursor=pointer]:
+            - /url: /dashboard/community
+            - generic [ref=e78]:
+              - img [ref=e79]
+              - generic [ref=e83]: Community
+      - generic [ref=e84]:
+        - button "What's new — version 0.16.0" [ref=e85] [cursor=pointer]:
+          - generic [ref=e87]: v0.16.0
+          - generic [ref=e88]: What's new
+        - link "Settings" [ref=e89] [cursor=pointer]:
+          - /url: /dashboard/settings
+          - generic [ref=e90]:
+            - img [ref=e91]
+            - generic [ref=e94]: Settings
+    - generic [ref=e95]:
+      - banner [ref=e96]:
+        - button "Collapse sidebar" [ref=e98] [cursor=pointer]:
+          - img [ref=e99]
+        - button "SE shard 8 e2e" [ref=e103] [cursor=pointer]:
+          - generic [ref=e105]: SE
+          - generic [ref=e106]: shard 8 e2e
+          - img [ref=e107]
+      - main [ref=e109]:
+        - iframe [ref=e111]:
+          - generic [active] [ref=f21e1]:
+            - region "Notifications alt+T":
+              - list:
+                - listitem [ref=f21e2]:
+                  - button "Close toast" [ref=f21e3] [cursor=pointer]:
+                    - img [ref=f21e4]
+                  - img [ref=f21e8]
+                  - generic [ref=f21e10]:
+                    - generic [ref=f21e11]: "Cannot connect to server: websocket error."
+                    - generic [ref=f21e12]: Check if server is reachable at wss://reflex.playspace.health/_event
+            - generic [ref=f21e13]:
+              - 'generic "Connection Error: websocket error"':
+                - img [ref=f21e14]
+              - generic [ref=f21e21]:
+                - img [ref=f21e24]
+                - img [ref=f21e31]
+  - region "Notifications (F8)":
+    - list
+  - region "Notifications alt+T"
+  - alert [ref=e112]
+  - iframe [ref=e113]:
+    
+  - button "Open Intercom Messenger" [ref=e114] [cursor=pointer]:
+    - img [ref=e116]
+    - generic:
+      - img
+```
+
+# Test source
+
+```ts
+  8   | //           src="https://reflex.playspace.health" />
+  9   | // All builder controls (#prompt, #generate-button, Improve Prompt, the
+  10  | // Templates gallery, the "Your Apps" gallery) live INSIDE that iframe — reach
+  11  | // them via `frame` (page.frameLocator), never the top-level page. The recorded
+  12  | // flow this POM is derived from (playwright-creategame) used bare `#prompt` /
+  13  | // `#generate-button` because the recorder operated in the frame's context.
+  14  | //
+  15  | // Generation is handled by the reflex app (a different origin), so there is NO
+  16  | // main-app `/api/games/generate` call to await — progress/completion is
+  17  | // observed inside the frame (a generated game appears as a card in "Your
+  18  | // Apps"). Real generation is a heavy AI codegen (minutes) → gate it behind
+  19  | // LIVE_AI=1 in the spec.
+  20  | //
+  21  | // Entry points (both verified): the Creative Suite tile
+  22  | // (`creative-suite-playstudio-builder`) and the Home tile
+  23  | // (`#playstudio-builder-row`) both route to /dashboard/games/create.
+  24  | 
+  25  | export class GameCreatorPage {
+  26  |   readonly page: Page;
+  27  | 
+  28  |   // Top-level (main app) locators.
+  29  |   readonly iframeHost: Locator;
+  30  |   readonly creativeSuiteTile: Locator;
+  31  | 
+  32  |   constructor(page: Page) {
+  33  |     this.page = page;
+  34  |     this.iframeHost = page.locator('#create-games-iframe');
+  35  |     this.creativeSuiteTile = page.getByTestId('creative-suite-playstudio-builder');
+  36  |   }
+  37  | 
+  38  |   /** The reflex builder iframe. All builder controls live here. */
+  39  |   get frame(): FrameLocator {
+  40  |     return this.page.frameLocator('#create-games-iframe');
+  41  |   }
+  42  | 
+  43  |   // ---- Controls inside the builder iframe ----
+  44  |   get promptInput(): Locator {
+  45  |     return this.frame.locator('#prompt'); // a <textarea>
+  46  |   }
+  47  |   get generateButton(): Locator {
+  48  |     return this.frame.locator('#generate-button');
+  49  |   }
+  50  |   get improvePromptButton(): Locator {
+  51  |     return this.frame.getByRole('button', { name: /improve prompt/i });
+  52  |   }
+  53  |   get templatesSearch(): Locator {
+  54  |     return this.frame.locator('#templates-gallery-search');
+  55  |   }
+  56  |   get appsSearch(): Locator {
+  57  |     return this.frame.locator('#apps-gallery-search');
+  58  |   }
+  59  |   /** "Your Apps" gallery heading — present on the builder landing. */
+  60  |   get yourAppsHeading(): Locator {
+  61  |     return this.frame.getByText(/your apps/i).first();
+  62  |   }
+  63  |   /** Empty-state copy shown in "Your Apps" before any game has been generated. */
+  64  |   get appsEmptyState(): Locator {
+  65  |     return this.frame.getByText(/no apps found for this project/i);
+  66  |   }
+  67  | 
+  68  |   /**
+  69  |    * Fill a short prompt and click "Improve Prompt" — the builder rewrites it
+  70  |    * via an LLM into a more detailed spec. Resolves once the prompt text changes
+  71  |    * from `original`, and returns the improved text. Verified live: a short
+  72  |    * prompt ("rock paper scissor") is expanded into a detailed app spec in ~5s.
+  73  |    */
+  74  |   async improvePrompt(original: string, timeoutMs = 60_000): Promise<string> {
+  75  |     await this.fillPrompt(original);
+  76  |     await expect(this.improvePromptButton).toBeVisible({ timeout: 10_000 });
+  77  |     await this.improvePromptButton.click();
+  78  |     await expect(
+  79  |       this.promptInput,
+  80  |       'Improve Prompt must rewrite the prompt into something different',
+  81  |     ).not.toHaveValue(original, { timeout: timeoutMs });
+  82  |     return this.promptInput.inputValue();
+  83  |   }
+  84  | 
+  85  |   /**
+  86  |    * Land on the builder and wait until it's interactive (prompt visible).
+  87  |    *
+  88  |    * The reflex builder iframe intermittently loads a "Connection Error:" state
+  89  |    * instead of the prompt (throttle-prone, especially under parallel load), so
+  90  |    * reload-retry up to 3 times — a reload usually gets a healthy instance.
+  91  |    */
+  92  |   async open(): Promise<void> {
+  93  |     for (let attempt = 1; attempt <= 3; attempt++) {
+  94  |       await this.page
+  95  |         .goto('/dashboard/games/create', { waitUntil: 'domcontentloaded' })
+  96  |         .catch(() => {});
+  97  |       await this.iframeHost.waitFor({ state: 'attached', timeout: 15_000 }).catch(() => {});
+  98  |       const ready = await this.promptInput
+  99  |         .waitFor({ state: 'visible', timeout: 20_000 })
+  100 |         .then(() => true)
+  101 |         .catch(() => false);
+  102 |       if (ready) return;
+  103 |       // builder loaded degraded ("Connection Error") — reload and retry
+  104 |     }
+  105 |     await expect(
+  106 |       this.promptInput,
+  107 |       'builder prompt did not render after 3 reloads (reflex iframe "Connection Error" / not hydrated)',
+> 108 |     ).toBeVisible({ timeout: 10_000 });
+      |       ^ Error: builder prompt did not render after 3 reloads (reflex iframe "Connection Error" / not hydrated)
+  109 |   }
+  110 | 
+  111 |   /** Open the builder via the Creative Suite tile (validates that entry path). */
+  112 |   async openViaCreativeSuite(): Promise<void> {
+  113 |     await this.page.goto('/dashboard/creative-suite');
+  114 |     await expect(this.creativeSuiteTile).toBeVisible({ timeout: 15_000 });
+  115 |     await this.creativeSuiteTile.click();
+  116 |     await this.iframeHost.waitFor({ state: 'attached', timeout: 30_000 }).catch(() => {});
+  117 |     const ready = await this.promptInput
+  118 |       .waitFor({ state: 'visible', timeout: 20_000 })
+  119 |       .then(() => true)
+  120 |       .catch(() => false);
+  121 |     // If the builder loaded degraded, recover via the reload-retry path.
+  122 |     if (!ready) await this.open();
+  123 |   }
+  124 | 
+  125 |   /** Type a game prompt into the builder. */
+  126 |   async fillPrompt(text: string): Promise<void> {
+  127 |     await this.promptInput.fill(text);
+  128 |   }
+  129 | 
+  130 |   /**
+  131 |    * Fill the prompt and click Generate to kick off a game build.
+  132 |    * NOTE: the Generate button is visible upfront but DISABLED until the prompt
+  133 |    * has content (verified live 2026-07-08), so fill first; `submitPrompt`
+  134 |    * handles that ordering and waits for it to enable before clicking.
+  135 |    */
+  136 |   async submitPrompt(text: string): Promise<void> {
+  137 |     await this.fillPrompt(text);
+  138 |     await expect(this.generateButton).toBeEnabled({ timeout: 10_000 });
+  139 |     await this.generateButton.click();
+  140 |   }
+  141 | 
+  142 |   // ---- Post-submit workspace (the builder switches to a project workspace
+  143 |   //      with Chat/Preview/Deploy/Testing tabs and an AI agent that builds the
+  144 |   //      game over several minutes). Verified live 2026-06-26. ----
+  145 | 
+  146 |   // Verified live (a11y snapshot): the workspace exposes a "Preview" TAB
+  147 |   // (role=tab, not a button) and, while building, a "Stop" BUTTON.
+  148 | 
+  149 |   /** The Preview tab — present once the game project workspace is created. */
+  150 |   get previewTab(): Locator {
+  151 |     return this.frame.getByRole('tab', { name: /preview/i }).first();
+  152 |   }
+  153 |   /** Stop control — present while the AI agent is actively building. */
+  154 |   get stopButton(): Locator {
+  155 |     return this.frame.getByRole('button', { name: /^stop$/i }).first();
+  156 |   }
+  157 |   /** Agent build-activity cue (planning / editing files / phase progress). */
+  158 |   get buildActivity(): Locator {
+  159 |     return this.frame
+  160 |       .getByText(/working\.\.\.|edited \d+ files?|planning next|starting phase|building/i)
+  161 |       .first();
+  162 |   }
+  163 | 
+  164 |   /**
+  165 |    * Assert that submitting a prompt created a game project and the build
+  166 |    * started: the workspace materialises (Preview tab) and the AI agent is
+  167 |    * actively building (Stop button visible, or build-activity text present).
+  168 |    * This is the "successfully created + building, not failing on kickoff"
+  169 |    * contract.
+  170 |    *
+  171 |    * The full build is a long (>14min observed), throttle-dependent codegen, so
+  172 |    * end-to-end playability is intentionally NOT asserted here (see spec note).
+  173 |    */
+  174 |   async expectGameProjectCreated(buildTimeoutMs = 5 * 60_000): Promise<void> {
+  175 |     // The workspace shell (Preview tab) appears quickly — even on a degraded
+  176 |     // builder it renders within seconds.
+  177 |     await expect(
+  178 |       this.previewTab,
+  179 |       'the prompt must create a game project workspace (Preview tab)',
+  180 |     ).toBeVisible({ timeout: 60_000 });
+  181 |     // The build itself can be slow to start on a loaded builder — wait up to
+  182 |     // 5 minutes for the agent to begin building (Stop / build-activity).
+  183 |     await expect(
+  184 |       this.stopButton.or(this.buildActivity).first(),
+  185 |       'after Generate, the AI agent must start building the game',
+  186 |     ).toBeVisible({ timeout: buildTimeoutMs });
+  187 |   }
+  188 | }
+  189 | 
+```
